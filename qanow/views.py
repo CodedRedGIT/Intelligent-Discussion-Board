@@ -11,3 +11,9 @@ def get_all_questions(request):
     serializer = QuestionSerializer(questions, many=True)
     return Response(serializer.data)
 
+
+@api_view(['GET'])
+def get_question(request, id):
+    questions = Question.objects.get(id=id)
+    serializer = QuestionSerializer(questions, many=False)
+    return Response(serializer.data)
