@@ -38,6 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'qanow.apps.QanowConfig',
+    'rest_framework',
+    'corsheaders',
+    'crispy_bootstrap5',
+    'crispy_forms'
 ]
 
 MIDDLEWARE = [
