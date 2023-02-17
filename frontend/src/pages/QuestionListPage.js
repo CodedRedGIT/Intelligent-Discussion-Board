@@ -1,22 +1,28 @@
 import React, {useState, useEffect} from 'react'
+import ListItem from "../components/ListItem";
 
 const QuestionListPage = () => {
 
-    let [notes, setNotes] = useState([])
+    let [questions, setQuestions] = useState([])
 
     useEffect(() => {
-        getNotes()
+        getQuestions()
     }, [])
 
-    let getNotes = async () => {
-      let response = await fetch('http://localhost:8000/api/questions/')
+    let getQuestions = async () => {
+        let response = await fetch('/api/questions/')
         let data = await response.json()
-        setNotes(data)
+        console.log(data)
+        setQuestions(data)
     }
 
     return(
         <div>
-            <h1>Questions</h1>
+            <div className="question-list">
+                {questions.map((question, index) => (
+                    <ListItem key={index} question={question}/>
+                ))}
+            </div>
         </div>
     )
 }
