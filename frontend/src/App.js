@@ -1,7 +1,7 @@
 import './App.css';
-import Header from './components/Header'
 import QuestionListPage from './pages/QuestionListPage'
 import QuestionPage from './pages/QuestionPage'
+import Navbar from './components/Navbar';
 import {
     BrowserRouter as Router,
     Route
@@ -12,7 +12,7 @@ function App() {
     return (
         <Router>
             <div className="App">
-                <Header/>
+                <Navbar/>
                 <Route path="/" exact component={QuestionListPage} />
                 <Route path="/questions/:id" component={QuestionPage} />
             </div>
