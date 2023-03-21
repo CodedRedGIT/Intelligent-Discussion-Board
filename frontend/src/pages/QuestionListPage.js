@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ListItem from "../components/ListItem";
+import Navbar from "../components/Navbar";
 
 const QuestionListPage = () => {
   let [questions, setQuestions] = useState([]);
@@ -17,6 +18,7 @@ const QuestionListPage = () => {
 
   return (
     <div>
+      <Navbar />
       <div className="thread__container">
         {questions.map((question, index) => (
           <div className="thread__item">

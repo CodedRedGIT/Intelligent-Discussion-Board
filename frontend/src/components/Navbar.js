@@ -1,13 +1,22 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { ReactComponent as Profile } from "../images/user.svg";
+import { useHistory } from "react-router-dom";
+import UserLogo from "../images/user.svg";
 
 const Navbar = () => {
+  const history = useHistory();
   return (
     <nav className="navbar">
-      <NavLink to="/">IDB</NavLink>
+      <NavLink to="/dashboard">IDB</NavLink>
       <div className="navbarRight">
-        <button>Sign Out</button>
+        <img src={UserLogo} alt="UserLogo" width="40" />
+        <button
+          onClick={() => {
+            history.push("/");
+          }}
+        >
+          Sign Out
+        </button>
       </div>
     </nav>
   );
