@@ -25,6 +25,7 @@ IDB should have very low error rate as we do not want to provide incorrect repli
 
 1. Clone this repository, *recommended IDE is VisualStudio*
 2. Setup a Python Virtual Environment, *recommend version 3.10*
+    * For simplicity, you can run the powershell venv command to create a venv. `.\venv.ps1` *for windows*
 3. Install dependencies with `pip install -r requirements.txt`
 4. Migrate database models with `py manage.py migrate`
 5. Run server with `py manage.py runserver`
