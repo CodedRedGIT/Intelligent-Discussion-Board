@@ -46,16 +46,17 @@ const Login = () => {
         <div className="formGroup">
           <label htmlFor="password">Password</label>
           <input
-            required
-            className="formControl"
-            placeholder="Password"
-            type="password"
-            name="password"
-            id="password"
-            minLength="6"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+              required
+              className="formControl"
+              placeholder="Password"
+              type="password"
+              name="password"
+              id="password"
+              minLength="6"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
         </div>
         <button className="loginBtn">Sign In</button>
       </form>

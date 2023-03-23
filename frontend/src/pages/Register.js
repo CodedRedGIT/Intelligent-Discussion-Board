@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import axios from 'axios';
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -7,15 +8,22 @@ const Register = () => {
   const [password2, setPassword2] = useState("");
   const history = useHistory();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
       alert("Password doesn't match");
       return false;
-    } else history.push("/");
-    setEmail("");
-    setPassword("");
-    setPassword2("");
+    } 
+    try {
+      const response = await axios.post('/api/create_user/', {email, password});
+      console.log(response.data);
+      setEmail("");
+      setPassword("");
+      setPassword2("");
+      history.push("/");
+    } catch (error) {
+      console.log(error.response.data);
+    }
   };
 
   return (
@@ -59,4 +67,5 @@ const Register = () => {
     </div>
   );
 };
+
 export default Register;
