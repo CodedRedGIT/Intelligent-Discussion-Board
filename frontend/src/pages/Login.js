@@ -9,11 +9,12 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    sessionStorage.setItem("token-info", email);
+    handleLogin();
+    //sessionStorage.setItem("token-info", email);
     setEmail("");
     setPassword("");
-    history.push("/dashboard");
   };
+
   function handleLogin() {
     const data = {
       email: email,
@@ -23,6 +24,7 @@ const Login = () => {
       .post("/api/login/", data)
       .then((response) => {
         console.log(response.data);
+        sessionStorage.setItem("token-info", email);
         // Handle successful login
         history.push("/dashboard"); // redirect to /dashboard page
         return response;
@@ -34,45 +36,45 @@ const Login = () => {
       });
   }
 
-  function LoginForm() {
-    function handleSubmit(event) {
-      event.preventDefault();
-      handleLogin();
-    }
+  //   function LoginForm() {
+  //     function handleSubmit(event) {
+  //       event.preventDefault();
+  //       handleLogin();
+  //     }
 
-    return (
-      <form className="loginForm" onSubmit={handleSubmit}>
-        <div className="formGroup">
-          <label htmlFor="email">Email Address</label>
-          <input
-            required
-            className="formControl"
-            placeholder="Email Address"
-            type="text"
-            name="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="formGroup">
-          <label htmlFor="password">Password</label>
-          <input
-            required
-            className="formControl"
-            placeholder="Password"
-            type="password"
-            name="password"
-            id="password"
-            minLength="6"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <button className="loginBtn">Sign In</button>
-      </form>
-    );
-  }
+  //     return (
+  //       <form className="loginForm" onSubmit={handleSubmit}>
+  //         <div className="formGroup">
+  //           <label htmlFor="email">Email Address</label>
+  //           <input
+  //             required
+  //             className="formControl"
+  //             placeholder="Email Address"
+  //             type="text"
+  //             name="email"
+  //             id="email"
+  //             value={email}
+  //             onChange={(e) => setEmail(e.target.value)}
+  //           />
+  //         </div>
+  //         <div className="formGroup">
+  //           <label htmlFor="password">Password</label>
+  //           <input
+  //             required
+  //             className="formControl"
+  //             placeholder="Password"
+  //             type="password"
+  //             name="password"
+  //             id="password"
+  //             minLength="6"
+  //             value={password}
+  //             onChange={(e) => setPassword(e.target.value)}
+  //           />
+  //         </div>
+  //         <button className="loginBtn">Sign In</button>
+  //       </form>
+  //     );
+  //   }
 
   return (
     <div className="login">
@@ -103,10 +105,7 @@ const Login = () => {
       </form>
       <h3>Don't have an account?&nbsp;</h3>
       <Link to="/register">Register</Link>
-      <LoginForm />
-      <h3 className="loginSubtitle">
-        Don't have an account?&nbsp;<Link to="/register">Register</Link>
-      </h3>
+      {/* <LoginForm /> */}
     </div>
   );
 };
