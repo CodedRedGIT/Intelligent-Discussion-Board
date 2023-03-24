@@ -15,6 +15,9 @@ const QuestionPage = ({ match }) => {
     setQuestion(data);
   };
 
+  let date = question?.published_date.substring(0, 10);
+  let time = question?.published_date.substring(11, 16);
+
   return (
     <div>
       <Navbar />
@@ -23,7 +26,8 @@ const QuestionPage = ({ match }) => {
           <h3>{question?.prompt}</h3>
           <div className="thread__info">
             <small>{question?.tag}</small>
-            <small>{question?.published_date}</small>
+            <small>{date}</small>
+            <small>{time}</small>
           </div>
         </div>
       </div>

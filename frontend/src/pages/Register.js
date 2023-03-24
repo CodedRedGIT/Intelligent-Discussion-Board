@@ -26,7 +26,7 @@ const Register = () => {
         <input
           required
           placeholder="Email Address"
-          type="text"
+          type="email"
           name="email"
           id="email"
           value={email}

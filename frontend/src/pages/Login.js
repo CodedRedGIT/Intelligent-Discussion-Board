@@ -8,6 +8,7 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    sessionStorage.setItem("token-info", email);
     setEmail("");
     setPassword("");
     history.push("/dashboard");
@@ -21,7 +22,7 @@ const Login = () => {
         <input
           required
           placeholder="Email Address"
-          type="text"
+          type="email"
           name="email"
           id="email"
           value={email}
