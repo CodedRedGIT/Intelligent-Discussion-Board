@@ -15,6 +15,10 @@ input {
 a {
   text-decoration: none;
 }
+.loginFormContainer {
+  display: flex;
+  justify-content: center;
+}
 .register,
 .login,
 .home,
