@@ -24,12 +24,22 @@ class Member(models.Model):
     member_type = models.TextField(choices=MemberType.choices)
 
 
+class Reply(models.Model):
+    member_id = models.ForeignKey(
+        Member, null=False, on_delete=models.DO_NOTHING)
+    published_date = models.DateTimeField(default=timezone.now)
+    prompt = models.CharField(max_length=256)
+    upvotes = models.IntegerField(default=0)
+
+
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     member_id = models.ForeignKey(Member, null=False, on_delete=models.CASCADE)
     prompt = models.CharField(max_length=256)
     published_date = models.DateTimeField(default=timezone.now)
     upvotes = models.IntegerField(default=0)
+
+    replies = models.ManyToManyField(Reply)
 
     class Tags(models.TextChoices):
         SYLLABUS = "SYLLABUS"
@@ -38,12 +48,3 @@ class Post(models.Model):
         MISC = "MISC"
 
     tag = models.TextField(choices=Tags.choices, null=True)
-
-
-class Reply(models.Model):
-    post_id = models.ForeignKey(Post, null=False, on_delete=models.DO_NOTHING)
-    member_id = models.ForeignKey(
-        Member, null=False, on_delete=models.DO_NOTHING)
-    published_date = models.DateTimeField(default=timezone.now)
-    prompt = models.CharField(max_length=256)
-    upvotes = models.IntegerField(default=0)
