@@ -23,6 +23,10 @@ class Member(models.Model):
 
     member_type = models.TextField(choices=MemberType.choices)
 
+    def save(self, *args, **kwargs):
+        self.member_type = self.member_type.upper()
+        super().save(*args, **kwargs)
+
 
 class Reply(models.Model):
     member_id = models.ForeignKey(
