@@ -3,21 +3,21 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
 
-from .models import Class, Question
-from .serializer import ClassSerializer, QuestionSerializer
+from .models import Class, Post
+from .serializer import ClassSerializer, PostSerializer
 
 
 @api_view(['GET'])
-def get_all_questions(request):
-    questions = Question.objects.all()
-    serializer = QuestionSerializer(questions, many=True)
+def get_all_posts(request):
+    posts = Post.objects.all()
+    serializer = PostSerializer(posts, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
-def get_question(request, id):
-    questions = Question.objects.get(id=id)
-    serializer = QuestionSerializer(questions, many=False)
+def get_post(request, id):
+    posts = Post.objects.get(id=id)
+    serializer = PostSerializer(posts, many=False)
     return Response(serializer.data)
 
 

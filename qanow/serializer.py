@@ -2,9 +2,9 @@ from rest_framework.serializers import ModelSerializer
 from .models import *
 
 
-class QuestionSerializer(ModelSerializer):
+class PostSerializer(ModelSerializer):
     class Meta:
-        model = Question
+        model = Post
         fields = '__all__'
 
 
