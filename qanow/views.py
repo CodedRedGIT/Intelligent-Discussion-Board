@@ -70,12 +70,13 @@ def login(request):
 
 
 @api_view(['POST'])
-def create_user(request):
+def create_member(request):
     email = request.data.get('email')
     password = request.data.get('password')
     try:
         user = User.objects.create_user(email, email, password)
-        return Response({'message': 'User created successfully'})
+        member = Member.objects.create(user=user, member_type='STUDENT')
+        return Response({'message': 'User and member created successfully'}, status=201)
     except IntegrityError:
         return Response({'error': 'A user with this email already exists'}, status=400)
     except Exception as e:
@@ -154,3 +155,30 @@ def get_post_replies(request, post_id):
     replies = post.replies.all()
     serializer = ReplySerializer(replies, many=True)
     return Response(serializer.data, status=200)
+
+
+@api_view(['POST'])
+def create_class(request):
+    serializer = ClassSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+
+@api_view(['POST'])
+def create_reply(request):
+    serializer = ReplySerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+
+@api_view(['POST'])
+def create_post(request):
+    serializer = PostSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
