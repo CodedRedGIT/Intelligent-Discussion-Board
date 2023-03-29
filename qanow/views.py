@@ -47,8 +47,8 @@ def create_user(request):
         return Response({'error': 'A user with this email already exists'}, status=400)
     except Exception as e:
         return Response({'error': f'Unable to create user: {str(e)}'}, status=400)
-    
-    
+
+
 @api_view(['GET'])
 def get_classes(request):
     """
