@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, StringRelatedField
 from .models import *
 
 
@@ -16,23 +16,23 @@ class MemberSerializer(ModelSerializer):
         fields = ('id', 'user', 'classes', 'member_type')
 
 
+class ReplySerializer(ModelSerializer):
+    member_id = StringRelatedField()
+
+    class Meta:
+        model = Reply
+        fields = ('id', 'member_id',
+                  'published_date', 'prompt', 'upvotes')
+
+
 class PostSerializer(ModelSerializer):
-    member_id = MemberSerializer()
+    member_id = StringRelatedField()
+    replies = ReplySerializer(many=True)
 
     class Meta:
         model = Post
         fields = ('id', 'member_id', 'prompt',
-                  'published_date', 'upvotes', 'tag')
-
-
-class ReplySerializer(ModelSerializer):
-    member_id = MemberSerializer()
-    post_id = PostSerializer()
-
-    class Meta:
-        model = Reply
-        fields = ('id', 'member_id', 'post_id',
-                  'published_date', 'prompt', 'upvotes')
+                  'published_date', 'upvotes', 'tag', 'replies')
 
 
 class UserSerializer(ModelSerializer):
