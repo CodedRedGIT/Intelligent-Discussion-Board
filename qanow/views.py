@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
 
-from .models import Question
-from .serializer import QuestionSerializer
+from .models import Class, Question
+from .serializer import ClassSerializer, QuestionSerializer
 
 
 @api_view(['GET'])
@@ -47,3 +47,13 @@ def create_user(request):
         return Response({'error': 'A user with this email already exists'}, status=400)
     except Exception as e:
         return Response({'error': f'Unable to create user: {str(e)}'}, status=400)
+    
+    
+@api_view(['GET'])
+def get_classes(request):
+    """
+    Retrieve a list of all classes.
+    """
+    classes = Class.objects.all()
+    serializer = ClassSerializer(classes, many=True)
+    return Response(serializer.data, status=200)
