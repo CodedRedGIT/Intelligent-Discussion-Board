@@ -1,7 +1,7 @@
 import "./App.css";
 import Login from "./pages/Login";
-import PostListPage from "./pages/QuestionListPage";
-import PostPage from "./pages/QuestionPage";
+import PostListPage from "./pages/PostListPage";
+import PostPage from "./pages/PostPage";
 import Navbar from "./components/Navbar";
 import {
   BrowserRouter as Router,
