@@ -3,20 +3,20 @@ import ListItem from "../components/ListItem";
 import Navbar from "../components/Navbar";
 import { useHistory, Redirect } from "react-router-dom";
 
-const QuestionListPage = () => {
-  let [questions, setQuestions] = useState([]);
+const PostListPage = () => {
+  let [posts, setPosts] = useState([]);
   const history = useHistory();
   let isLogged = sessionStorage.getItem("token-info");
 
   useEffect(() => {
-    getQuestions();
+    getPosts();
   }, []);
 
-  let getQuestions = async () => {
-    let response = await fetch("/api/questions/");
+  let getPosts = async () => {
+    let response = await fetch("/api/posts/");
     let data = await response.json();
     console.log(data);
-    setQuestions(data);
+    setPosts(data);
   };
   if (!isLogged) {
     return <Redirect from="/dashboard" to="/" />;
@@ -27,15 +27,15 @@ const QuestionListPage = () => {
         <button
           className="createThread"
           onClick={() => {
-            history.push("/create-thread");
+            history.push("/create-post");
           }}
         >
-          Create a Thread
+          Create a Post
         </button>
         <div className="thread__container">
-          {questions.map((question, index) => (
+          {posts.map((post, index) => (
             <div className="thread__item" key={index}>
-              <ListItem question={question} />
+              <ListItem post={post} />
             </div>
           ))}
         </div>
@@ -44,4 +44,4 @@ const QuestionListPage = () => {
   }
 };
 
-export default QuestionListPage;
+export default PostListPage;

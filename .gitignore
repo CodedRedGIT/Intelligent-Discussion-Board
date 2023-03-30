@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# black
+/venv/Scripts/black.exe
+/venv/Scripts/blackd.exe
+
 # Distribution / packaging
 .Python
 build/

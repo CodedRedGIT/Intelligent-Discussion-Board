@@ -1,7 +1,7 @@
 import "./App.css";
 import Login from "./pages/Login";
-import QuestionListPage from "./pages/QuestionListPage";
-import QuestionPage from "./pages/QuestionPage";
+import PostListPage from "./pages/PostListPage";
+import PostPage from "./pages/PostPage";
 import Navbar from "./components/Navbar";
 import {
   BrowserRouter as Router,
@@ -19,8 +19,8 @@ function App() {
         <Route path="/" exact component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/create-thread" component={CreateThread} />
-        <Route path="/dashboard" component={QuestionListPage} />
-        <Route path="/questions/:id" component={QuestionPage} />
+        <Route path="/dashboard" component={PostListPage} />
+        <Route path="/posts/:id" component={PostPage} />
       </div>
     </Router>
   );

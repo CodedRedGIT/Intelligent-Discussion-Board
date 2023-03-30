@@ -2,35 +2,35 @@ import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
-const QuestionPage = ({ match }) => {
-  let questionId = match.params.id;
-  let [question, setQuestion] = useState(null);
+const PostPage = ({ match }) => {
+  let postId = match.params.id;
+  let [post, setPost] = useState(null);
   let isLogged = sessionStorage.getItem("token-info");
 
   useEffect(() => {
-    getQuestion();
-  }, [questionId]);
+    getPost();
+  }, [postId]);
 
-  let getQuestion = async () => {
-    let response = await fetch(`/api/questions/${questionId}/`);
+  let getPost = async () => {
+    let response = await fetch(`/api/posts/${postId}/`);
     let data = await response.json();
-    setQuestion(data);
+    setPost(data);
   };
 
-  let date = question?.published_date.substring(0, 10);
-  let time = question?.published_date.substring(11, 16);
+  let date = post?.published_date.substring(0, 10);
+  let time = post?.published_date.substring(11, 16);
 
   if (!isLogged) {
-    return <Redirect from="/questions/:id" to="/" />;
+    return <Redirect from="/posts/:id" to="/" />;
   } else {
     return (
       <div>
         <Navbar />
         <div className="thread__container">
           <div className="thread__item">
-            <h3>{question?.prompt}</h3>
+            <h3>{post?.prompt}</h3>
             <div className="thread__info">
-              <small>{question?.tag}</small>
+              <small>{post?.tag}</small>
               <small>{date}</small>
               <small>{time}</small>
             </div>
@@ -41,4 +41,4 @@ const QuestionPage = ({ match }) => {
   }
 };
 
-export default QuestionPage;
+export default PostPage;

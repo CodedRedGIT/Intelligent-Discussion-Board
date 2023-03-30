@@ -3,8 +3,19 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('questions/', views.get_all_questions, name='all_questions'),
-    path('questions/<str:id>/', views.get_question, name='get_question'),
-    path('login/', views.login, name='login_api'),
-    path('create_user/', views.create_user, name='create_user'),
+    path('classes/', views.get_all_classes, name='get_all_classes'),
+    path('classes/<str:id>/', views.get_class, name='get_class'),
+    path('classes/create/', views.create_class, name='create_class'),
+    path('members/', views.get_all_members, name='get_all_members'),
+    path('members/<str:id>/', views.get_member_info, name='get_member_info'),
+    path('members/create/', views.create_member, name='create_member'),
+    path('posts/', views.get_all_posts, name='get_all_posts'),
+    path('posts/<str:id>/', views.get_post, name='get_post'),
+    path('posts/<str:post_id>/replies/',
+         views.get_post_replies, name='get_post_replies'),
+    path('posts/create/', views.create_post, name='create_post'),
+    path('replies/', views.get_all_replies, name='get_all_replies'),
+    path('replies/<str:id>/', views.get_reply, name='get_reply'),
+    path('replies/create/', views.create_reply, name='create_reply'),
+    path('login/', views.login, name='login'),
 ]
