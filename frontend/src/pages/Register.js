@@ -15,7 +15,7 @@ const Register = () => {
       return false;
     }
     try {
-      const response = await axios.post("/api/create_user/", {
+      const response = await axios.post("/api/members/create/", {
         email,
         password,
       });
