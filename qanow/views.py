@@ -54,21 +54,6 @@ def get_post(request, id):
     return Response(serializer.data)
 
 
-@api_view(['POST'])
-def login(request):
-    email = request.data.get('email')
-    password = request.data.get('password')
-
-    try:
-        user = User.objects.get(email=email)
-        if user.check_password(password):
-            return Response({'message': 'Login successful'})
-    except User.DoesNotExist:
-        pass
-
-    return Response({'error': 'Invalid credentials'}, status=400)
-
-
 @api_view(['GET'])
 def get_member_info(request, id):
     """
@@ -141,6 +126,21 @@ def get_post_replies(request, post_id):
     replies = post.replies.all()
     serializer = ReplySerializer(replies, many=True)
     return Response(serializer.data, status=200)
+
+
+@api_view(['POST'])
+def login(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+
+    try:
+        user = User.objects.get(email=email)
+        if user.check_password(password):
+            return Response({'message': 'Login successful'})
+    except User.DoesNotExist:
+        pass
+
+    return Response({'error': 'Invalid credentials'}, status=400)
 
 
 @api_view(['POST'])
