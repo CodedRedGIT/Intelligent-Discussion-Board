@@ -69,20 +69,6 @@ def login(request):
     return Response({'error': 'Invalid credentials'}, status=400)
 
 
-@api_view(['POST'])
-def create_member(request):
-    email = request.data.get('email')
-    password = request.data.get('password')
-    try:
-        user = User.objects.create_user(email, email, password)
-        member = Member.objects.create(user=user, member_type='STUDENT')
-        return Response({'message': 'User and member created successfully'}, status=201)
-    except IntegrityError:
-        return Response({'error': 'A user with this email already exists'}, status=400)
-    except Exception as e:
-        return Response({'error': f'Unable to create user: {str(e)}'}, status=400)
-
-
 @api_view(['GET'])
 def get_member_info(request, id):
     """
@@ -158,27 +144,46 @@ def get_post_replies(request, post_id):
 
 
 @api_view(['POST'])
+def create_member(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+    try:
+        user = User.objects.create_user(email, email, password)
+        member = Member.objects.create(user=user, member_type='STUDENT')
+        return Response({'message': 'User and member created successfully'}, status=201)
+    except IntegrityError:
+        return Response({'error': 'A user with this email already exists'}, status=400)
+    except Exception as e:
+        return Response({'error': f'Unable to create user: {str(e)}'}, status=400)
+
+
+@api_view(['POST'])
 def create_class(request):
-    serializer = ClassSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=201)
-    return Response(serializer.errors, status=400)
+    section = request.data.get('section')
+    new_class = Class.objects.create(class_section=section)
+    data = {'id': new_class.id, 'class_section': new_class.class_section}
+    return Response(data, status=201)
 
 
 @api_view(['POST'])
 def create_reply(request):
-    serializer = ReplySerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=201)
-    return Response(serializer.errors, status=400)
+    member_id = request.data.get('member_id')
+    prompt = request.data.get('prompt')
+    new_reply = Reply.objects.create(member_id=member_id, prompt=prompt)
+    data = {'id': new_reply.id, 'member_id': new_reply.member_id.id,
+            'prompt': new_reply.prompt, 'upvotes': new_reply.upvotes}
+    return Response(data, status=201)
 
 
 @api_view(['POST'])
 def create_post(request):
-    serializer = PostSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=201)
-    return Response(serializer.errors, status=400)
+    member_id = request.data.get('member_id')
+    prompt = request.data.get('prompt')
+    tag = request.data.get('tag')
+    new_post = Post.objects.create(member_id=member_id, prompt=prompt, tag=tag)
+    data = {'id': new_post.id, 'member_id': new_post.member_id.id, 'prompt': new_post.prompt,
+            'published_date': new_post.published_date, 'upvotes': new_post.upvotes, 'replies': []}
+    for reply in new_post.replies.all():
+        data['replies'].append({'id': reply.id, 'member_id': reply.member_id.id, 'prompt': reply.prompt,
+                               'published_date': reply.published_date, 'upvotes': reply.upvotes})
+    return Response(data, status=201)
