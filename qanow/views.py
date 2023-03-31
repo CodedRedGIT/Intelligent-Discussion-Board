@@ -136,7 +136,9 @@ def login(request):
     try:
         user = User.objects.get(email=email)
         if user.check_password(password):
-            return Response({'message': 'Login successful'})
+            member = Member.objects.get(user=user)
+            serializer = MemberSerializer(member)
+            return Response(serializer.data, status=200)
     except User.DoesNotExist:
         pass
 
@@ -169,7 +171,8 @@ def create_class(request):
 def create_reply(request, post_id):
     member_id = request.data.get('member_id')
     prompt = request.data.get('prompt')
-    new_reply = Reply.objects.create(member_id=member_id, prompt=prompt)
+    member = Member.objects.get(id=member_id)
+    new_reply = Reply.objects.create(member_id=member, prompt=prompt)
     post = Post.objects.get(id=post_id)
     post.replies.add(new_reply)
     data = {'id': new_reply.id, 'member_id': new_reply.member_id.id,

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const ReplyForm = ({ postId }) => {
   const [prompt, setPrompt] = useState("");
@@ -6,20 +7,26 @@ const ReplyForm = ({ postId }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const tokenInfo = sessionStorage.getItem("token-id");
+    console.log(tokenInfo);
     try {
-      const response = await fetch(`/api/posts/${postId}/replies/create/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("token-info")}`,
-        },
-        body: JSON.stringify({
+      const response = await axios.post(
+        `/api/posts/${postId}/replies/create/`,
+        {
           prompt: prompt,
-        }),
-      });
+          member_id: tokenInfo,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("token-id")}`,
+          },
+        }
+      );
 
-      if (response.ok) {
+      if (response.status === 201) {
         setPrompt("");
+        window.location.reload();
       } else {
         console.error("Failed to create reply");
       }
