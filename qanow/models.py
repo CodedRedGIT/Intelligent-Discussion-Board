@@ -27,6 +27,9 @@ class Member(models.Model):
         self.member_type = self.member_type.upper()
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return str(self.id)
+
 
 class Reply(models.Model):
     member_id = models.ForeignKey(
