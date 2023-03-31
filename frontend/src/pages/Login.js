@@ -23,16 +23,14 @@ const Login = () => {
     return axios
       .post("/api/login/", data)
       .then((response) => {
-        console.log(response.data);
         sessionStorage.setItem("token-info", email);
         // Handle successful login
         history.push("/dashboard"); // redirect to /dashboard page
         return response;
       })
       .catch((error) => {
-        console.log(error);
-        // Handle login error
-        throw error;
+        let message = error.response.data.error;
+        alert(message);
       });
   }
 

@@ -37,16 +37,22 @@ class Reply(models.Model):
     published_date = models.DateTimeField(default=timezone.now)
     prompt = models.CharField(max_length=256)
     upvotes = models.IntegerField(default=0)
+    email = models.EmailField(default='', null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.email = self.member_id.user.email
+        super().save(*args, **kwargs)
 
 
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     member_id = models.ForeignKey(Member, null=False, on_delete=models.CASCADE)
+    title = models.CharField(max_length=64, default='I have a question')
     prompt = models.CharField(max_length=256)
     published_date = models.DateTimeField(default=timezone.now)
     upvotes = models.IntegerField(default=0)
 
-    replies = models.ManyToManyField(Reply, blank=True)
+    replies = models.ManyToManyField(Reply, blank=True, related_name='posts')
 
     class Tags(models.TextChoices):
         SYLLABUS = "SYLLABUS"
@@ -54,4 +60,4 @@ class Post(models.Model):
         HOMEWORK = "HW"
         MISC = "MISC"
 
-    tag = models.TextField(choices=Tags.choices, null=True)
+    tag = models.TextField(choices=Tags.choices, null=True, blank=True)

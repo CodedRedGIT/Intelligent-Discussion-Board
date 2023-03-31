@@ -85,6 +85,22 @@ a {
   width: 100%;
   padding: 20px;
 }
+.thread__prompt {
+  display: flex;
+  align-items: left;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  padding: 30px;
+}
+.thread__reply {
+  display: flex;
+  align-items: left;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+}
 .thread__item {
   padding: 20px;
   width: 80%;
