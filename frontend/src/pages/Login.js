@@ -10,7 +10,6 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     handleLogin();
-    //sessionStorage.setItem("token-info", email);
     setEmail("");
     setPassword("");
   };
@@ -23,7 +22,10 @@ const Login = () => {
     return axios
       .post("/api/login/", data)
       .then((response) => {
-        sessionStorage.setItem("token-info", email);
+        const memberData = response.data;
+        console.log(memberData);
+        sessionStorage.setItem("token-id", memberData.id);
+        sessionStorage.setItem("token-email", memberData.user.email);
         // Handle successful login
         history.push("/dashboard"); // redirect to /dashboard page
         return response;
@@ -33,46 +35,6 @@ const Login = () => {
         alert(message);
       });
   }
-
-  //   function LoginForm() {
-  //     function handleSubmit(event) {
-  //       event.preventDefault();
-  //       handleLogin();
-  //     }
-
-  //     return (
-  //       <form className="loginForm" onSubmit={handleSubmit}>
-  //         <div className="formGroup">
-  //           <label htmlFor="email">Email Address</label>
-  //           <input
-  //             required
-  //             className="formControl"
-  //             placeholder="Email Address"
-  //             type="text"
-  //             name="email"
-  //             id="email"
-  //             value={email}
-  //             onChange={(e) => setEmail(e.target.value)}
-  //           />
-  //         </div>
-  //         <div className="formGroup">
-  //           <label htmlFor="password">Password</label>
-  //           <input
-  //             required
-  //             className="formControl"
-  //             placeholder="Password"
-  //             type="password"
-  //             name="password"
-  //             id="password"
-  //             minLength="6"
-  //             value={password}
-  //             onChange={(e) => setPassword(e.target.value)}
-  //           />
-  //         </div>
-  //         <button className="loginBtn">Sign In</button>
-  //       </form>
-  //     );
-  //   }
 
   return (
     <div className="login">

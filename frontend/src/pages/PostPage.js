@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import RepliesList from "../components/ListReplies";
+import ReplyForm from "../components/ReplyForm";
 
 const PostPage = ({ match }) => {
   const postId = match.params.id;
   const [post, setPost] = useState(null);
   const [member, setMember] = useState(null);
-  const isLogged = sessionStorage.getItem("token-info");
+  const isLogged = sessionStorage.getItem("token-email");
 
   useEffect(() => {
     getPost();
@@ -52,6 +53,7 @@ const PostPage = ({ match }) => {
             </div>
           </div>
           <RepliesList postId={postId} />
+          <ReplyForm postId={postId} />
         </div>
       </div>
     );

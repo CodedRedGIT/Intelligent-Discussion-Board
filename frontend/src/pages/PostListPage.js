@@ -6,7 +6,7 @@ import { useHistory, Redirect } from "react-router-dom";
 const PostListPage = () => {
   let [posts, setPosts] = useState([]);
   const history = useHistory();
-  let isLogged = sessionStorage.getItem("token-info");
+  let isLogged = sessionStorage.getItem("token-email");
 
   useEffect(() => {
     getPosts();
@@ -15,7 +15,6 @@ const PostListPage = () => {
   let getPosts = async () => {
     let response = await fetch("/api/posts/");
     let data = await response.json();
-    console.log(data);
     setPosts(data);
   };
   if (!isLogged) {

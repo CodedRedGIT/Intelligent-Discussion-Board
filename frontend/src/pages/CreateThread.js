@@ -6,7 +6,7 @@ const CreateThread = () => {
   const [threadPrompt, setThreadPrompt] = useState("");
   const [threadBody, setThreadBody] = useState("");
   const history = useHistory();
-  let isLogged = sessionStorage.getItem("token-info");
+  let isLogged = sessionStorage.getItem("token-email");
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -23,7 +23,7 @@ const Navbar = () => {
         {/* {<img src={UserLogo} alt="UserLogo" width="40" />} */}
         <button
           onClick={() => {
-            sessionStorage.removeItem("token-info");
+            sessionStorage.removeItem("token-email");
             history.push("/");
           }}
         >
