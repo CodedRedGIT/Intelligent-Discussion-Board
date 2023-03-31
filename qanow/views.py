@@ -166,10 +166,12 @@ def create_class(request):
 
 
 @api_view(['POST'])
-def create_reply(request):
+def create_reply(request, post_id):
     member_id = request.data.get('member_id')
     prompt = request.data.get('prompt')
     new_reply = Reply.objects.create(member_id=member_id, prompt=prompt)
+    post = Post.objects.get(id=post_id)
+    post.replies.add(new_reply)
     data = {'id': new_reply.id, 'member_id': new_reply.member_id.id,
             'prompt': new_reply.prompt, 'upvotes': new_reply.upvotes}
     return Response(data, status=201)
