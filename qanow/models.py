@@ -43,7 +43,7 @@ class Post(models.Model):
     published_date = models.DateTimeField(default=timezone.now)
     upvotes = models.IntegerField(default=0)
 
-    replies = models.ManyToManyField(Reply)
+    replies = models.ManyToManyField(Reply, blank=True)
 
     class Tags(models.TextChoices):
         SYLLABUS = "SYLLABUS"
