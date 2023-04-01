@@ -35,7 +35,7 @@ class Reply(models.Model):
     member_id = models.ForeignKey(
         Member, null=False, on_delete=models.DO_NOTHING)
     published_date = models.DateTimeField(default=timezone.now)
-    prompt = models.CharField(max_length=256)
+    prompt = models.CharField(max_length=2000)
     upvotes = models.IntegerField(default=0)
     email = models.EmailField(default='', null=True, blank=True)
 
@@ -47,8 +47,8 @@ class Reply(models.Model):
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     member_id = models.ForeignKey(Member, null=False, on_delete=models.CASCADE)
-    title = models.CharField(max_length=64, default='I have a question')
-    prompt = models.CharField(max_length=256)
+    title = models.CharField(max_length=256, default='I have a question')
+    prompt = models.CharField(max_length=2000)
     published_date = models.DateTimeField(default=timezone.now)
     upvotes = models.IntegerField(default=0)
 
