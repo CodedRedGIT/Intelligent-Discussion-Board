@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const ReplyForm = ({ postId }) => {
   const [prompt, setPrompt] = useState("");
@@ -37,19 +39,29 @@ const ReplyForm = ({ postId }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="reply-prompt">Reply:</label>
-        <textarea
-          className="form-control"
-          id="reply-prompt"
-          rows="3"
-          value={prompt}
-          onChange={(event) => setPrompt(event.target.value)}
-        />
+      <div
+        className="form-group"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+        }}
+      >
+        <h2>Reply:</h2>
+        <span className="inline-block w-4" />
+        <div style={{ height: "200px", overflowY: "scroll", flexGrow: 1 }}>
+          <ReactQuill
+            value={prompt}
+            onChange={setPrompt}
+            style={{ height: "100%", width: "100%" }}
+          />
+        </div>
       </div>
-      <button type="submit" className="btn btn-primary">
-        Submit
-      </button>
+      <div style={{ textAlign: "right" }}>
+        <button type="submit" className="btn btn-primary">
+          Submit
+        </button>
+      </div>
     </form>
   );
 };

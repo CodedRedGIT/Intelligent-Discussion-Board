@@ -20,9 +20,10 @@ const ListReplies = ({ postId }) => {
       <div className="thread__replies">
         {sortedReplies.map((reply) => (
           <div className="thread__item" key={reply.id}>
-            <div className="thread__reply">
-              <p>{reply?.prompt}</p>
-            </div>
+            <div
+              className="thread__reply"
+              dangerouslySetInnerHTML={{ __html: reply.prompt }}
+            ></div>
             <div className="thread__info">
               <small>{reply.published_date}</small>
               <small>{reply.upvotes} upvotes</small>
