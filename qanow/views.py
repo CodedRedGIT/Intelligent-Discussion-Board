@@ -131,6 +131,18 @@ def get_post_replies(request, post_id):
     return Response(serializer.data, status=200)
 
 
+@api_view(['GET'])
+def get_member_classes(request, id):
+    try:
+        member = Member.objects.get(id=id)
+    except Member.DoesNotExist:
+        return Response({'error': 'Member not found'}, status=404)
+
+    classes = member.get_classes()
+    serializer = ClassSerializer(classes, many=True)
+    return Response(serializer.data, status=200)
+
+
 @api_view(['POST'])
 def login(request):
     email = request.data.get('email')

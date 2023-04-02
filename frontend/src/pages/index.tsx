@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
-import Login from './assets/login'
+import { Page } from '@/components/layout/Page'
 
-const Root: NextPage = () => <Login />
+const Root: NextPage = () => <Page title={'Login'}></Page>
 
 export default Root

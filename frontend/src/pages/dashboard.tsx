@@ -1,28 +1,34 @@
 import React from 'react'
-import ListItem from '@/components/ListItem'
-import useRetrieveAllPosts from './api/useRetrieveAllPosts'
-import { LinkButton } from '@/components/ui/LinkButton'
 import { NextPage } from 'next'
 import { Page } from '@/components/layout/Page'
+import useRetrieveClassesByMember from './api/useRetrieveClasses'
+import { useSession } from './api/useSession'
 
 const Dashboard: NextPage = () => {
-  const { loading, posts, error } = useRetrieveAllPosts()
+  const { sessionData } = useSession()
+
+  if (!sessionData) return <p>Error</p>
+
+  const { loading, classes, error } = useRetrieveClassesByMember(
+    sessionData?.token ?? '',
+  )
 
   return (
-    <Page title='Dashboard'>
-      <LinkButton href='/create-post'>Create a Post</LinkButton>
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
-      <div className='thread__container'>
-        {posts.map(post => (
-          <div className='thread__item' key={post.id}>
-            <h3>{post.title}</h3>
-            <div className='thread__info'>
-              <small>{post.tag}</small>
-              <small>{post.published_date}</small>
-            </div>
+    <Page title={'Dashboard'}>
+      <div>
+        {!sessionData ? (
+          <p>You must be signed in to view this page!</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : loading ? (
+          <p>Loading...</p>
+        ) : (
+          <div>
+            {classes.map(c => (
+              <div key={c.id}>{c.class_section}</div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </Page>
   )

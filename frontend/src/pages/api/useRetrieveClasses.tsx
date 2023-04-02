@@ -1,43 +1,44 @@
 import { useState, useEffect } from 'react'
 
-interface Post {
-  id: number
-  prompt: string
-  title: string
-  tag: string
-  published_date: string
+interface Class {
+  id: string
+  class_section: string
 }
 
-interface UseRetrieveAllPostsResult {
-  posts: Post[]
+interface UseRetrieveClassesByMemberResult {
+  classes: Class[]
   loading: boolean
   error: string | null
 }
 
-const useRetrieveAllPosts = (): UseRetrieveAllPostsResult => {
-  const [posts, setPosts] = useState<Post[]>([])
+const useRetrieveClassesByMember = (
+  memberId: string,
+): UseRetrieveClassesByMemberResult => {
+  const [classes, setClasses] = useState<Class[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchClasses = async () => {
       setLoading(true)
 
       try {
-        const response = await fetch('http://localhost:8000/classes/')
+        const response = await fetch(
+          `http://localhost:8000/api/members/${memberId}/classes/`,
+        )
         const data = await response.json()
-        setPosts(data)
+        setClasses(data)
       } catch (error) {
-        setError('Error retrieving posts')
+        setError('Error retrieving classes')
       }
 
       setLoading(false)
     }
 
-    fetchPosts()
-  }, [])
+    fetchClasses()
+  }, [memberId])
 
-  return { posts, loading, error }
+  return { classes, loading, error }
 }
 
-export default useRetrieveAllPosts
+export default useRetrieveClassesByMember

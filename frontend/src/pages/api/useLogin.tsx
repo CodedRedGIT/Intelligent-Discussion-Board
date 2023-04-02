@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { useSession } from './useSession'
 import { useRouter } from 'next/router'
+import { useSessionContext } from './auth/session'
 
 const useLogin = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const { saveSessionData } = useSession()
+  const { saveSessionData } = useSessionContext()
   const router = useRouter()
 
   const login = async (email: string, password: string) => {
@@ -17,8 +17,9 @@ const useLogin = () => {
         body: JSON.stringify({ email, password }),
       })
       const data = await response.json()
+      console.log(data)
       if (response.ok) {
-        saveSessionData({ token: data.token, email })
+        saveSessionData({ token: data.member.id, email })
         router.push('/dashboard')
       } else {
         setError(data.error)

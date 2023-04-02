@@ -11,6 +11,9 @@
   "parserOptions": {
     "project": "./tsconfig.eslint.json"
   },
+  "plugins": [
+    "react-hooks"
+  ],
   "rules": {
     "@next/next/no-img-element": "off",
     "react-hooks/exhaustive-deps": [
@@ -18,7 +21,8 @@
       {
         "additionalHooks": "(useAsyncEffect|useAnimationFrame)"
       }
-    ]
+    ],
+    "react-hooks/rules-of-hooks": "error"
   },
   "ignorePatterns": ["**/build/*"],
   "env": {

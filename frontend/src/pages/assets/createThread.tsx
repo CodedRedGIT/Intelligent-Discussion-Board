@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Navigate } from 'react-router-dom'
 import { NextPage } from 'next'
 import Navbar from '@/components/layout/Navbar'
 
@@ -17,7 +16,7 @@ const CreateThread: NextPage = () => {
   }
 
   if (!isLogged) {
-    return <Navigate to='/' />
+    return <link href='/' />
   } else {
     return (
       <div>

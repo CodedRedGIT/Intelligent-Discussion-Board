@@ -24,6 +24,9 @@ class Member(models.Model):
     def __str__(self):
         return str(self.id)
 
+    def get_classes(self):
+        return Class.objects.filter(members=self)
+
 
 class Reply(models.Model):
     member_id = models.ForeignKey(

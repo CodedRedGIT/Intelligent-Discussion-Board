@@ -14,10 +14,12 @@ const Login = () => {
   }
 
   return (
-    <div className='login'>
-      <h1 className='loginTitle'>Log In</h1>
-      <form className='loginForm' onSubmit={handleSubmit}>
-        <label htmlFor='email'>Email Address</label>
+    <div className='login flex flex-col justify-center items-center h-full'>
+      <h1 className='loginTitle text-center mb-8'>Log In</h1>
+      <form className='loginForm flex flex-col w-70' onSubmit={handleSubmit}>
+        <label htmlFor='email' className='mb-2'>
+          Email Address
+        </label>
         <input
           required
           placeholder='Email Address'
@@ -26,8 +28,11 @@ const Login = () => {
           id='email'
           value={email}
           onChange={e => setEmail(e.target.value)}
+          className='py-2 px-4 border border-gray-300 rounded-lg mb-5'
         />
-        <label htmlFor='password'>Password</label>
+        <label htmlFor='password' className='mb-2'>
+          Password
+        </label>
         <input
           required
           placeholder='Password'
@@ -37,12 +42,16 @@ const Login = () => {
           minLength={6}
           value={password}
           onChange={e => setPassword(e.target.value)}
+          className='py-2 px-4 border border-gray-300 rounded-lg mb-5'
         />
-        <button className='loginBtn' disabled={loading}>
+        <button
+          className='loginBtn bg-purple-500 text-white py-2 px-4 rounded-lg font-bold'
+          disabled={loading}
+        >
           {loading ? 'Loading...' : 'Sign In'}
         </button>
       </form>
-      <h3>
+      <h3 className='text-center mt-8'>
         Don&apos;t have an account?&nbsp;
         <Link href='/register'>Register</Link>
       </h3>
