@@ -5,7 +5,12 @@ const { fontFamily } = require('tailwindcss/defaultTheme')
 // eslint-disable-next-line tsdoc/syntax
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/pages/**/*.{js,ts,jsx,tsx}', './styles/**/*.css'],
+  content: [
+    './src/pages/**/**/*.{js,ts,jsx,tsx}',
+    './src/components/**/**/*.{js,ts,jsx,tsx}',
+    './styles/**/*.css',
+  ],
+
   theme: {
     extend: {
       fontFamily: {
