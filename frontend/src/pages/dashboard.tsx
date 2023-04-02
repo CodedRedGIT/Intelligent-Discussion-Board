@@ -2,10 +2,10 @@ import React from 'react'
 import { NextPage } from 'next'
 import { Page } from '@/components/layout/Page'
 import useRetrieveClassesByMember from './api/useRetrieveClasses'
-import { useSession } from './api/useSession'
+import { useSessionContext } from './api/auth/session' // import the useSessionContext hook
 
 const Dashboard: NextPage = () => {
-  const { sessionData } = useSession()
+  const { sessionData } = useSessionContext() // use the useSessionContext hook to get the sessionData value
 
   if (!sessionData) return <p>Error</p>
 
