@@ -1,16 +1,16 @@
 import React from 'react'
-import Navbar from '../components/layout/Navbar'
-import ListReplies from '../components/ListReplies'
-import ReplyForm from '../components/ReplyForm'
-import useRetrievePostInfo from './api/useRetrievePostInfo'
-import { Link } from 'react-router-dom'
+import Navbar from '../../components/layout/Navbar'
+import ListReplies from '../../components/ListReplies'
+import ReplyForm from '../../components/ReplyForm'
+import useRetrievePostInfo from '../api/useRetrievePostInfo'
 import { NextPage } from 'next'
-import { useRouter } from 'next/router'
+import Link from 'next/link'
 
-const Post: NextPage = () => {
-  const { query } = useRouter()
-  const postId = query.id as string
+interface Props {
+  postId: string
+}
 
+const Post: NextPage<Props> = ({ postId }) => {
   const { post, member, error } = useRetrievePostInfo(postId)
   const isLogged = sessionStorage.getItem('token-id')
 
@@ -18,7 +18,7 @@ const Post: NextPage = () => {
   const time = post?.published_date.substring(11, 16)
 
   if (!isLogged) {
-    return <Link to='/' />
+    return <Link href='/' />
   }
 
   return (

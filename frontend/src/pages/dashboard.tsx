@@ -1,34 +1,31 @@
 import React from 'react'
-import { Navigate } from 'react-router-dom'
-import Navbar from '@/components/layout/Navbar'
 import ListItem from '@/components/ListItem'
-import useRetrieveAllPosts from '../api/useRetrieveAllPosts'
+import useRetrieveAllPosts from './api/useRetrieveAllPosts'
 import { LinkButton } from '@/components/ui/LinkButton'
 import { NextPage } from 'next'
+import { Page } from '@/components/layout/Page'
 
-const ListPost: NextPage = () => {
-  const isLogged = sessionStorage.getItem('token-email')
+const Dashboard: NextPage = () => {
   const { loading, posts, error } = useRetrieveAllPosts()
 
-  if (!isLogged) {
-    return <Navigate to='/' />
-  }
-
   return (
-    <div>
-      <Navbar />
+    <Page title='Dashboard'>
       <LinkButton href='/create-post'>Create a Post</LinkButton>
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       <div className='thread__container'>
         {posts.map(post => (
           <div className='thread__item' key={post.id}>
-            <ListItem post={post} />
+            <h3>{post.title}</h3>
+            <div className='thread__info'>
+              <small>{post.tag}</small>
+              <small>{post.published_date}</small>
+            </div>
           </div>
         ))}
       </div>
-    </div>
+    </Page>
   )
 }
 
-export default ListPost
+export default Dashboard

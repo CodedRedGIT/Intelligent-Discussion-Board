@@ -5,16 +5,10 @@ from django.db import models
 from django.utils import timezone
 
 
-class Class(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    class_section = models.CharField(max_length=15)
-
-
 class Member(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="member", null=True, blank=True)
-    classes = models.ManyToManyField(Class)
 
     class MemberType(models.TextChoices):
         STUDENT = "STUDENT"
@@ -52,7 +46,7 @@ class Post(models.Model):
     published_date = models.DateTimeField(default=timezone.now)
     upvotes = models.IntegerField(default=0)
 
-    replies = models.ManyToManyField(Reply, blank=True, related_name='posts')
+    replies = models.ManyToManyField(Reply, blank=True, related_name='replies')
 
     class Tags(models.TextChoices):
         SYLLABUS = "SYLLABUS"
@@ -61,3 +55,12 @@ class Post(models.Model):
         MISC = "MISC"
 
     tag = models.TextField(choices=Tags.choices, null=True, blank=True)
+
+
+class Class(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    class_section = models.CharField(max_length=15)
+    posts = models.ManyToManyField(Post, blank=True, related_name='posts')
+    members = models.ManyToManyField(
+        Member, blank=True, related_name='members')
+    owners = models.ManyToManyField(Member, blank=True, related_name='owners')

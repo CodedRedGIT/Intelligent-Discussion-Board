@@ -1,26 +1,16 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
-import useLoginMember from '../api/useLoginMember'
-import { useRouter } from 'next/router'
+import useLogin from '../api/useLogin'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { loginMember, loading, error } = useLoginMember()
-  const router = useRouter()
+  const { login, loading, error } = useLogin()
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-  ): Promise<void> => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    try {
-      await loginMember({ email, password })
-      router.push('/assets/listPost')
-    } catch (error) {
-      console.log(error)
-    }
-    setEmail('')
-    setPassword('')
+
+    await login(email, password)
   }
 
   return (
@@ -54,7 +44,7 @@ const Login = () => {
       </form>
       <h3>
         Don&apos;t have an account?&nbsp;
-        <Link href='/assets/register'>Register</Link>
+        <Link href='/register'>Register</Link>
       </h3>
       {error && <p>{error}</p>}
     </div>

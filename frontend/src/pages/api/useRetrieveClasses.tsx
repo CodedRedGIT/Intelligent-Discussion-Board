@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 
 interface Post {
   id: number
   prompt: string
+  title: string
   tag: string
   published_date: string
 }
@@ -24,8 +24,9 @@ const useRetrieveAllPosts = (): UseRetrieveAllPostsResult => {
       setLoading(true)
 
       try {
-        const response = await axios.get('/api/posts/')
-        setPosts(response.data)
+        const response = await fetch('http://localhost:8000/classes/')
+        const data = await response.json()
+        setPosts(data)
       } catch (error) {
         setError('Error retrieving posts')
       }

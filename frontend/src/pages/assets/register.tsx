@@ -1,25 +1,22 @@
 import React, { useState } from 'react'
-import useCreateMember from '../api/useCreateMember'
 import { NextPage } from 'next'
+import { useRegistration } from '../api/useRegistration'
 
 const Register: NextPage = () => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [password2, setPassword2] = useState<string>('')
+  const { isLoading, error, success, register } = useRegistration()
 
-  const [createMember, loading] = useCreateMember()
-
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-  ): Promise<void> => {
-    e.preventDefault()
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
 
     if (password !== password2) {
       alert("Password doesn't match")
       return
     }
 
-    await createMember({ email, password })
+    register(email, password, password2)
   }
 
   return (
@@ -58,9 +55,11 @@ const Register: NextPage = () => {
           value={password2}
           onChange={e => setPassword2(e.target.value)}
         />
-        <button className='registerBtn' disabled={loading}>
-          {loading ? 'Loading...' : 'Submit'}
+        <button type='submit' disabled={isLoading}>
+          {isLoading ? 'Loading...' : 'Register'}
         </button>
+        {error && <p className='error'>{error}</p>}
+        {success && <p className='success'>Registration Successful!</p>}
       </form>
     </div>
   )

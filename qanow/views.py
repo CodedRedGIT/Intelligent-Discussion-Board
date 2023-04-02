@@ -1,8 +1,11 @@
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
 
+from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Class, Member, Post, Reply
 from .serializer import ClassSerializer, MemberSerializer, PostSerializer, ReplySerializer, UserSerializer
 
@@ -138,7 +141,12 @@ def login(request):
         if user.check_password(password):
             member = Member.objects.get(user=user)
             serializer = MemberSerializer(member)
-            return Response(serializer.data, status=200)
+
+            # create a token for the user
+            refresh = RefreshToken.for_user(user)
+
+            # return the serialized member and token in the response
+            return Response({'member': serializer.data, 'access_token': str(refresh.access_token)}, status=200)
     except User.DoesNotExist:
         pass
 
