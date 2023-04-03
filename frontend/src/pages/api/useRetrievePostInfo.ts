@@ -28,6 +28,7 @@ const useRetrievePostInfo = (postId: string): PostInfo => {
   })
 
   useEffect(() => {
+    if (!postId) return
     const fetchPostInfo = async () => {
       try {
         const postResponse = await fetch(`/api/posts/${postId}/`)
