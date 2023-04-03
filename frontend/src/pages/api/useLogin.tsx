@@ -19,7 +19,11 @@ const useLogin = () => {
       const data = await response.json()
       console.log(data)
       if (response.ok) {
-        saveSessionData({ token: data.member.id, email })
+        saveSessionData({
+          token: data.access_token,
+          email,
+          user_id: data.member.id,
+        })
         router.push('/dashboard')
       } else {
         setError(data.error)

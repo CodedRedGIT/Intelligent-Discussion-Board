@@ -21,4 +21,5 @@ urlpatterns = [
     path('replies/', views.get_all_replies, name='get_all_replies'),
     path('replies/<str:id>/', views.get_reply, name='get_reply'),
     path('login/', views.login, name='login'),
+    path('session/', views.get_session_data),
 ]

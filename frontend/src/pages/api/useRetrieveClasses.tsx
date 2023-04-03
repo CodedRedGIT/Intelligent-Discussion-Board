@@ -22,6 +22,8 @@ const useRetrieveClassesByMember = (
     const fetchClasses = async () => {
       setLoading(true)
 
+      if (!memberId) return
+
       try {
         const response = await fetch(
           `http://localhost:8000/api/members/${memberId}/classes/`,

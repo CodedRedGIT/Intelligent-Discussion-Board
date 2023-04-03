@@ -1,3 +1,6 @@
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -163,6 +166,15 @@ def login(request):
         pass
 
     return Response({'error': 'Invalid credentials'}, status=400)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_session_data(request):
+    user = request.user
+    member = Member.objects.get(user=user)
+    serializer = MemberSerializer(member)
+    return Response({'access_token': str(request.auth), 'email': user.email, 'user_id': serializer.data['id']})
 
 
 @api_view(['POST'])

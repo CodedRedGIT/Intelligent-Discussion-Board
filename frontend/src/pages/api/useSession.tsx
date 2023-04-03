@@ -1,42 +1,30 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import cookie from 'cookie'
-
-export type SessionData = {
-  token: string
-  email: string
-}
+import { getSessionData, SessionData } from './auth/getSessionData'
 
 export const useSession = () => {
-  const [sessionData, setSessionData] = useState<SessionData | null>(() => {
-    const cookies =
-      typeof document !== 'undefined' ? cookie.parse(document.cookie) : {}
+  const [sessionData, setSessionData] = useState<SessionData | null>(null)
 
-    const token = cookies.token || ''
-    const email = cookies.email || ''
-
-    if (token && email) {
-      console.log('YES')
-      return { token, email }
+  useEffect(() => {
+    const { session_id } = cookie.parse(document.cookie)
+    const fetchData = async () => {
+      const data = await getSessionData(session_id)
+      setSessionData(data)
     }
-
-    console.log('NO')
-    return null
-  })
-
-  console.log('sessionData on client:', sessionData)
+    fetchData()
+  }, [])
 
   const saveSessionData = (data: SessionData) => {
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('email', data.email)
-    }
+    const expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 year
+    document.cookie = `session_id=${
+      data.token
+    }; expires=${expires.toUTCString()}; path=/;`
     setSessionData(data)
   }
 
   const clearSessionData = () => {
-    if (typeof localStorage !== 'undefined') {
-      localStorage.clear()
-    }
+    document.cookie =
+      'session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
     setSessionData(null)
   }
 

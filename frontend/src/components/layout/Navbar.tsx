@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHouse } from '@fortawesome/free-solid-svg-icons'
 import { useSessionContext } from '../../pages/api/auth/session'
 import { LinkButton } from '../ui/LinkButton'
-import Login from '@/pages/assets/login'
 
 const Navbar = () => {
   const { sessionData, clearSessionData } = useSessionContext()

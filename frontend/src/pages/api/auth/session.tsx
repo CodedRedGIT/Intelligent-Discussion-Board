@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react'
-import { useSession, SessionData } from '@/pages/api/useSession'
+import { useSession } from '@/pages/api/useSession'
+import { SessionData } from './getSessionData'
 
 type SessionContextData = {
   sessionData: SessionData | null
