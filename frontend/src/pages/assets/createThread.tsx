@@ -1,3 +1,4 @@
+// TODO needs to be updated with new frontend build
 import React, { useState } from 'react'
 import { NextPage } from 'next'
 import Navbar from '@/components/layout/Navbar'
