@@ -54,10 +54,10 @@ def get_all_replies(request):
 
 
 @api_view(['GET'])
-def get_class_posts(request, class_id):
+def get_class_posts(request, id):
     # Retrieve the Class object with the given class_id
     try:
-        class_obj = Class.objects.get(id=class_id)
+        class_obj = Class.objects.get(id=id)
     except Class.DoesNotExist:
         return JsonResponse({'error': 'Class not found'}, status=404)
 

@@ -116,7 +116,7 @@ const Dashboard: NextPage = () => {
                 onChange={e => setSection(e.target.value)}
               />
               <button
-                className='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-all duration-200'
+                className='bg-green-500 text-gray-50 px-4 py-2 rounded hover:bg-green-600 transition-all duration-200'
                 onClick={handleCreateClass}
                 disabled={isCreating}
               >

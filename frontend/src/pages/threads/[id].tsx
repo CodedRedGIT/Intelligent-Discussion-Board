@@ -1,13 +1,15 @@
 import React from 'react'
 import { NextPage } from 'next'
 import { Page } from '@/components/layout/Page'
-import useRetrieveClassPosts from './api/useRetrieveClassPosts'
 import { LinkButton } from '@/components/ui/LinkButton'
 import { useRouter } from 'next/router'
+import useRetrieveClassPosts from '../api/useRetrieveClassPosts'
 
-const Threads = () => {
-  const router = useRouter()
-  const { classId } = router.query
+const Threads: NextPage = () => {
+  const { query } = useRouter()
+  const classId = query.id as string | undefined
+
+  console.log(classId)
 
   const { loading, posts, error } = useRetrieveClassPosts(classId)
 
