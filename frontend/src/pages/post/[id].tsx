@@ -1,7 +1,7 @@
 import React from 'react'
 // import ListReplies from '../../components/ListReplies'
 // import ReplyForm from '../../components/ReplyForm'
-import useRetrievePostInfo from '../api/useRetrievePostInfo'
+import useRetrievePost from '../api/useRetrievePost'
 import { NextPage } from 'next'
 import { Card } from '@/components/layout/Card'
 import { LinkButton } from '@/components/ui/LinkButton'
@@ -13,7 +13,7 @@ const Post: NextPage = () => {
   const { query } = useRouter()
   const postId = query.id as string
 
-  const { post, member, error } = useRetrievePostInfo(postId)
+  const { post, member, error } = useRetrievePost(postId)
 
   const date = post?.published_date.substring(0, 10)
   const time = post?.published_date.substring(11, 16)

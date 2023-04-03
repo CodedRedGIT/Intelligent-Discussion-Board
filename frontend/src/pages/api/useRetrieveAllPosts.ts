@@ -1,3 +1,6 @@
+/*
+Not used for a specific class but can be used for statistics later on
+*/
 import { useState, useEffect } from 'react'
 
 interface Post {

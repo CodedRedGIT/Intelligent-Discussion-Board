@@ -9,19 +9,21 @@ interface Post {
 }
 
 interface Member {
+  id: string
+  member_type: string
   user: {
     email: string
   }
 }
 
-interface PostInfo {
+interface PostResponse {
   post: Post | null
   member: Member | null
   error: string | null
 }
 
-const useRetrievePostInfo = (postId: string): PostInfo => {
-  const [postInfo, setPostInfo] = useState<PostInfo>({
+const useRetrievePost = (postId: string): PostResponse => {
+  const [postInfo, setPostInfo] = useState<PostResponse>({
     post: null,
     member: null,
     error: null,
@@ -55,4 +57,4 @@ const useRetrievePostInfo = (postId: string): PostInfo => {
   return postInfo
 }
 
-export default useRetrievePostInfo
+export default useRetrievePost
