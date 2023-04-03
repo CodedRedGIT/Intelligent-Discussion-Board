@@ -7,7 +7,7 @@ import useRetrieveClassPosts from '../api/useRetrieveClassPosts'
 
 const Threads: NextPage = () => {
   const { query } = useRouter()
-  const classId = query.id as string | undefined
+  const classId = query.id as string
 
   console.log(classId)
 

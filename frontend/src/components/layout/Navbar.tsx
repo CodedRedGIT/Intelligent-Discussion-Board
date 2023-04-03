@@ -26,11 +26,7 @@ const Navbar = () => {
           <FontAwesomeIcon
             icon={faHouse}
             className='fa-solid text-white text-4xl cursor-pointer'
-            onClick={() => {
-              {
-                homeButton
-              }
-            }}
+            onClick={homeButton}
           />
         </div>
 
