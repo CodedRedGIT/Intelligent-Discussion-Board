@@ -3,6 +3,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  webpackHmr: false,
 }
 
 module.exports = nextConfig
