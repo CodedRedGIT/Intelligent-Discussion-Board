@@ -3,13 +3,13 @@ import { NextPage } from 'next'
 import { Page } from '@/components/layout/Page'
 import useRetrieveClassPosts from './api/useRetrieveClassPosts'
 import { LinkButton } from '@/components/ui/LinkButton'
+import { useRouter } from 'next/router'
 
-interface Props {
-  class_id: string
-}
+const Threads = () => {
+  const router = useRouter()
+  const { classId } = router.query
 
-const Threads: NextPage<Props> = ({ class_id }) => {
-  const { loading, posts, error } = useRetrieveClassPosts(class_id)
+  const { loading, posts, error } = useRetrieveClassPosts(classId)
 
   return (
     <Page title='Threads'>

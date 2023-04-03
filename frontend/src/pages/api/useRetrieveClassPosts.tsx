@@ -15,7 +15,7 @@ interface useRetrieveClassPostsResult {
 }
 
 const useRetrieveClassPosts = (
-  class_id: string,
+  class_id: string | string[] | undefined,
 ): useRetrieveClassPostsResult => {
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState<boolean>(false)

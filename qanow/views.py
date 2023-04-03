@@ -211,8 +211,21 @@ def create_member(request):
 
 @api_view(['POST'])
 def create_class(request):
+    """
+    Creates a new class with the provided section and assigns the member as the owner and member of the class.
+    """
     section = request.data.get('section')
+    member_id = request.data.get('member_id')
+
+    print(member_id)
+    try:
+        member = Member.objects.get(id=member_id)
+    except Member.DoesNotExist:
+        return Response({'error': 'Member not found'}, status=404)
+
     new_class = Class.objects.create(class_section=section)
+    new_class.members.add(member)
+    new_class.owners.add(member)
     data = {'id': new_class.id, 'class_section': new_class.class_section}
     return Response(data, status=201)
 
