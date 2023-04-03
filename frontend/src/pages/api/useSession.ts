@@ -21,7 +21,7 @@ export const useSession = () => {
   }, [])
 
   const saveSessionData = (data: SessionData) => {
-    const expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 year
+    const expires = new Date(Date.now() + 2 * 365 * 24 * 60 * 60 * 1000) 
     document.cookie = `session_id=${
       data.token
     }; expires=${expires.toUTCString()}; path=/;`

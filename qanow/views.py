@@ -1,8 +1,7 @@
+import datetime
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -177,6 +176,8 @@ def login(request):
 
             # create a token for the user
             refresh = RefreshToken.for_user(user)
+            access_token = refresh.access_token
+            access_token.set_exp(lifetime=datetime.timedelta(minutes=200))
 
             # return the serialized member and token in the response
             return Response({'member': serializer.data, 'access_token': str(refresh.access_token)}, status=200)
