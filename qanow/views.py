@@ -54,6 +54,24 @@ def get_all_replies(request):
 
 
 @api_view(['GET'])
+def get_class_posts(request, class_id):
+    # Retrieve the Class object with the given class_id
+    try:
+        class_obj = Class.objects.get(id=class_id)
+    except Class.DoesNotExist:
+        return JsonResponse({'error': 'Class not found'}, status=404)
+
+    # Retrieve the posts associated with the Class object
+    posts = class_obj.posts.all()
+
+    # Serialize the posts using the PostSerializer
+    serializer = PostSerializer(posts, many=True)
+
+    # Return the serialized posts as a JSON response
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
 def get_post(request, id):
     posts = Post.objects.get(id=id)
     serializer = PostSerializer(posts, many=False)

@@ -1,11 +1,15 @@
 import React from 'react'
-import useRetrieveAllPosts from './api/useRetrieveAllPosts'
-import { LinkButton } from '@/components/ui/LinkButton'
 import { NextPage } from 'next'
 import { Page } from '@/components/layout/Page'
+import useRetrieveClassPosts from './api/useRetrieveClassPosts'
+import { LinkButton } from '@/components/ui/LinkButton'
 
-const Dashboard: NextPage = () => {
-  const { loading, posts, error } = useRetrieveAllPosts()
+interface Props {
+  class_id: string
+}
+
+const Threads: NextPage<Props> = ({ class_id }) => {
+  const { loading, posts, error } = useRetrieveClassPosts(class_id)
 
   return (
     <Page title='Threads'>
@@ -27,4 +31,4 @@ const Dashboard: NextPage = () => {
   )
 }
 
-export default Dashboard
+export default Threads
