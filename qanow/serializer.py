@@ -5,37 +5,28 @@ from .models import *
 class ClassSerializer(ModelSerializer):
     class Meta:
         model = Class
-        fields = ('id', 'class_section')
+        fields = '__all__'
 
 
 class MemberSerializer(ModelSerializer):
-    classes = ClassSerializer(many=True)
-
     class Meta:
         model = Member
-        fields = ('id', 'user', 'classes', 'member_type')
+        fields = '__all__'
 
 
 class ReplySerializer(ModelSerializer):
-    member_id = StringRelatedField()
-
     class Meta:
         model = Reply
-        fields = ('id', 'member_id',
-                  'published_date', 'prompt', 'upvotes')
+        fields = '__all__'
 
 
 class PostSerializer(ModelSerializer):
-    member_id = StringRelatedField()
-    replies = ReplySerializer(many=True)
-
     class Meta:
         model = Post
-        fields = ('id', 'member_id', 'prompt',
-                  'published_date', 'upvotes', 'tag', 'replies')
+        fields = '__all__'
 
 
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name']
+        fields = '__all__'

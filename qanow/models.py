@@ -5,16 +5,10 @@ from django.db import models
 from django.utils import timezone
 
 
-class Class(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    class_section = models.CharField(max_length=15)
-
-
 class Member(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="member", null=True, blank=True)
-    classes = models.ManyToManyField(Class)
 
     class MemberType(models.TextChoices):
         STUDENT = "STUDENT"
@@ -27,23 +21,35 @@ class Member(models.Model):
         self.member_type = self.member_type.upper()
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return str(self.id)
+
+    def get_classes(self):
+        return Class.objects.filter(members=self)
+
 
 class Reply(models.Model):
     member_id = models.ForeignKey(
         Member, null=False, on_delete=models.DO_NOTHING)
     published_date = models.DateTimeField(default=timezone.now)
-    prompt = models.CharField(max_length=256)
+    prompt = models.CharField(max_length=2000)
     upvotes = models.IntegerField(default=0)
+    email = models.EmailField(default='', null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.email = self.member_id.user.email
+        super().save(*args, **kwargs)
 
 
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     member_id = models.ForeignKey(Member, null=False, on_delete=models.CASCADE)
-    prompt = models.CharField(max_length=256)
+    title = models.CharField(max_length=256, default='I have a question')
+    prompt = models.CharField(max_length=2000)
     published_date = models.DateTimeField(default=timezone.now)
     upvotes = models.IntegerField(default=0)
 
-    replies = models.ManyToManyField(Reply)
+    replies = models.ManyToManyField(Reply, blank=True, related_name='replies')
 
     class Tags(models.TextChoices):
         SYLLABUS = "SYLLABUS"
@@ -51,4 +57,13 @@ class Post(models.Model):
         HOMEWORK = "HW"
         MISC = "MISC"
 
-    tag = models.TextField(choices=Tags.choices, null=True)
+    tag = models.TextField(choices=Tags.choices, null=True, blank=True)
+
+
+class Class(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    class_section = models.CharField(max_length=15)
+    posts = models.ManyToManyField(Post, blank=True, related_name='posts')
+    members = models.ManyToManyField(
+        Member, blank=True, related_name='members')
+    owners = models.ManyToManyField(Member, blank=True, related_name='owners')

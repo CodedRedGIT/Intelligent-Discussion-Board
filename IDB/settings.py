@@ -24,8 +24,6 @@ SECRET_KEY = 'django-insecure-io7!*ur0&l+$%p%w@13bps+c8mu2hkiaclimtzcv&fjo#qw$65
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,7 +37,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'crispy_bootstrap5',
-    'crispy_forms'
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -51,16 +49,29 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
 ]
+
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_COOKIE_AGE = 86400
+SESSION_COOKIE_SECURE = True
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
 
 ROOT_URLCONF = 'IDB.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,9 +140,11 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",
-    "http://localhost:3000",
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+    'http://localhost:8000',
 ]
+
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000',]
