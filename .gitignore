@@ -159,6 +159,9 @@ cython_debug/
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
+# venv
+venv/bin/
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -238,7 +241,6 @@ fabric.properties
 .idea/
 
 media/
-/codedredDjango/urls.py
 venv/Scripts/activate
 venv/Scripts/activate.bat
 venv/pyvenv.cfg
@@ -251,3 +253,4 @@ venv/Scripts/python.exe
 venv/Scripts/pip3.10.exe
 venv/Scripts/pip3.exe
 venv/Scripts/deactivate.bat
+
