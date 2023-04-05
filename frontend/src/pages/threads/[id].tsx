@@ -1,11 +1,11 @@
 import React from 'react'
 import { NextPage } from 'next'
-import { Page } from '@/components/layout/Page'
-import { LinkButton } from '@/components/ui/LinkButton'
 import { useRouter } from 'next/router'
 import useRetrieveClassPosts from '../api/useRetrieveClassPosts'
-import { Card } from '@/components/layout/Card'
 import Link from 'next/link'
+import { Page } from '../../components/layout/Page'
+import { LinkButton } from '../../components/ui/LinkButton'
+import { Card } from '../../components/layout/Card'
 
 const Threads: NextPage = () => {
   const { query } = useRouter()

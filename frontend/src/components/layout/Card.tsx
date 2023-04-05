@@ -1,5 +1,6 @@
 import { clsx } from 'clsx'
 import type { CSSProperties, FC, PropsWithChildren } from 'react'
+import React from 'react'
 
 interface Props {
   className?: string

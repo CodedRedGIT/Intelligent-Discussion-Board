@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import useLogin from '../api/useLogin'
-import { Card } from '@/components/layout/Card'
+import { Card } from '../../components/layout/Card'
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -55,7 +55,7 @@ const Login = () => {
         </form>
         <h3 className='text-center mt-8 text-xl'>
           Don&apos;t have an account?&nbsp;
-          <Link href='/register' className='underline text-blue-500'>
+          <Link href='/assets/register' className='underline text-blue-500'>
             Register
           </Link>
         </h3>

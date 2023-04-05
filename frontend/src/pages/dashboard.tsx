@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { NextPage } from 'next'
-import { Page } from '@/components/layout/Page'
 import useRetrieveClassesByMember from './api/useRetrieveClasses'
 import { useSessionContext } from './api/auth/session'
-import { Card } from '@/components/layout/Card'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faArrowRight,
@@ -11,8 +9,9 @@ import {
   faMugHot,
 } from '@fortawesome/free-solid-svg-icons'
 import { useCreateClass } from './api/useCreateClass'
-import { LinkButton } from '@/components/ui/LinkButton'
 import Link from 'next/link'
+import { Page } from '../components/layout/Page'
+import { Card } from '../components/layout/Card'
 
 const Dashboard: NextPage = () => {
   const { sessionData } = useSessionContext()

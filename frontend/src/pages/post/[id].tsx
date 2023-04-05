@@ -1,16 +1,15 @@
 // this page is still being worked on to work with out new framework. Need to update components.
 
-
 import React from 'react'
 // import ListReplies from '../../components/ListReplies'
 // import ReplyForm from '../../components/ReplyForm'
 import useRetrievePost from '../api/useRetrievePost'
 import { NextPage } from 'next'
-import { Card } from '@/components/layout/Card'
-import { LinkButton } from '@/components/ui/LinkButton'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Page } from '@/components/layout/Page'
+import { Card } from '../../components/layout/Card'
+import { Page } from '../../components/layout/Page'
+import { LinkButton } from '../../components/ui/LinkButton'
 
 const Post: NextPage = () => {
   const { query } = useRouter()

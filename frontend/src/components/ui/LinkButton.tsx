@@ -1,6 +1,7 @@
 import { clsx } from 'clsx'
 import Link from 'next/link'
 import type { CSSProperties, FC, PropsWithChildren } from 'react'
+import React from 'react'
 
 interface Props {
   href: string
