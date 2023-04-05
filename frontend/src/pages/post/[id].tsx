@@ -1,3 +1,6 @@
+// this page is still being worked on to work with out new framework. Need to update components.
+
+
 import React from 'react'
 // import ListReplies from '../../components/ListReplies'
 // import ReplyForm from '../../components/ReplyForm'
