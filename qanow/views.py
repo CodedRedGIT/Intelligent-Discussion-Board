@@ -241,6 +241,14 @@ def create_reply(request, post_id):
 
 @api_view(['POST'])
 def create_post(request):
+
+    class_id = request.data.get('class_id')
+
+    try:
+        class_obj = Class.objects.get(id=class_id)
+    except Class.DoesNotExist:
+        return Response({'error': 'Class not found'}, status=404)
+
     member_id = request.data.get('member_id')
     prompt = request.data.get('prompt')
     tag = request.data.get('tag')
@@ -250,4 +258,6 @@ def create_post(request):
     for reply in new_post.replies.all():
         data['replies'].append({'id': reply.id, 'member_id': reply.member_id.id, 'prompt': reply.prompt,
                                'published_date': reply.published_date, 'upvotes': reply.upvotes})
+
+    class_obj.posts.add(new_post)
     return Response(data, status=201)
