@@ -33,11 +33,15 @@ const useRetrievePost = (postId: string): PostResponse => {
     if (!postId) return
     const fetchPostInfo = async () => {
       try {
-        const postResponse = await fetch(`/api/posts/${postId}/`)
+        const postResponse = await fetch(
+          `http://localhost:8000/api/posts/${postId}/`,
+        )
         const postData = await postResponse.json()
 
         const member_id = postData.member_id
-        const memberResponse = await fetch(`/api/members/${member_id}/`)
+        const memberResponse = await fetch(
+          `http://localhost:8000/api/members/${member_id}/`,
+        )
         const memberData = await memberResponse.json()
 
         setPostInfo({ post: postData, member: memberData, error: null })

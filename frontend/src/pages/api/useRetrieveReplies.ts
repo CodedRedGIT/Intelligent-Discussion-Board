@@ -4,6 +4,7 @@ interface Reply {
   prompt: string
   upvotes: number
   published_date: string
+  email: string
 }
 
 interface Member {

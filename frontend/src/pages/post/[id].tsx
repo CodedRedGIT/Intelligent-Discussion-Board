@@ -1,8 +1,8 @@
 // this page is still being worked on to work with out new framework. Need to update components.
 
 import React from 'react'
-// import ListReplies from '../../components/ListReplies'
-// import ReplyForm from '../../components/ReplyForm'
+import ListReplies from '../../components/ListReplies'
+import ReplyForm from '../../components/ReplyForm'
 import useRetrievePost from '../api/useRetrievePost'
 import { NextPage } from 'next'
 import Link from 'next/link'
@@ -40,8 +40,8 @@ const Post: NextPage = () => {
                     </small>
                   </div>
                   <p className='text-gray-500 text-lg mt-4'>{post?.prompt}</p>
-                  {/* <ListReplies postId={postId} />
-                  <ReplyForm postId={postId} /> */}
+                  <ListReplies postId={postId} />
+                  <ReplyForm postId={postId} />
                   <div className='flex justify-center mt-8'>
                     <Link href='/threads'>
                       <LinkButton href={''}>Back to Threads</LinkButton>

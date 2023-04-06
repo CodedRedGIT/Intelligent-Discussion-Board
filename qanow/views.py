@@ -87,12 +87,8 @@ def get_member_info(request, id):
     except Member.DoesNotExist:
         return Response({'error': 'Member not found'}, status=404)
 
-    # Retrieve the member's classes
-    classes = member.classes.all()
-    class_serializer = ClassSerializer(classes, many=True)
-
     # Retrieve the member's member type
-    member_type = member.get_member_type_display()
+    member_type = member.member_type
 
     # Retrieve the member's user information
     user_serializer = UserSerializer(member.user)
@@ -100,7 +96,6 @@ def get_member_info(request, id):
     # Combine the retrieved data into a single response
     response_data = {
         'member_id': id,
-        'classes': class_serializer.data,
         'member_type': member_type,
         'user': user_serializer.data,
     }
@@ -232,12 +227,23 @@ def create_class(request):
 
 
 @api_view(['POST'])
-def create_reply(request, post_id):
+def create_reply(request):
+
+    post_id = request.data.get('post_id')
+
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found'}, status=404)
+
     member_id = request.data.get('member_id')
     prompt = request.data.get('prompt')
+    # tag = request.data.get('tag')
+
     member = Member.objects.get(id=member_id)
-    new_reply = Reply.objects.create(member_id=member, prompt=prompt)
-    post = Post.objects.get(id=post_id)
+
+    new_reply = Reply.objects.create(
+        member_id=member, prompt=prompt)
     post.replies.add(new_reply)
     data = {'id': new_reply.id, 'member_id': new_reply.member_id.id,
             'prompt': new_reply.prompt, 'upvotes': new_reply.upvotes}
@@ -246,6 +252,14 @@ def create_reply(request, post_id):
 
 @api_view(['POST'])
 def create_post(request):
+
+    class_id = request.data.get('class_id')
+
+    try:
+        class_obj = Class.objects.get(id=class_id)
+    except Class.DoesNotExist:
+        return Response({'error': 'Class not found'}, status=404)
+
     member_id = request.data.get('member_id')
     prompt = request.data.get('prompt')
     tag = request.data.get('tag')
@@ -255,4 +269,6 @@ def create_post(request):
     for reply in new_post.replies.all():
         data['replies'].append({'id': reply.id, 'member_id': reply.member_id.id, 'prompt': reply.prompt,
                                'published_date': reply.published_date, 'upvotes': reply.upvotes})
+
+    class_obj.posts.add(new_post)
     return Response(data, status=201)
