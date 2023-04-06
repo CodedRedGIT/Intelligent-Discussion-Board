@@ -227,12 +227,23 @@ def create_class(request):
 
 
 @api_view(['POST'])
-def create_reply(request, post_id):
+def create_reply(request):
+
+    post_id = request.data.get('post_id')
+
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found'}, status=404)
+
     member_id = request.data.get('member_id')
     prompt = request.data.get('prompt')
+    # tag = request.data.get('tag')
+
     member = Member.objects.get(id=member_id)
-    new_reply = Reply.objects.create(member_id=member, prompt=prompt)
-    post = Post.objects.get(id=post_id)
+
+    new_reply = Reply.objects.create(
+        member_id=member, prompt=prompt)
     post.replies.add(new_reply)
     data = {'id': new_reply.id, 'member_id': new_reply.member_id.id,
             'prompt': new_reply.prompt, 'upvotes': new_reply.upvotes}

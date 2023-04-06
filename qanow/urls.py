@@ -17,7 +17,7 @@ urlpatterns = [
     path('posts/<str:id>/', views.get_post, name='get_post'),
     path('posts/<str:post_id>/replies/',
          views.get_post_replies, name='get_post_replies'),
-    path('posts/<str:post_id>/replies/create/',
+    path('posts/replies/create/',
          views.create_reply, name='create_reply'),
     path('posts/create/', views.create_post, name='create_post'),
     path('replies/', views.get_all_replies, name='get_all_replies'),
