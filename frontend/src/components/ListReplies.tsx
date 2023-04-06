@@ -1,29 +1,11 @@
-// TODO needs to be updated with new frontend build
-import React, { useState, useEffect } from 'react'
-
-interface Reply {
-  id: number
-  prompt: string
-  published_date: string
-  upvotes: number
-  email: string
-}
+import useRetrieveReplies from '@/pages/api/useRetrieveReplies'
 
 interface Props {
   postId: string
 }
 
 const ListReplies: React.FC<Props> = ({ postId }) => {
-  const [replies, setReplies] = useState<Reply[]>([])
-
-  useEffect(() => {
-    const fetchReplies = async () => {
-      const response = await fetch(`/api/posts/${postId}/replies/`)
-      const data = await response.json()
-      setReplies(data)
-    }
-    fetchReplies()
-  }, [postId])
+  const { replies } = useRetrieveReplies(postId)
 
   const sortedReplies = [...replies].sort((a, b) => b.upvotes - a.upvotes)
 
@@ -32,7 +14,7 @@ const ListReplies: React.FC<Props> = ({ postId }) => {
       <h2>Replies</h2>
       <div className='thread__replies'>
         {sortedReplies.map(reply => (
-          <div className='thread__item' key={reply.id}>
+          <div className='thread__item'>
             <div
               className='thread__reply'
               dangerouslySetInnerHTML={{ __html: reply.prompt }}

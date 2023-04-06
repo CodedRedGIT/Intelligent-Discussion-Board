@@ -87,12 +87,8 @@ def get_member_info(request, id):
     except Member.DoesNotExist:
         return Response({'error': 'Member not found'}, status=404)
 
-    # Retrieve the member's classes
-    classes = member.classes.all()
-    class_serializer = ClassSerializer(classes, many=True)
-
     # Retrieve the member's member type
-    member_type = member.get_member_type_display()
+    member_type = member.member_type
 
     # Retrieve the member's user information
     user_serializer = UserSerializer(member.user)
@@ -100,7 +96,6 @@ def get_member_info(request, id):
     # Combine the retrieved data into a single response
     response_data = {
         'member_id': id,
-        'classes': class_serializer.data,
         'member_type': member_type,
         'user': user_serializer.data,
     }
