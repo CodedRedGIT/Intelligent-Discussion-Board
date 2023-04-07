@@ -12,6 +12,7 @@ import { useCreateClass } from './api/useCreateClass'
 import Link from 'next/link'
 import { Page } from '../components/layout/Page'
 import { Card } from '../components/layout/Card'
+import Router from 'next/router'
 
 const Dashboard: NextPage = () => {
   const { sessionData } = useSessionContext()
@@ -31,6 +32,7 @@ const Dashboard: NextPage = () => {
 
   const handleCreateClass = () => {
     createClass(section, sessionData?.user_id)
+    Router.reload()
   }
 
   return (

@@ -17,7 +17,7 @@ const Threads: NextPage = () => {
     <Page title='Threads'>
       <div className='flex justify-between items-center'>
         <h1 className='text-2xl font-bold'>Threads</h1>
-        <LinkButton href='/create-post'>Create a Post</LinkButton>
+        <LinkButton href={`create-post/${classId}`}>Create a Post</LinkButton>
       </div>
       {error && <p className='text-red-500'>{error}</p>}
       {loading && <p>Loading...</p>}
