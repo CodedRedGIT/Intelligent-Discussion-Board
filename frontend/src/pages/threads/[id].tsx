@@ -28,30 +28,32 @@ const Threads: NextPage = () => {
         <>
           <span className='inline-block w-4' />
           {posts.map(post => (
-            <Link href={`/post/${post.id}`} key={post.id} passHref>
-              <div>
-                <Card>
-                  <div className='p-4'>
-                    <div>
-                      <h3 className='text-2xl font-bold text-black mb-2'>
-                        {post.title}
-                      </h3>
-                      <div className='flex justify-between'>
-                        <small className='text-gray-500 text-sm'>
-                          {post.tag}
-                        </small>
-                        <small className='text-gray-500 text-sm'>
-                          {post.published_date}
-                        </small>
+            <>
+              <Link href={`/post/${post.id}`} key={post.id} passHref>
+                <div>
+                  <Card>
+                    <div className='p-4'>
+                      <div>
+                        <h3 className='text-2xl font-bold text-black mb-2'>
+                          {post.title}
+                        </h3>
+                        <div className='flex justify-between'>
+                          <small className='text-gray-500 text-sm'>
+                            {post.tag}
+                          </small>
+                          <small className='text-gray-500 text-sm'>
+                            {post.published_date}
+                          </small>
+                        </div>
+                        <p className='text-gray-500 text-lg mt-4'>
+                          {post.prompt.slice(0, 150)}...
+                        </p>
                       </div>
-                      <p className='text-gray-500 text-lg mt-4'>
-                        {post.prompt.slice(0, 150)}...
-                      </p>
                     </div>
-                  </div>
-                </Card>
-              </div>
-            </Link>
+                  </Card>
+                </div>
+              </Link><span className='inline-block w-4' />
+            </>
           ))}
         </>
       )}

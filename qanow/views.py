@@ -261,9 +261,16 @@ def create_post(request):
         return Response({'error': 'Class not found'}, status=404)
 
     member_id = request.data.get('member_id')
+
+    try:
+        member = Member.objects.get(id=member_id)
+    except Member.DoesNotExist:
+        return Response({'error': 'Member not found'}, status=404)
+
     prompt = request.data.get('prompt')
     tag = request.data.get('tag')
-    new_post = Post.objects.create(member_id=member_id, prompt=prompt, tag=tag)
+    title = request.data.get('title')
+    new_post = Post.objects.create(member_id=member, prompt=prompt, title=title, tag=tag)
     data = {'id': new_post.id, 'member_id': new_post.member_id.id, 'prompt': new_post.prompt,
             'published_date': new_post.published_date, 'upvotes': new_post.upvotes, 'replies': []}
     for reply in new_post.replies.all():
