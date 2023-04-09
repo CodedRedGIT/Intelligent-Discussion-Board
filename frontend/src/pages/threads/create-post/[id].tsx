@@ -15,7 +15,7 @@ const CreatePost: NextPage = () => {
   const class_id = query.id as string
   const [title, setTitle] = useState('')
   const [prompt, setPrompt] = useState('')
-  const [tag, setTag] = useState('')
+  const [tag, setTag] = useState('SYLLABUS')
 
   const {
     isLoading: isCreating,
@@ -26,19 +26,13 @@ const CreatePost: NextPage = () => {
 
   const member_id = sessionData?.user_id ?? ''
 
-  const options = ['SYLLABUS', 'HW', 'EXAM', 'MISC']
-
-  const handleTagChange = (e: any) => {
-    setTag(e.target.value)
-    console.log(tag)
-  }
-
   const handleCreatePost = () => {
     createPost({ member_id, prompt, title, tag, class_id })
     console.log(member_id)
     console.log(prompt)
     console.log(title)
-    alert('Thread Posted')
+    console.log(tag)
+    alert('Thread Posted') //run text processing
   }
   // const { loading, posts, error } = useRetrieveClassPosts(classId)
 
@@ -76,8 +70,8 @@ const CreatePost: NextPage = () => {
                 className='dropdown'
                 onChange={e => {
                   setTag(e.target.value)
-                  console.log(tag)
                 }}
+                value={tag}
               >
                 <option value='SYLLABUS'>SYLLABUS</option>
                 <option value='HW'>HW</option>
