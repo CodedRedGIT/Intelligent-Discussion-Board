@@ -25,7 +25,6 @@ const ReplyForm: React.FC<Props> = ({ post_id }) => {
   const handleSubmit = () => {
     createReply({ member_id, prompt, post_id })
     alert('Reply posted')
-    Router.reload()
   }
 
   // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

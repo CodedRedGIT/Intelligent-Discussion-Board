@@ -42,7 +42,9 @@ const Threads: NextPage = () => {
                             {post.tag}
                           </small>
                           <small className='text-gray-500 text-sm'>
-                            {post.published_date}
+                            {post.published_date.substring(0, 10)}
+                            <br />
+                            {post.published_date.substring(11, 19)}
                           </small>
                         </div>
                         <p className='text-gray-500 text-lg mt-4'>
@@ -52,7 +54,8 @@ const Threads: NextPage = () => {
                     </div>
                   </Card>
                 </div>
-              </Link><span className='inline-block w-4' />
+              </Link>
+              <span className='inline-block w-4' />
             </>
           ))}
         </>
