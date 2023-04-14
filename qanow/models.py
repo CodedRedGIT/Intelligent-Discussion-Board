@@ -44,7 +44,7 @@ class Reply(models.Model):
         super().save(*args, **kwargs)
 
 
-def embeddingcreate(text):
+def embedding_create(text):
     response = openai.Embedding.create(
         input=text,
         model="text-embedding-ada-002"
@@ -87,7 +87,7 @@ class Post(models.Model):
 def set_embedding(sender, instance, created, **kwargs):
     if created and not instance.embedding:
         # Generate an embedding vector using the embeddingcreate function
-        vector = embeddingcreate(instance.prompt)
+        vector = embedding_create(instance.prompt)
         # Set the embedding foreign key on the Post instance
         instance.embedding = TextData.objects.create(embedding=vector)
         instance.save()
