@@ -10,6 +10,10 @@ __pycache__/
 /venv/Scripts/black.exe
 /venv/Scripts/blackd.exe
 
+
+#textData
+/venv
+
 # Distribution / packaging
 .Python
 build/

@@ -23,7 +23,7 @@ class ReplySerializer(ModelSerializer):
 class PostSerializer(ModelSerializer):
     class Meta:
         model = Post
-        fields = '__all__'
+        exclude = ('embedding',)
 
 
 class UserSerializer(ModelSerializer):
