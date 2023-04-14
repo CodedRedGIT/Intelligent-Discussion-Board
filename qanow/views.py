@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from qanow.text_data import processtext
+from qanow.text_data import process_text
 from .models import Class, Member, Post, Reply
 from .serializer import ClassSerializer, MemberSerializer, PostSerializer, ReplySerializer, UserSerializer
 
@@ -274,7 +274,7 @@ def create_post_request(request):
     title = request.data.get('title')
 
     # process text
-    processed_text = processtext(prompt, class_id)
+    processed_text = process_text(prompt, class_id)
 
     print(processed_text)
 
