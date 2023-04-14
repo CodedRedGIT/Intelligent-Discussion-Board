@@ -314,3 +314,39 @@ def upvote_reply(request, id):
 
     serializer = ReplySerializer(reply)
     return Response(serializer.data, status=200)
+
+
+@api_view(['POST'])
+def remove_upvote_post(request, id):
+    """
+    Remove an upvote from a specific post.
+    """
+    try:
+        post = Post.objects.get(id=id)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found'}, status=404)
+
+    if post.upvotes > 0:
+        post.upvotes -= 1
+        post.save()
+
+    serializer = PostSerializer(post)
+    return Response(serializer.data, status=200)
+
+
+@api_view(['POST'])
+def remove_upvote_reply(request, id):
+    """
+    Remove an upvote from a specific reply.
+    """
+    try:
+        reply = Reply.objects.get(id=id)
+    except Reply.DoesNotExist:
+        return Response({'error': 'Reply not found'}, status=404)
+
+    if reply.upvotes > 0:
+        reply.upvotes -= 1
+        reply.save()
+
+    serializer = ReplySerializer(reply)
+    return Response(serializer.data, status=200)
