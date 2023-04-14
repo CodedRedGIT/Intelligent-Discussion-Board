@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# black
+/venv/Scripts/black.exe
+/venv/Scripts/blackd.exe
+
 # Distribution / packaging
 .Python
 build/
@@ -155,6 +159,9 @@ cython_debug/
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
+# venv
+venv/bin/
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -234,19 +241,17 @@ fabric.properties
 .idea/
 
 media/
-/codedredDjango/urls.py
 venv/Scripts/activate
 venv/Scripts/activate.bat
-.gitignore
 venv/pyvenv.cfg
 venv/Scripts/Activate.ps1
-.gitignore
 venv/Scripts/django-admin.exe
 venv/Scripts/pip.exe
 venv/Scripts/sqlformat.exe
 venv/Scripts/pythonw.exe
 venv/Scripts/python.exe
-.gitignore
 venv/Scripts/pip3.10.exe
 venv/Scripts/pip3.exe
 venv/Scripts/deactivate.bat
+
+venv/include
