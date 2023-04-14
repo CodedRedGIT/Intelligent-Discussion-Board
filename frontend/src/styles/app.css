@@ -1,9 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: "Ubuntu", sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   color: #674188;
 }
 input {
@@ -105,12 +105,21 @@ a {
   padding: 20px;
   width: 80%;
   box-shadow: 0 0 1px 1px #c3acd0;
-  display: grid;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
 }
 .thread__info {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+.thread__info__bottom {
+  display: flex;
+  justify-content: space-between;
+}
+.thread__info__top {
   display: grid;
 }
 .likes__container {
@@ -193,4 +202,16 @@ a {
   cursor: pointer;
   border-radius: 3px;
   margin-top: 15px;
+}
+.dropdown {
+  margin-bottom: 15px;
+  box-shadow: 0 0 1px 1px #cdcdcd;
+  border: none;
+}
+.icon {
+  cursor: pointer;
+}
+.icon :hover {
+  cursor: pointer;
+  fill: #f99417;
 }

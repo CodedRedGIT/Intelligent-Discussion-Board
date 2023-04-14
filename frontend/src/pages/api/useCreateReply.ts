@@ -6,7 +6,7 @@ export const useCreateReply = () => {
   const [success, setSuccess] = useState<boolean>(false)
 
   const createReply = async (newReply: {
-    member_id: string
+    member_id: string | undefined
     prompt: string
     //tag: string <-- deal with this later
     post_id: string

@@ -12,6 +12,8 @@ import { useCreateClass } from './api/useCreateClass'
 import Link from 'next/link'
 import { Page } from '../components/layout/Page'
 import { Card } from '../components/layout/Card'
+import Router from 'next/router'
+import { Button } from '@/components/ui/Button'
 
 const Dashboard: NextPage = () => {
   const { sessionData } = useSessionContext()
@@ -31,6 +33,11 @@ const Dashboard: NextPage = () => {
 
   const handleCreateClass = () => {
     createClass(section, sessionData?.user_id)
+    Router.reload()
+  }
+
+  const fileButton = () => {
+    Router.push('/files')
   }
 
   return (
@@ -130,6 +137,22 @@ const Dashboard: NextPage = () => {
             )}
           </Card>
         </div>
+      </div>
+      <div>
+        <span className='inline-block w-4' />
+        <Card className='bg-white p-6 rounded-lg shadow-md max-w-xl'>
+          <Link href={`/files`} passHref>
+            <div className='bg-gray-100 p-4 rounded-lg shadow-md flex justify-between items-center hover:bg-gray-200'>
+              <div>
+                <h2 className='text-xl font-bold mb-2'>Files</h2>
+              </div>
+              <FontAwesomeIcon
+                icon={faArrowRight}
+                className='text-orange-500 text-2xl'
+              />
+            </div>
+          </Link>
+        </Card>
       </div>
     </Page>
   )
