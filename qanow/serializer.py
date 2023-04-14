@@ -23,7 +23,7 @@ class ReplySerializer(ModelSerializer):
 class PostSerializer(ModelSerializer):
     class Meta:
         model = Post
-        exclude = ('embedding',)
+        exclude = ('textData',)
 
 
 class UserSerializer(ModelSerializer):

@@ -2,6 +2,8 @@ import openai
 import nltk
 from nltk.corpus import stopwords
 import numpy as np
+
+from .models import Class, Post
 openai.api_key = "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"
 
 # TODO, figure out how to access the other uploaded documents in the DB. The same API calls should be usable
@@ -62,11 +64,25 @@ def similarityscore(postvector, dbvector):
 
 
 # Process function that gets the embeddings and checks if the syllabus should be recommended as well
-def processtext(posttext):
+def processtext(posttext, class_id):
     returnlist = []
 
-    returnlist.append(embeddingcreate(posttext))
-    returnlist.append(syllabuscheck(posttext))
+    post_embedding = embeddingcreate(posttext)
+    postvector = np.array(post_embedding)
+
+    class_instance = Class.objects.get(id=class_id)
+    posts = class_instance.posts.all()
+
+    for post in posts:
+        if not post.textData:
+            continue
+        embedding = post.textData.embedding
+        dbvector = np.array(embedding)
+        score = similarityscore(postvector, embedding)
+        if (score > .85):
+            returnlist.append(post.id)
+
+    # returnlist.append(syllabuscheck(posttext))
 
     return returnlist
 

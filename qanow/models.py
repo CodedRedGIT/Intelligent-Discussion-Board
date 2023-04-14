@@ -5,8 +5,7 @@ from django.db import models
 from django.dispatch import receiver
 from django.utils import timezone
 from django.db.models.signals import post_save
-
-from qanow.text_data import embeddingcreate
+import openai
 
 
 class Member(models.Model):
@@ -45,8 +44,22 @@ class Reply(models.Model):
         super().save(*args, **kwargs)
 
 
+def embeddingcreate(text):
+    response = openai.Embedding.create(
+        input=text,
+        model="text-embedding-ada-002"
+    )
+
+    vector = response['data'][0]['embedding']
+
+    # print(len(vector))
+    # print(vector)
+
+    return vector
+
+
 class TextData(models.Model):
-    embedding = models.CharField(max_length=4000)
+    embedding = models.JSONField()
 
 
 class Post(models.Model):

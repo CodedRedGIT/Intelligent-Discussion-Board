@@ -8,6 +8,8 @@ from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
 
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from qanow.text_data import processtext
 from .models import Class, Member, Post, Reply
 from .serializer import ClassSerializer, MemberSerializer, PostSerializer, ReplySerializer, UserSerializer
 
@@ -251,6 +253,35 @@ def create_reply(request):
 
 
 @api_view(['POST'])
+def create_post_request(request):
+
+    class_id = request.data.get('class_id')
+
+    try:
+        class_obj = Class.objects.get(id=class_id)
+    except Class.DoesNotExist:
+        return Response({'error': 'Class not found'}, status=404)
+
+    member_id = request.data.get('member_id')
+
+    try:
+        member = Member.objects.get(id=member_id)
+    except Member.DoesNotExist:
+        return Response({'error': 'Member not found'}, status=404)
+
+    prompt = request.data.get('prompt')
+    tag = request.data.get('tag')
+    title = request.data.get('title')
+
+    # process text
+    processed_text = processtext(prompt, class_id)
+
+    print(processed_text)
+
+    return Response(processed_text, status=201)
+
+
+@api_view(['POST'])
 def create_post(request):
 
     class_id = request.data.get('class_id')
@@ -270,7 +301,9 @@ def create_post(request):
     prompt = request.data.get('prompt')
     tag = request.data.get('tag')
     title = request.data.get('title')
-    new_post = Post.objects.create(member_id=member, prompt=prompt, title=title, tag=tag)
+
+    new_post = Post.objects.create(
+        member_id=member, prompt=prompt, title=title, tag=tag)
     data = {'id': new_post.id, 'member_id': new_post.member_id.id, 'prompt': new_post.prompt,
             'published_date': new_post.published_date, 'upvotes': new_post.upvotes, 'replies': []}
     for reply in new_post.replies.all():
