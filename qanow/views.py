@@ -270,7 +270,8 @@ def create_post(request):
     prompt = request.data.get('prompt')
     tag = request.data.get('tag')
     title = request.data.get('title')
-    new_post = Post.objects.create(member_id=member, prompt=prompt, title=title, tag=tag)
+    new_post = Post.objects.create(
+        member_id=member, prompt=prompt, title=title, tag=tag)
     data = {'id': new_post.id, 'member_id': new_post.member_id.id, 'prompt': new_post.prompt,
             'published_date': new_post.published_date, 'upvotes': new_post.upvotes, 'replies': []}
     for reply in new_post.replies.all():
@@ -279,3 +280,37 @@ def create_post(request):
 
     class_obj.posts.add(new_post)
     return Response(data, status=201)
+
+
+@api_view(['POST'])
+def upvote_post(request, id):
+    """
+    Upvote a specific post.
+    """
+    try:
+        post = Post.objects.get(id=id)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found'}, status=404)
+
+    post.upvotes += 1
+    post.save()
+
+    serializer = PostSerializer(post)
+    return Response(serializer.data, status=200)
+
+
+@api_view(['POST'])
+def upvote_reply(request, id):
+    """
+    Upvote a specific reply.
+    """
+    try:
+        reply = Reply.objects.get(id=id)
+    except Reply.DoesNotExist:
+        return Response({'error': 'Reply not found'}, status=404)
+
+    reply.upvotes += 1
+    reply.save()
+
+    serializer = ReplySerializer(reply)
+    return Response(serializer.data, status=200)

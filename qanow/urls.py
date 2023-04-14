@@ -20,8 +20,10 @@ urlpatterns = [
     path('posts/<str:id>/', views.get_post, name='get_post'),
     path('posts/<str:post_id>/replies/',
          views.get_post_replies, name='get_post_replies'),
+    path('posts/<str:id>/upvote/', views.upvote_post, name='upvote_post'),
     path('replies/', views.get_all_replies, name='get_all_replies'),
     path('replies/<str:id>/', views.get_reply, name='get_reply'),
+    path('replies/<str:id>/upvote/', views.upvote_reply, name='upvote_reply'),
     path('login/', views.login, name='login'),
     path('session/', views.get_session_data),
 ]
