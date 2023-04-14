@@ -350,3 +350,33 @@ def remove_upvote_reply(request, id):
 
     serializer = ReplySerializer(reply)
     return Response(serializer.data, status=200)
+
+
+@api_view(['DELETE'])
+def delete_post(request, id):
+    """
+    Delete a specific post.
+    """
+    try:
+        post = Post.objects.get(id=id)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found'}, status=404)
+
+    post.delete()
+
+    return Response({'message': 'Post deleted successfully'}, status=204)
+
+
+@api_view(['DELETE'])
+def delete_reply(request, id):
+    """
+    Delete a specific reply.
+    """
+    try:
+        reply = Reply.objects.get(id=id)
+    except Reply.DoesNotExist:
+        return Response({'error': 'Reply not found'}, status=404)
+
+    reply.delete()
+
+    return Response({'message': 'Reply deleted successfully'}, status=204)
