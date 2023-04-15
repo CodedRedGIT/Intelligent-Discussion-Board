@@ -8,14 +8,17 @@ import { Page } from '../../../components/layout/Page'
 import { LinkButton } from '../../../components/ui/LinkButton'
 import { Card } from '../../../components/layout/Card'
 import { useSessionContext } from '@/pages/api/auth/session'
+import { useCreatePostCheck } from '@/pages/api/useCreatePostCheck'
 
 const CreatePost: NextPage = () => {
+  const router = useRouter()
   const { sessionData } = useSessionContext()
   const { query } = useRouter()
   const class_id = query.id as string
   const [title, setTitle] = useState('')
   const [prompt, setPrompt] = useState('')
   const [tag, setTag] = useState('SYLLABUS')
+  const [showPopup, setShowPopup] = useState(false)
 
   const {
     isLoading: isCreating,
@@ -24,28 +27,73 @@ const CreatePost: NextPage = () => {
     createPost,
   } = useCreatePost()
 
+  const { data, createPostCheck } = useCreatePostCheck()
+
   const member_id = sessionData?.user_id ?? ''
+
+  const handleCreatePostCheck = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault() // Prevent the default form submission behavior
+    createPostCheck({ member_id, prompt, title, tag, class_id })
+
+    if (Array.isArray(data) && data.length === 0) {
+      createPost({ member_id, prompt, title, tag, class_id })
+      router.push(`/threads/${class_id}`)
+    } else {
+      setShowPopup(true)
+    }
+  }
 
   const handleCreatePost = () => {
     createPost({ member_id, prompt, title, tag, class_id })
-    console.log(member_id)
-    console.log(prompt)
-    console.log(title)
-    console.log(tag)
-    alert('Thread Posted') //run text processing
+    setShowPopup(false)
+    router.push(`/threads/${class_id}`)
   }
-  // const { loading, posts, error } = useRetrieveClassPosts(classId)
 
   return (
     <Page title='CreatePost'>
       <div className='flex justify-between items-center'>
         <h1 className='text-2xl font-bold'>Create Post</h1>
       </div>
+      {showPopup && (
+        <div className='fixed inset-0 overflow-y-auto'>
+          <div className='flex items-center justify-center min-h-screen px-4'>
+            <div className='fixed inset-0 bg-gray-500 opacity-50'></div>
+            <div className='relative bg-white rounded-lg'>
+              <div className='p-4'>
+                <h3 className='text-xl font-bold mb-2'>Post Already Exists</h3>
+                <p className='mb-2'>
+                  A post with the same title and prompt already exists in this
+                  class.
+                </p>
+                <p className='mb-4'>
+                  Click "Post anyways" to create a new post with the same title
+                  and prompt.
+                </p>
+                <div className='flex justify-between'>
+                  <button
+                    className='text-sm text-gray-500 font-medium'
+                    onClick={() => setShowPopup(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className='text-sm text-white bg-green-500 px-4 py-2 rounded-md font-medium'
+                    onClick={handleCreatePost}
+                  >
+                    Post anyways
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {createError && <p className='text-red-500'>{createError}</p>}
       {isCreating && <p>Loading...</p>}
       <div>
         <Card>
-          <form className='homeForm' onSubmit={handleCreatePost}>
+          <form className='homeForm' onSubmit={handleCreatePostCheck}>
             <div className='home__container'>
               <h3 style={{ marginBottom: 3 }}>Thread Prompt</h3>
               <input
@@ -83,40 +131,6 @@ const CreatePost: NextPage = () => {
           </form>
         </Card>
       </div>
-      {/* {!isCreating && !posts.length && (
-        <p className='text-gray-500'>No threads available</p>
-      )} */}
-      {/* {!!posts.length && (
-        <>
-          <span className='inline-block w-4' />
-          {posts.map(post => (
-            <Link href={`/post/${post.id}`} key={post.id} passHref>
-              <div>
-                <Card>
-                  <div className='p-4'>
-                    <div>
-                      <h3 className='text-2xl font-bold text-black mb-2'>
-                        {post.title}
-                      </h3>
-                      <div className='flex justify-between'>
-                        <small className='text-gray-500 text-sm'>
-                          {post.tag}
-                        </small>
-                        <small className='text-gray-500 text-sm'>
-                          {post.published_date}
-                        </small>
-                      </div>
-                      <p className='text-gray-500 text-lg mt-4'>
-                        {post.prompt.slice(0, 150)}...
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-              </div>
-            </Link>
-          ))}
-        </>
-      )} */}
     </Page>
   )
 }
