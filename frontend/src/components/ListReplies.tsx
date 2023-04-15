@@ -100,7 +100,7 @@ const ListReplies: React.FC<Props> = ({ postId }) => {
       <h2>Replies</h2>
       <div className='thread__replies'>
         {sortedReplies.map(reply => (
-          <Reply reply={reply} />
+          <Reply key={reply.id} reply={reply} />
         ))}
       </div>
     </div>
