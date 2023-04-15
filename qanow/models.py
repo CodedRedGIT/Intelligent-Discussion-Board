@@ -2,7 +2,10 @@ import uuid
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.dispatch import receiver
 from django.utils import timezone
+from django.db.models.signals import post_save
+import openai
 
 
 class Member(models.Model):
@@ -41,6 +44,24 @@ class Reply(models.Model):
         super().save(*args, **kwargs)
 
 
+def embedding_create(text):
+    response = openai.Embedding.create(
+        input=text,
+        model="text-embedding-ada-002"
+    )
+
+    vector = response['data'][0]['embedding']
+
+    # print(len(vector))
+    # print(vector)
+
+    return vector
+
+
+class TextData(models.Model):
+    embedding = models.JSONField()
+
+
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     member_id = models.ForeignKey(Member, null=False, on_delete=models.CASCADE)
@@ -58,6 +79,18 @@ class Post(models.Model):
         MISC = "MISC"
 
     tag = models.TextField(choices=Tags.choices, null=True, blank=True)
+    textData = models.ForeignKey(
+        TextData, on_delete=models.CASCADE, null=True)
+
+
+@receiver(post_save, sender=Post)
+def set_embedding(sender, instance, created, **kwargs):
+    if created and not instance.textData:
+        # Generate an embedding vector using the embeddingcreate function
+        vector = embedding_create(instance.prompt)
+        # Set the embedding foreign key on the Post instance
+        instance.textData = TextData.objects.create(embedding=vector)
+        instance.save()
 
 
 class Class(models.Model):

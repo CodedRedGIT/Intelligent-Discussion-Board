@@ -8,6 +8,8 @@ from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
 
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from qanow.text_data import process_text
 from .models import Class, Member, Post, Reply
 from .serializer import ClassSerializer, MemberSerializer, PostSerializer, ReplySerializer, UserSerializer
 
@@ -251,6 +253,34 @@ def create_reply(request):
 
 
 @api_view(['POST'])
+def create_post_check(request):
+
+    class_id = request.data.get('class_id')
+
+    try:
+        class_obj = Class.objects.get(id=class_id)
+    except Class.DoesNotExist:
+        return Response({'error': 'Class not found'}, status=404)
+
+    member_id = request.data.get('member_id')
+
+    try:
+        member = Member.objects.get(id=member_id)
+    except Member.DoesNotExist:
+        return Response({'error': 'Member not found'}, status=404)
+
+    prompt = request.data.get('prompt')
+    tag = request.data.get('tag')
+    title = request.data.get('title')
+
+    # process text
+    processed_text = process_text(prompt, class_id)
+
+    # will return a json reponse of all post id's that are similar
+    return Response(processed_text, status=201)
+
+
+@api_view(['POST'])
 def create_post(request):
 
     class_id = request.data.get('class_id')
@@ -270,6 +300,7 @@ def create_post(request):
     prompt = request.data.get('prompt')
     tag = request.data.get('tag')
     title = request.data.get('title')
+
     new_post = Post.objects.create(
         member_id=member, prompt=prompt, title=title, tag=tag)
     data = {'id': new_post.id, 'member_id': new_post.member_id.id, 'prompt': new_post.prompt,
@@ -280,103 +311,3 @@ def create_post(request):
 
     class_obj.posts.add(new_post)
     return Response(data, status=201)
-
-
-@api_view(['POST'])
-def upvote_post(request, id):
-    """
-    Upvote a specific post.
-    """
-    try:
-        post = Post.objects.get(id=id)
-    except Post.DoesNotExist:
-        return Response({'error': 'Post not found'}, status=404)
-
-    post.upvotes += 1
-    post.save()
-
-    serializer = PostSerializer(post)
-    return Response(serializer.data, status=200)
-
-
-@api_view(['POST'])
-def upvote_reply(request, id):
-    """
-    Upvote a specific reply.
-    """
-    try:
-        reply = Reply.objects.get(id=id)
-    except Reply.DoesNotExist:
-        return Response({'error': 'Reply not found'}, status=404)
-
-    reply.upvotes += 1
-    reply.save()
-
-    serializer = ReplySerializer(reply)
-    return Response(serializer.data, status=200)
-
-
-@api_view(['POST'])
-def remove_upvote_post(request, id):
-    """
-    Remove an upvote from a specific post.
-    """
-    try:
-        post = Post.objects.get(id=id)
-    except Post.DoesNotExist:
-        return Response({'error': 'Post not found'}, status=404)
-
-    if post.upvotes > 0:
-        post.upvotes -= 1
-        post.save()
-
-    serializer = PostSerializer(post)
-    return Response(serializer.data, status=200)
-
-
-@api_view(['POST'])
-def remove_upvote_reply(request, id):
-    """
-    Remove an upvote from a specific reply.
-    """
-    try:
-        reply = Reply.objects.get(id=id)
-    except Reply.DoesNotExist:
-        return Response({'error': 'Reply not found'}, status=404)
-
-    if reply.upvotes > 0:
-        reply.upvotes -= 1
-        reply.save()
-
-    serializer = ReplySerializer(reply)
-    return Response(serializer.data, status=200)
-
-
-@api_view(['DELETE'])
-def delete_post(request, id):
-    """
-    Delete a specific post.
-    """
-    try:
-        post = Post.objects.get(id=id)
-    except Post.DoesNotExist:
-        return Response({'error': 'Post not found'}, status=404)
-
-    post.delete()
-
-    return Response({'message': 'Post deleted successfully'}, status=204)
-
-
-@api_view(['DELETE'])
-def delete_reply(request, id):
-    """
-    Delete a specific reply.
-    """
-    try:
-        reply = Reply.objects.get(id=id)
-    except Reply.DoesNotExist:
-        return Response({'error': 'Reply not found'}, status=404)
-
-    reply.delete()
-
-    return Response({'message': 'Reply deleted successfully'}, status=204)
