@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-type ItemType = 'post' | 'reply'
+type ItemType = 'posts' | 'replies'
 
 export const useUpvote = (id: string, type: ItemType) => {
   const [isLoading, setIsLoading] = useState(false)
