@@ -253,7 +253,7 @@ def create_reply(request):
 
 
 @api_view(['POST'])
-def create_post_request(request):
+def create_post_check(request):
 
     class_id = request.data.get('class_id')
 
@@ -276,8 +276,7 @@ def create_post_request(request):
     # process text
     processed_text = process_text(prompt, class_id)
 
-    print(processed_text)
-
+    # will return a json reponse of all post id's that are similar
     return Response(processed_text, status=201)
 
 
