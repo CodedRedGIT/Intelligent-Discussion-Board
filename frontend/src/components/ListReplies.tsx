@@ -1,4 +1,5 @@
 import useRetrieveReplies from '@/pages/api/useRetrieveReplies'
+import { useUpvote } from '@/pages/api/useUpvote'
 import { faThumbsUp, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -15,26 +16,50 @@ const ListReplies: React.FC<Props> = ({ postId }) => {
     <div className='thread__container'>
       <h2>Replies</h2>
       <div className='thread__replies'>
-        {sortedReplies.map(reply => (
-          <div className='thread__item'>
-            <div
-              className='thread__reply'
-              dangerouslySetInnerHTML={{ __html: reply.prompt }}
-            ></div>
-            <div className='thread__info'>
-              <div className='thread__info__top'>
-                <small>{reply.published_date.substring(0, 10)}</small>
-                <small>{reply.published_date.substring(12, 19)}</small>
-                <small>{reply.upvotes} upvotes</small>
-                <small>{reply.email}</small>
-              </div>
-              <div className='thread__info__bottom'>
-                <FontAwesomeIcon icon={faThumbsUp} className='icon' />
-                <FontAwesomeIcon icon={faTrash} className='icon' />
+        {sortedReplies.map(reply => {
+          const { isLoading, error, success, upvote, removeUpvote } = useUpvote(
+            reply.id,
+            'reply',
+          )
+
+          const handleUpvote = () => {
+            upvote()
+          }
+
+          const handleRemoveUpvote = () => {
+            removeUpvote()
+          }
+
+          return (
+            <div className='thread__item' key={reply.id}>
+              <div
+                className='thread__reply'
+                dangerouslySetInnerHTML={{ __html: reply.prompt }}
+              ></div>
+              <div className='thread__info'>
+                <div className='thread__info__top'>
+                  <small>{reply.published_date.substring(0, 10)}</small>
+                  <small>{reply.published_date.substring(12, 19)}</small>
+                  <small>
+                    <button onClick={handleUpvote} disabled={isLoading}>
+                      <FontAwesomeIcon icon={faThumbsUp} className='icon' />
+                      {isLoading ? 'Loading...' : `${reply.upvotes} upvotes`}
+                    </button>
+                  </small>
+                  <small>{reply.email}</small>
+                </div>
+                <div className='thread__info__bottom'>
+                  <button onClick={handleRemoveUpvote} disabled={isLoading}>
+                    <FontAwesomeIcon icon={faTrash} className='icon' />
+                    {isLoading ? 'Loading...' : 'Delete'}
+                  </button>
+                  {success && <div className='success'>Success!</div>}
+                  {error && <div className='error'>{error}</div>}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

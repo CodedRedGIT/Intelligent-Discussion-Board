@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
 interface Reply {
+  id: string
   prompt: string
   upvotes: number
   published_date: string

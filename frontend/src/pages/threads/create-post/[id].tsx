@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { useCreatePost } from '@/pages/api/useCreatePost'
@@ -16,6 +16,9 @@ const CreatePost: NextPage = () => {
   const [prompt, setPrompt] = useState('')
   const [tag, setTag] = useState('SYLLABUS')
   const [showPopup, setShowPopup] = useState(false)
+  const { data, createPostCheck } = useCreatePostCheck()
+  const member_id = sessionData?.user_id ?? ''
+  const [createPostCheckFinished, setCreatePostCheckFinished] = useState(false)
 
   const {
     isLoading: isCreating,
@@ -24,20 +27,31 @@ const CreatePost: NextPage = () => {
     createPost,
   } = useCreatePost()
 
-  const { data, createPostCheck } = useCreatePostCheck()
-
-  const member_id = sessionData?.user_id ?? ''
-
-  const handleCreatePostCheck = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault() // Prevent the default form submission behavior
-    createPostCheck({ member_id, prompt, title, tag, class_id })
-
-    if (Array.isArray(data) && data.length === 0) {
-      createPost({ member_id, prompt, title, tag, class_id })
-      router.push(`/threads/${class_id}`)
-    } else {
-      setShowPopup(true)
+  useEffect(() => {
+    if (createPostCheckFinished) {
+      if (data.length === 0) {
+        createPost({ member_id, prompt, title, tag, class_id })
+        router.push(`/threads/${class_id}`)
+      } else {
+        console.log(data)
+        setShowPopup(true)
+      }
     }
+  }, [
+    createPostCheckFinished,
+    data,
+    member_id,
+    prompt,
+    title,
+    tag,
+    class_id,
+    router,
+  ])
+
+  const handleCreatePostCheck = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault() // Prevent the default form submission behavior
+    await createPostCheck({ member_id, prompt, title, tag, class_id })
+    setCreatePostCheckFinished(true)
   }
 
   const handleCreatePost = () => {
@@ -69,10 +83,14 @@ const CreatePost: NextPage = () => {
                 <div className='flex justify-between'>
                   <button
                     className='text-sm text-gray-500 font-medium'
-                    onClick={() => setShowPopup(false)}
+                    onClick={() => {
+                      setShowPopup(false)
+                      setCreatePostCheckFinished(false)
+                    }}
                   >
                     Cancel
                   </button>
+
                   <button
                     className='text-sm text-white bg-green-500 px-4 py-2 rounded-md font-medium'
                     onClick={handleCreatePost}

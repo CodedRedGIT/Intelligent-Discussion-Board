@@ -32,6 +32,7 @@ class Member(models.Model):
 
 
 class Reply(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     member_id = models.ForeignKey(
         Member, null=False, on_delete=models.DO_NOTHING)
     published_date = models.DateTimeField(default=timezone.now)

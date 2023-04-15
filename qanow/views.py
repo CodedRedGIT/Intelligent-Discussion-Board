@@ -276,6 +276,7 @@ def create_post_check(request):
     # process text
     processed_text = process_text(prompt, class_id)
 
+    print(processed_text)
     # will return a json reponse of all post id's that are similar
     return Response(processed_text, status=201)
 
