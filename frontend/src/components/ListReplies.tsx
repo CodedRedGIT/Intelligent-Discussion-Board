@@ -7,6 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
+import { useDeleteItem } from '@/pages/api/useDeleteItem'
 
 interface ReplyProps {
   reply: any
@@ -17,6 +18,13 @@ const Reply: React.FC<ReplyProps> = ({ reply }) => {
     reply.id,
     'replies',
   )
+
+  const {
+    isLoading: deleteIsLoading,
+    error: deleteError,
+    success: deleteSuccess,
+    deleteItem,
+  } = useDeleteItem(reply.id, 'replies')
 
   const [showUpvoteButton, setShowUpvoteButton] = useState(!success)
   const [upvotes, setUpvotes] = useState(reply.upvotes)
@@ -31,6 +39,11 @@ const Reply: React.FC<ReplyProps> = ({ reply }) => {
     removeUpvote()
     setShowUpvoteButton(true)
     setUpvotes(upvotes - 1)
+  }
+
+  const handleDelete = () => {
+    deleteItem()
+    window.location.reload()
   }
 
   return (
@@ -60,10 +73,12 @@ const Reply: React.FC<ReplyProps> = ({ reply }) => {
           <small>{reply.email}</small>
         </div>
         <div className='thread__info__bottom'>
-          <button onClick={handleRemoveUpvote} disabled={isLoading}>
+          <button onClick={handleDelete} disabled={deleteIsLoading}>
             <FontAwesomeIcon icon={faTrash} className='icon' />
-            {isLoading ? 'Loading...' : 'Delete'}
+            {deleteIsLoading ? 'Loading...' : 'Delete'}
           </button>
+          {deleteSuccess && <div className='success'>Success!</div>}
+          {deleteError && <div className='error'>{deleteError}</div>}
           {error && <div className='error'>{error}</div>}
         </div>
       </div>

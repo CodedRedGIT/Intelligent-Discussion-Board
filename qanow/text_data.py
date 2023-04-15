@@ -4,7 +4,7 @@ from nltk.corpus import stopwords
 import numpy as np
 
 from .models import Class
-openai.api_key = "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"
+openai.api_key = "input_key_from_github_here"
 
 # TODO, figure out how to access the other uploaded documents in the DB. The same API calls should be usable
 
