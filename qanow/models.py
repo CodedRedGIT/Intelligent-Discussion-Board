@@ -85,11 +85,11 @@ class Post(models.Model):
 
 @receiver(post_save, sender=Post)
 def set_embedding(sender, instance, created, **kwargs):
-    if created and not instance.embedding:
+    if created and not instance.textData:
         # Generate an embedding vector using the embeddingcreate function
         vector = embedding_create(instance.prompt)
         # Set the embedding foreign key on the Post instance
-        instance.embedding = TextData.objects.create(embedding=vector)
+        instance.textData = TextData.objects.create(embedding=vector)
         instance.save()
 
 

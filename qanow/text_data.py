@@ -4,7 +4,7 @@ from nltk.corpus import stopwords
 import numpy as np
 
 from .models import Class
-openai.api_key = "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"
+openai.api_key = "insert_api_key_here_from_discord"
 
 # TODO, figure out how to access the other uploaded documents in the DB. The same API calls should be usable
 
