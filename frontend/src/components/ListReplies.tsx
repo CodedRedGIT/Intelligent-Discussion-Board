@@ -9,8 +9,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import { useDeleteItem } from '@/pages/api/useDeleteItem'
 
+interface Reply {
+  id: string
+  prompt: string
+  upvotes: number
+  published_date: string
+  email: string
+  parent_reply?: Reply
+  child_replies?: Reply[]
+}
+
 interface ReplyProps {
-  reply: any
+  reply: Reply
 }
 
 const Reply: React.FC<ReplyProps> = ({ reply }) => {
@@ -82,6 +92,13 @@ const Reply: React.FC<ReplyProps> = ({ reply }) => {
           {error && <div className='error'>{error}</div>}
         </div>
       </div>
+      {reply.child_replies && (
+        <div className='thread__child-replies'>
+          {reply.child_replies.map(childReply => (
+            <Reply key={childReply.id} reply={childReply} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

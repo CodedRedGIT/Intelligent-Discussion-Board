@@ -6,6 +6,8 @@ interface Reply {
   upvotes: number
   published_date: string
   email: string
+  parent_reply?: Reply
+  child_replies?: Reply[]
 }
 
 interface Member {
