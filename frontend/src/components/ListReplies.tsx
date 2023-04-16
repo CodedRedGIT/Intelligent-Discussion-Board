@@ -109,8 +109,19 @@ interface Props {
 
 const ListReplies: React.FC<Props> = ({ postId }) => {
   const { replies } = useRetrieveReplies(postId)
+  const [isLiked, setLike] = useState<boolean>(false)
 
   const sortedReplies = [...replies].sort((a, b) => b.upvotes - a.upvotes)
+
+  const like = (isLiked: boolean) => {
+    if (isLiked) {
+      isLiked = false
+      alert('Unliked')
+    } else {
+      isLiked = true
+      alert('Liked')
+    }
+  }
 
   return (
     <div className='thread__container'>

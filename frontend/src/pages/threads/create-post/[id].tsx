@@ -136,10 +136,10 @@ const CreatePost: NextPage = () => {
                 }}
                 value={tag}
               >
+                <option value='MISC'>MISC</option>
                 <option value='SYLLABUS'>SYLLABUS</option>
                 <option value='HW'>HW</option>
                 <option value='EXAM'>EXAM</option>
-                <option value='MISC'>MISC</option>
               </select>
               <button className='homeBtn'>Submit</button>
             </div>
