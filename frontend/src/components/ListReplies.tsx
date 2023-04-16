@@ -1,6 +1,107 @@
 import useRetrieveReplies from '@/pages/api/useRetrieveReplies'
-import { faThumbsUp, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { useUpvote } from '@/pages/api/useUpvote'
+import {
+  faThumbsDown,
+  faThumbsUp,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useState } from 'react'
+import { useDeleteItem } from '@/pages/api/useDeleteItem'
+
+interface Reply {
+  id: string
+  prompt: string
+  upvotes: number
+  published_date: string
+  email: string
+  parent_reply?: Reply
+  child_replies?: Reply[]
+}
+
+interface ReplyProps {
+  reply: Reply
+}
+
+const Reply: React.FC<ReplyProps> = ({ reply }) => {
+  const { isLoading, error, success, upvote, removeUpvote } = useUpvote(
+    reply.id,
+    'replies',
+  )
+
+  const {
+    isLoading: deleteIsLoading,
+    error: deleteError,
+    success: deleteSuccess,
+    deleteItem,
+  } = useDeleteItem(reply.id, 'replies')
+
+  const [showUpvoteButton, setShowUpvoteButton] = useState(!success)
+  const [upvotes, setUpvotes] = useState(reply.upvotes)
+
+  const handleUpvote = () => {
+    upvote()
+    setShowUpvoteButton(false)
+    setUpvotes(upvotes + 1)
+  }
+
+  const handleRemoveUpvote = () => {
+    removeUpvote()
+    setShowUpvoteButton(true)
+    setUpvotes(upvotes - 1)
+  }
+
+  const handleDelete = () => {
+    deleteItem()
+    window.location.reload()
+  }
+
+  return (
+    <div className='thread__item' key={reply.id}>
+      <div
+        className='thread__reply'
+        dangerouslySetInnerHTML={{ __html: reply.prompt }}
+      ></div>
+      <div className='thread__info'>
+        <div className='thread__info__top'>
+          <small>{reply.published_date.substring(0, 10)}</small>
+          <small>{reply.published_date.substring(12, 19)}</small>
+          <small>
+            {showUpvoteButton && (
+              <button onClick={handleUpvote} disabled={isLoading}>
+                <FontAwesomeIcon icon={faThumbsUp} className='icon' />
+                {isLoading ? 'Loading...' : `${upvotes} upvotes`}
+              </button>
+            )}
+            {!showUpvoteButton && (
+              <button onClick={handleRemoveUpvote} disabled={isLoading}>
+                <FontAwesomeIcon icon={faThumbsDown} className='icon' />
+                {isLoading ? 'Loading...' : `${upvotes} upvotes`}
+              </button>
+            )}
+          </small>
+          <small>{reply.email}</small>
+        </div>
+        <div className='thread__info__bottom'>
+          <button onClick={handleDelete} disabled={deleteIsLoading}>
+            <FontAwesomeIcon icon={faTrash} className='icon' />
+            {deleteIsLoading ? 'Loading...' : 'Delete'}
+          </button>
+          {deleteSuccess && <div className='success'>Success!</div>}
+          {deleteError && <div className='error'>{deleteError}</div>}
+          {error && <div className='error'>{error}</div>}
+        </div>
+      </div>
+      {reply.child_replies && (
+        <div className='thread__child-replies'>
+          {reply.child_replies.map(childReply => (
+            <Reply key={childReply.id} reply={childReply} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 interface Props {
   postId: string
@@ -16,24 +117,7 @@ const ListReplies: React.FC<Props> = ({ postId }) => {
       <h2>Replies</h2>
       <div className='thread__replies'>
         {sortedReplies.map(reply => (
-          <div className='thread__item'>
-            <div
-              className='thread__reply'
-              dangerouslySetInnerHTML={{ __html: reply.prompt }}
-            ></div>
-            <div className='thread__info'>
-              <div className='thread__info__top'>
-                <small>{reply.published_date.substring(0, 10)}</small>
-                <small>{reply.published_date.substring(12, 19)}</small>
-                <small>{reply.upvotes} upvotes</small>
-                <small>{reply.email}</small>
-              </div>
-              <div className='thread__info__bottom'>
-                <FontAwesomeIcon icon={faThumbsUp} className='icon' />
-                <FontAwesomeIcon icon={faTrash} className='icon' />
-              </div>
-            </div>
-          </div>
+          <Reply key={reply.id} reply={reply} />
         ))}
       </div>
     </div>

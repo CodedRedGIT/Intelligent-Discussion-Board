@@ -276,6 +276,7 @@ def create_post_check(request):
     # process text
     processed_text = process_text(prompt, class_id)
 
+    print(processed_text)
     # will return a json reponse of all post id's that are similar
     return Response(processed_text, status=201)
 
@@ -311,3 +312,103 @@ def create_post(request):
 
     class_obj.posts.add(new_post)
     return Response(data, status=201)
+
+
+@api_view(['POST'])
+def upvote_post(request, id):
+    """
+    Upvote a specific post.
+    """
+    try:
+        post = Post.objects.get(id=id)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found'}, status=404)
+
+    post.upvotes += 1
+    post.save()
+
+    serializer = PostSerializer(post)
+    return Response(serializer.data, status=200)
+
+
+@api_view(['POST'])
+def upvote_reply(request, id):
+    """
+    Upvote a specific reply.
+    """
+    try:
+        reply = Reply.objects.get(id=id)
+    except Reply.DoesNotExist:
+        return Response({'error': 'Reply not found'}, status=404)
+
+    reply.upvotes += 1
+    reply.save()
+
+    serializer = ReplySerializer(reply)
+    return Response(serializer.data, status=200)
+
+
+@api_view(['POST'])
+def remove_upvote_post(request, id):
+    """
+    Remove an upvote from a specific post.
+    """
+    try:
+        post = Post.objects.get(id=id)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found'}, status=404)
+
+    if post.upvotes > 0:
+        post.upvotes -= 1
+        post.save()
+
+    serializer = PostSerializer(post)
+    return Response(serializer.data, status=200)
+
+
+@api_view(['POST'])
+def remove_upvote_reply(request, id):
+    """
+    Remove an upvote from a specific reply.
+    """
+    try:
+        reply = Reply.objects.get(id=id)
+    except Reply.DoesNotExist:
+        return Response({'error': 'Reply not found'}, status=404)
+
+    if reply.upvotes > 0:
+        reply.upvotes -= 1
+        reply.save()
+
+    serializer = ReplySerializer(reply)
+    return Response(serializer.data, status=200)
+
+
+@api_view(['DELETE'])
+def delete_post(request, id):
+    """
+    Delete a specific post.
+    """
+    try:
+        post = Post.objects.get(id=id)
+    except Post.DoesNotExist:
+        return Response({'error': 'Post not found'}, status=404)
+
+    post.delete()
+
+    return Response({'message': 'Post deleted successfully'}, status=204)
+
+
+@api_view(['DELETE'])
+def delete_reply(request, id):
+    """
+    Delete a specific reply.
+    """
+    try:
+        reply = Reply.objects.get(id=id)
+    except Reply.DoesNotExist:
+        return Response({'error': 'Reply not found'}, status=404)
+
+    reply.delete()
+
+    return Response({'message': 'Reply deleted successfully'}, status=204)

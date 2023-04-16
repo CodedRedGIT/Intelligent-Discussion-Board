@@ -30,7 +30,7 @@ const Threads: NextPage = () => {
         <>
           <span className='inline-block w-4' />
           {posts.map(post => (
-            <>
+            <div key={post.id}>
               <Link href={`/post/${post.id}`} key={post.id} passHref>
                 <div>
                   <Card>
@@ -58,7 +58,7 @@ const Threads: NextPage = () => {
                 </div>
               </Link>
               <span className='inline-block w-4' />
-            </>
+            </div>
           ))}
         </>
       )}

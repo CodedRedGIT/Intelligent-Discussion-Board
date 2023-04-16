@@ -32,12 +32,15 @@ class Member(models.Model):
 
 
 class Reply(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     member_id = models.ForeignKey(
         Member, null=False, on_delete=models.DO_NOTHING)
     published_date = models.DateTimeField(default=timezone.now)
     prompt = models.CharField(max_length=2000)
     upvotes = models.IntegerField(default=0)
     email = models.EmailField(default='', null=True, blank=True)
+    parent_reply = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE, related_name='child_replies')
 
     def save(self, *args, **kwargs):
         self.email = self.member_id.user.email
