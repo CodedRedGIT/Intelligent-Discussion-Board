@@ -27,6 +27,8 @@ urlpatterns = [
          views.remove_upvote_post, name='remove_upvote_post'),
     path('posts/<str:id>/delete/', views.delete_post, name='delete_post'),
     path('replies/', views.get_all_replies, name='get_all_replies'),
+    path('replies/create/',
+         views.create_nested_reply, name='create_nested_reply'),
     path('replies/<str:id>/', views.get_reply, name='get_reply'),
     path('replies/<str:id>/upvote/', views.upvote_reply, name='upvote_reply'),
     path('replies/<str:id>/remove_upvote/',

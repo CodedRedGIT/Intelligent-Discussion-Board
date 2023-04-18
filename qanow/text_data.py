@@ -2,9 +2,11 @@ import openai
 import nltk
 from nltk.corpus import stopwords
 import numpy as np
+import os
 
 from .models import Class
-openai.api_key = "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"
+
+openai.api_key = os.environ["OPENAI"]
 
 # TODO, figure out how to access the other uploaded documents in the DB. The same API calls should be usable
 
