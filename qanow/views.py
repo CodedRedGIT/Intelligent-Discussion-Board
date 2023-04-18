@@ -246,6 +246,7 @@ def create_reply(request):
 
     new_reply = Reply.objects.create(
         member_id=member, prompt=prompt)
+    new_reply.files.set(request.FILES.getlist('file'))
     post.replies.add(new_reply)
     data = {'id': new_reply.id, 'member_id': new_reply.member_id.id,
             'prompt': new_reply.prompt, 'upvotes': new_reply.upvotes}
@@ -308,6 +309,8 @@ def create_post(request):
 
     new_post = Post.objects.create(
         member_id=member, prompt=prompt, title=title, tag=tag)
+    
+    new_post.files.set(request.FILES.getlist('file'))
     data = {'id': new_post.id, 'member_id': new_post.member_id.id, 'prompt': new_post.prompt,
             'published_date': new_post.published_date, 'upvotes': new_post.upvotes, 'replies': []}
     for reply in new_post.replies.all():
