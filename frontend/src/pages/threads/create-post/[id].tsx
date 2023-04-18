@@ -7,6 +7,7 @@ import { Card } from '../../../components/layout/Card'
 import { useSessionContext } from '@/pages/api/auth/session'
 import { useCreatePostCheck } from '@/pages/api/useCreatePostCheck'
 import useRetrievePost from '@/pages/api/useRetrievePost'
+import Link from 'next/link'
 
 interface Post {
   title: string
@@ -38,7 +39,7 @@ const CreatePost: NextPage = () => {
   const [prompt, setPrompt] = useState('')
   const [tag, setTag] = useState('MISC')
   const [showPopup, setShowPopup] = useState(false)
-  const { data, createPostCheck } = useCreatePostCheck()
+  const { posts, createPostCheck } = useCreatePostCheck()
   const member_id = sessionData?.user_id ?? ''
   const [createPostCheckFinished, setCreatePostCheckFinished] = useState(false)
 
@@ -51,18 +52,18 @@ const CreatePost: NextPage = () => {
 
   useEffect(() => {
     if (createPostCheckFinished) {
-      if (data.length === 0) {
+      if (posts.length === 0) {
         createPost({ member_id, prompt, title, tag, class_id })
         router.push(`/threads/${class_id}`)
         window.location.reload()
       } else {
-        console.log(data)
+        console.log(posts)
         setShowPopup(true)
       }
     }
   }, [
     createPostCheckFinished,
-    data,
+    posts,
     member_id,
     prompt,
     title,
@@ -112,10 +113,9 @@ const CreatePost: NextPage = () => {
                   Click "Post anyways" to create a new post with the same title
                   and prompt.
                 </p>
-                {data &&
-                  printPosts(data).map(posts => {
-                    ;<p>{posts.post?.prompt}</p>
-                  })}
+                {posts.map(post => (
+                  <Link href={`posts/${post.id}`}>{post.title}</Link>
+                ))}
                 <div className='flex justify-between'>
                   <button
                     className='text-sm text-gray-500 font-medium'
