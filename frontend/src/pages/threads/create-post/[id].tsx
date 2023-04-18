@@ -113,9 +113,13 @@ const CreatePost: NextPage = () => {
                   Click "Post anyways" to create a new post with the same title
                   and prompt.
                 </p>
-                {posts.map(post => (
-                  <Link href={`posts/${post.id}`}>{post.title}</Link>
-                ))}
+                <div className='grid'>
+                  {posts.map(post => (
+                    <Link href={`/post/${post.id}`} replace>
+                      {post.title}
+                    </Link>
+                  ))}
+                </div>
                 <div className='flex justify-between'>
                   <button
                     className='text-sm text-gray-500 font-medium'
