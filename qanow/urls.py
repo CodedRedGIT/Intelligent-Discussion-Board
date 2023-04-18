@@ -31,6 +31,8 @@ urlpatterns = [
     path('replies/<str:id>/upvote/', views.upvote_reply, name='upvote_reply'),
     path('replies/<str:id>/remove_upvote/',
          views.remove_upvote_reply, name='remove_upvote_reply'),
+    path('replies/<str:id>/create/',
+         views.create_nested_reply, name='create_nested_reply'),
     path('replies/<str:id>/delete/', views.delete_reply, name='delete_reply'),
     path('login/', views.login, name='login'),
     path('session/', views.get_session_data),

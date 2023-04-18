@@ -252,6 +252,31 @@ def create_reply(request):
             'prompt': new_reply.prompt, 'upvotes': new_reply.upvotes}
     return Response(data, status=201)
 
+@api_view(['POST'])
+def create_nested_reply(request):
+    reply_id = request.data.get('reply_id')
+
+    try:
+        parent_reply = Reply.objects.get(id=reply_id)
+    except Reply.DoesNotExist:
+        return Response({'error': 'Reply not found'}, status=404)
+
+    member_id = request.data.get('member_id')
+    prompt = request.data.get('prompt')
+
+    member = Member.objects.get(id=member_id)
+
+    new_reply = Reply.objects.create(
+        member_id=member,
+        prompt=prompt,
+        parent_reply=parent_reply,
+    )
+    new_reply.files.set(request.FILES.getlist('file'))
+
+    serializer = ReplySerializer(new_reply)
+    return Response(serializer.data, status=201)
+
+
 
 @api_view(['POST'])
 def create_post_check(request):
