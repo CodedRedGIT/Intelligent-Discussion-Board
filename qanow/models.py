@@ -29,6 +29,9 @@ class Member(models.Model):
 
     def get_classes(self):
         return Class.objects.filter(members=self)
+    
+class File(models.Model):
+    file = models.FileField(upload_to='post_files/')
 
 
 class Reply(models.Model):
@@ -41,6 +44,7 @@ class Reply(models.Model):
     email = models.EmailField(default='', null=True, blank=True)
     parent_reply = models.ForeignKey(
         'self', null=True, blank=True, on_delete=models.CASCADE, related_name='child_replies')
+    files = models.ManyToManyField('File', blank=True)
 
     def save(self, *args, **kwargs):
         self.email = self.member_id.user.email
@@ -72,6 +76,7 @@ class Post(models.Model):
     prompt = models.CharField(max_length=2000)
     published_date = models.DateTimeField(default=timezone.now)
     upvotes = models.IntegerField(default=0)
+    files = models.ManyToManyField('File', blank=True)
 
     replies = models.ManyToManyField(Reply, blank=True, related_name='replies')
 
@@ -103,3 +108,4 @@ class Class(models.Model):
     members = models.ManyToManyField(
         Member, blank=True, related_name='members')
     owners = models.ManyToManyField(Member, blank=True, related_name='owners')
+    files = models.ManyToManyField('File', blank=True)

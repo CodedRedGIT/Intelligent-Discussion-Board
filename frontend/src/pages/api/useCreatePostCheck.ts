@@ -1,10 +1,15 @@
 import { useState } from 'react'
 
+interface Post {
+  id: number
+  prompt: string
+  title: string
+}
+
 export const useCreatePostCheck = () => {
-  const [isLoading, setIsLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<boolean>(false)
-  const [data, setData] = useState<any>(null)
+  const [posts, setPosts] = useState<Post[]>([])
 
   const createPostCheck = async (newPost: {
     member_id: string
@@ -13,7 +18,7 @@ export const useCreatePostCheck = () => {
     tag: string
     class_id: string
   }) => {
-    setIsLoading(true)
+    setLoading(true)
 
     try {
       const response = await fetch(
@@ -33,21 +38,24 @@ export const useCreatePostCheck = () => {
       }
 
       const responseData = await response.json()
-      setData(responseData)
-      setSuccess(true)
+      const processedPosts = responseData.map((item: any) => ({
+        id: item.post_id,
+        prompt: item.prompt,
+        title: item.title,
+      }))
+      setPosts(processedPosts)
       setError(null)
     } catch (error: any) {
       setError(error.message)
     } finally {
-      setIsLoading(false)
+      setLoading(false)
     }
   }
 
   return {
-    isLoading,
+    posts,
+    loading,
     error,
-    success,
-    data,
     createPostCheck,
   }
 }
