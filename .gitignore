@@ -259,3 +259,6 @@ venv/Scripts/pip3.exe
 venv/Scripts/deactivate.bat
 
 venv/include
+
+!.env
+.env.local
