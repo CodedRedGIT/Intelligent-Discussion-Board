@@ -254,7 +254,6 @@ def create_reply(request):
 
 @api_view(['POST'])
 def create_post_check(request):
-
     class_id = request.data.get('class_id')
 
     try:
@@ -270,15 +269,18 @@ def create_post_check(request):
         return Response({'error': 'Member not found'}, status=404)
 
     prompt = request.data.get('prompt')
-    tag = request.data.get('tag')
-    title = request.data.get('title')
 
     # process text
-    processed_text = process_text(prompt, class_id)
+    processed_text_dict = process_text(prompt, class_id)
 
-    print(processed_text)
-    # will return a json reponse of all post id's that are similar
-    return Response(processed_text, status=201)
+    # create a list of dictionaries containing post IDs and titles/prompts
+    response_data = []
+    for post_id, title in processed_text_dict.items():
+        response_data.append({'post_id': post_id, 'title': title})
+
+    # return the list of dictionaries as a JSON response
+    return Response(response_data, status=201)
+
 
 
 @api_view(['POST'])
