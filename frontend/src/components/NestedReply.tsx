@@ -1,16 +1,20 @@
-import useRetrieveReplies from '@/pages/api/useRetrieveReplies'
+import { useSessionContext } from '@/pages/api/auth/session'
+import { useCreateReply } from '@/pages/api/useCreateReply'
+import { useDeleteItem } from '@/pages/api/useDeleteItem'
 import { useUpvote } from '@/pages/api/useUpvote'
 import {
-  faThumbsDown,
   faThumbsUp,
+  faThumbsDown,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
-import { useDeleteItem } from '@/pages/api/useDeleteItem'
-import { Button } from './ui/Button'
-import ReplyForm from './ReplyForm'
-import NestedReply from './NestedReply'
+import React, { useState } from 'react'
+
+interface Props {
+  parentId: Reply | undefined
+  replyId: Reply
+  post_id: string
+}
 
 interface Reply {
   id: string
@@ -110,7 +114,18 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
           </div>
         </div>
         {isReplying && (
-          <NestedReply parentId={reply} replyId={reply} post_id={post_id} />
+          <div style={{ height: '200px', overflowY: 'scroll', flexGrow: 1 }}>
+            <form>
+              <textarea
+                required
+                rows={8}
+                className='modalInput'
+                name='Thread Prompt'
+                value={prompt}
+                onChange={e => setPrompt(e.target.value)}
+              />
+            </form>
+          </div>
         )}
       </div>
       {reply.child_replies && (
@@ -124,36 +139,60 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
   )
 }
 
-interface Props {
-  postId: string
-}
+const NestedReply: React.FC<Props> = ({ parentId, replyId, post_id }) => {
+  const [prompt, setPrompt] = useState('')
 
-const ListReplies: React.FC<Props> = ({ postId }) => {
-  const { replies } = useRetrieveReplies(postId)
-  const [isLiked, setLike] = useState<boolean>(false)
+  const { sessionData } = useSessionContext()
+  const member_id = sessionData?.user_id
 
-  const sortedReplies = [...replies].sort((a, b) => b.upvotes - a.upvotes)
+  const {
+    isLoading: isCreating,
+    error: createError,
+    success,
+    createReply,
+  } = useCreateReply()
 
-  const like = (isLiked: boolean) => {
-    if (isLiked) {
-      isLiked = false
-      alert('Unliked')
-    } else {
-      isLiked = true
-      alert('Liked')
-    }
+  const handleSubmit = () => {
+    parentId?.child_replies?.push(replyId)
+    window.location.reload()
   }
 
   return (
-    <div className='thread__container'>
-      <h2>Replies</h2>
-      <div className='thread__replies'>
-        {sortedReplies.map(reply => (
-          <Reply key={reply.id} reply={reply} post_id={postId} />
-        ))}
-      </div>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div
+          className='form-group'
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+          }}
+        >
+          <h2>Reply:</h2>
+          <span className='inline-block w-4' />
+          <div style={{ height: '200px', overflowY: 'scroll', flexGrow: 1 }}>
+            {/* <ReactQuill
+            value={prompt}
+            onChange={setPrompt}
+            style={{ height: '100%', width: '100%' }}
+          /> */}
+            <textarea
+              required
+              rows={8}
+              className='modalInput'
+              name='Thread Prompt'
+              value={prompt}
+              onChange={e => setPrompt(e.target.value)}
+            />
+          </div>
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <button type='submit' className='btn btn-primary'>
+            Submit
+          </button>
+        </div>
+      </form>
     </div>
   )
 }
-
-export default ListReplies
+export default NestedReply

@@ -6,6 +6,28 @@ import { Page } from '../../../components/layout/Page'
 import { Card } from '../../../components/layout/Card'
 import { useSessionContext } from '@/pages/api/auth/session'
 import { useCreatePostCheck } from '@/pages/api/useCreatePostCheck'
+import useRetrievePost from '@/pages/api/useRetrievePost'
+
+interface Post {
+  title: string
+  prompt: string
+  tag: string
+  published_date: string
+  member_id: string
+}
+interface Member {
+  id: string
+  member_type: string
+  user: {
+    email: string
+  }
+}
+
+interface PostResponse {
+  post: Post | null
+  member: Member | null
+  error: string | null
+}
 
 const CreatePost: NextPage = () => {
   const router = useRouter()
@@ -14,7 +36,7 @@ const CreatePost: NextPage = () => {
   const class_id = query.id as string
   const [title, setTitle] = useState('')
   const [prompt, setPrompt] = useState('')
-  const [tag, setTag] = useState('SYLLABUS')
+  const [tag, setTag] = useState('MISC')
   const [showPopup, setShowPopup] = useState(false)
   const { data, createPostCheck } = useCreatePostCheck()
   const member_id = sessionData?.user_id ?? ''
@@ -32,6 +54,7 @@ const CreatePost: NextPage = () => {
       if (data.length === 0) {
         createPost({ member_id, prompt, title, tag, class_id })
         router.push(`/threads/${class_id}`)
+        window.location.reload()
       } else {
         console.log(data)
         setShowPopup(true)
@@ -60,6 +83,15 @@ const CreatePost: NextPage = () => {
     router.push(`/threads/${class_id}`)
   }
 
+  const printPosts = (posts: string[]) => {
+    let similarPosts: PostResponse[] = []
+    for (let i = 0; i < posts.length; i++) {
+      let response = useRetrievePost(posts[i])
+      similarPosts.push(response)
+    }
+    return similarPosts
+  }
+
   return (
     <Page title='CreatePost'>
       <div className='flex justify-between items-center'>
@@ -80,6 +112,10 @@ const CreatePost: NextPage = () => {
                   Click "Post anyways" to create a new post with the same title
                   and prompt.
                 </p>
+                {data &&
+                  printPosts(data).map(posts => {
+                    ;<p>{posts.post?.prompt}</p>
+                  })}
                 <div className='flex justify-between'>
                   <button
                     className='text-sm text-gray-500 font-medium'

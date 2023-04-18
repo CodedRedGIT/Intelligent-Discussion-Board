@@ -45,8 +45,8 @@ const Post: NextPage = () => {
                   </div>
                   <p className='text-gray-500 text-lg mt-4'>{post?.prompt}</p>
                   <ListReplies postId={postId} />
-                  {/* <ReplyForm post_id={postId} /> */}
-                  <Quill post_id={postId} />
+                  <ReplyForm post_id={postId} />
+                  {/* <Quill post_id={postId} /> */}
                   <div className='flex justify-center mt-8'>
                     <h3 onClick={router.back}>Back to Threads</h3>
                   </div>
