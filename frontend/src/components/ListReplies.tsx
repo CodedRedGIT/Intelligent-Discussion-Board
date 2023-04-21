@@ -102,16 +102,17 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
           {error && <div className='error'>{error}</div>}
           <div>
             <button
-              onClick={() => setIsReplying(true)}
+              onClick={() => {
+                if (isReplying) setIsReplying(false)
+                else setIsReplying(true)
+              }}
               className='btn btn-primary'
             >
               Reply
             </button>
           </div>
         </div>
-        {isReplying && (
-          <NestedReply parentId={reply} replyId={reply} post_id={post_id} />
-        )}
+        {isReplying && <NestedReply replyId={reply.id} />}
       </div>
       {reply.child_replies && (
         <div className='thread__child-replies'>

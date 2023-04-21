@@ -106,8 +106,7 @@ const CreatePost: NextPage = () => {
               <div className='p-4'>
                 <h3 className='text-xl font-bold mb-2'>Post Already Exists</h3>
                 <p className='mb-2'>
-                  A post with the same title and prompt already exists in this
-                  class.
+                  A post with the similar prompt already exists in this class.
                 </p>
                 <p className='mb-4'>
                   Click "Post anyways" to create a new post with the same title
