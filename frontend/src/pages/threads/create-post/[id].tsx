@@ -14,9 +14,9 @@ const CreatePost: NextPage = () => {
   const class_id = query.id as string
   const [title, setTitle] = useState('')
   const [prompt, setPrompt] = useState('')
-  const [tag, setTag] = useState('SYLLABUS')
+  const [tag, setTag] = useState('GENERAL')
   const [showPopup, setShowPopup] = useState(false)
-  const { data, createPostCheck } = useCreatePostCheck()
+  const { posts, createPostCheck } = useCreatePostCheck()
   const member_id = sessionData?.user_id ?? ''
   const [createPostCheckFinished, setCreatePostCheckFinished] = useState(false)
 
@@ -29,17 +29,17 @@ const CreatePost: NextPage = () => {
 
   useEffect(() => {
     if (createPostCheckFinished) {
-      if (data.length === 0) {
+      if (posts.length === 0) {
         createPost({ member_id, prompt, title, tag, class_id })
         router.push(`/threads/${class_id}`)
       } else {
-        console.log(data)
+        console.log(posts)
         setShowPopup(true)
       }
     }
   }, [
     createPostCheckFinished,
-    data,
+    posts,
     member_id,
     prompt,
     title,
@@ -140,6 +140,7 @@ const CreatePost: NextPage = () => {
                 <option value='HW'>HW</option>
                 <option value='EXAM'>EXAM</option>
                 <option value='MISC'>MISC</option>
+                <option value='GENERAL'>GENERAL</option>
               </select>
               <button className='homeBtn'>Submit</button>
             </div>
