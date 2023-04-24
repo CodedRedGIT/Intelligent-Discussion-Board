@@ -110,6 +110,16 @@ a {
   justify-content: space-between;
   margin-bottom: 20px;
 }
+.thread__child-replies {
+  padding: 20px;
+  width: 80%;
+  box-shadow: 0 0 1px 1px #c3acd0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
 .thread__info {
   display: flex;
   justify-content: space-between;

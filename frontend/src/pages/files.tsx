@@ -31,9 +31,17 @@ const Files: NextPage = () => {
                 name='file'
                 onChange={e => onChange(e)}
               />
-              <button className='homeBtn'>Submit</button>
+              <button className='homeBtn'>Upload</button>
             </div>
           </form>
+        </Card>
+        <br />
+        <Card>
+          <div className='home__container'>
+            <h3 style={{ marginBottom: 3 }}>Files:</h3>
+            No files uploaded...
+            {/* map the files onto a list here */}
+          </div>
         </Card>
       </div>
     </Page>
