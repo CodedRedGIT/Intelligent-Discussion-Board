@@ -8,6 +8,9 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import { useDeleteItem } from '@/pages/api/useDeleteItem'
+import { Button } from './ui/Button'
+import ReplyForm from './ReplyForm'
+import NestedReply from './NestedReply'
 
 interface Reply {
   id: string
@@ -21,9 +24,10 @@ interface Reply {
 
 interface ReplyProps {
   reply: Reply
+  post_id: string
 }
 
-const Reply: React.FC<ReplyProps> = ({ reply }) => {
+const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
   const { isLoading, error, success, upvote, removeUpvote } = useUpvote(
     reply.id,
     'replies',
@@ -38,6 +42,8 @@ const Reply: React.FC<ReplyProps> = ({ reply }) => {
 
   const [showUpvoteButton, setShowUpvoteButton] = useState(!success)
   const [upvotes, setUpvotes] = useState(reply.upvotes)
+  const [isReplying, setIsReplying] = useState(false)
+  const [prompt, setPrompt] = useState('')
 
   const handleUpvote = () => {
     upvote()
@@ -54,6 +60,10 @@ const Reply: React.FC<ReplyProps> = ({ reply }) => {
   const handleDelete = () => {
     deleteItem()
     window.location.reload()
+  }
+
+  const nestedReply = () => {
+    return <p>d</p>
   }
 
   return (
@@ -90,12 +100,24 @@ const Reply: React.FC<ReplyProps> = ({ reply }) => {
           {deleteSuccess && <div className='success'>Success!</div>}
           {deleteError && <div className='error'>{deleteError}</div>}
           {error && <div className='error'>{error}</div>}
+          <div>
+            <button
+              onClick={() => {
+                if (isReplying) setIsReplying(false)
+                else setIsReplying(true)
+              }}
+              className='btn btn-primary'
+            >
+              Reply
+            </button>
+          </div>
         </div>
+        {isReplying && <NestedReply replyId={reply.id} />}
       </div>
       {reply.child_replies && (
         <div className='thread__child-replies'>
           {reply.child_replies.map(childReply => (
-            <Reply key={childReply.id} reply={childReply} />
+            <Reply key={childReply.id} reply={childReply} post_id={post_id} />
           ))}
         </div>
       )}
@@ -109,15 +131,26 @@ interface Props {
 
 const ListReplies: React.FC<Props> = ({ postId }) => {
   const { replies } = useRetrieveReplies(postId)
+  const [isLiked, setLike] = useState<boolean>(false)
 
   const sortedReplies = [...replies].sort((a, b) => b.upvotes - a.upvotes)
+
+  const like = (isLiked: boolean) => {
+    if (isLiked) {
+      isLiked = false
+      alert('Unliked')
+    } else {
+      isLiked = true
+      alert('Liked')
+    }
+  }
 
   return (
     <div className='thread__container'>
       <h2>Replies</h2>
       <div className='thread__replies'>
         {sortedReplies.map(reply => (
-          <Reply key={reply.id} reply={reply} />
+          <Reply key={reply.id} reply={reply} post_id={postId} />
         ))}
       </div>
     </div>

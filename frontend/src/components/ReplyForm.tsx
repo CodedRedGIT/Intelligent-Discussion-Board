@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useCreateReply } from '@/pages/api/useCreateReply'
 import { useSessionContext } from '@/pages/api/auth/session'
 import Router from 'next/router'
+import Quill from './QuillForm'
 
 interface Props {
   post_id: string

@@ -12,6 +12,7 @@ import { Page } from '../../components/layout/Page'
 import { LinkButton } from '../../components/ui/LinkButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp, faTrash } from '@fortawesome/free-solid-svg-icons'
+import Quill from '@/components/QuillForm'
 
 const Post: NextPage = () => {
   const { query } = useRouter()
@@ -45,6 +46,7 @@ const Post: NextPage = () => {
                   <p className='text-gray-500 text-lg mt-4'>{post?.prompt}</p>
                   <ListReplies postId={postId} />
                   <ReplyForm post_id={postId} />
+                  {/* <Quill post_id={postId} /> */}
                   <div className='flex justify-center mt-8'>
                     <h3 onClick={router.back}>Back to Threads</h3>
                   </div>

@@ -301,9 +301,12 @@ def create_post_check(request):
 
     # create a list of dictionaries containing post IDs, titles, and prompts
     response_data = []
-    for post_id, title in processed_text_dict.items():
-        prompt = Post.objects.get(id=post_id).prompt
+    for post_id in processed_text_dict:
+        post = Post.objects.get(id=post_id)
+        prompt = post.prompt
+        title = post.title
         response_data.append({'post_id': post_id, 'title': title, 'prompt': prompt})
+
 
     # return the list of dictionaries as a JSON response
     return Response(response_data, status=201)
