@@ -37,7 +37,7 @@ const CreatePost: NextPage = () => {
   const class_id = query.id as string
   const [title, setTitle] = useState('')
   const [prompt, setPrompt] = useState('')
-  const [tag, setTag] = useState('MISC')
+  const [tag, setTag] = useState('GENERAL')
   const [showPopup, setShowPopup] = useState(false)
   const { posts, createPostCheck } = useCreatePostCheck()
   const member_id = sessionData?.user_id ?? ''
@@ -179,6 +179,7 @@ const CreatePost: NextPage = () => {
                 <option value='SYLLABUS'>SYLLABUS</option>
                 <option value='HW'>HW</option>
                 <option value='EXAM'>EXAM</option>
+                <option value='GENERAL'>GENERAL</option>
               </select>
               <button className='homeBtn'>Submit</button>
             </div>
