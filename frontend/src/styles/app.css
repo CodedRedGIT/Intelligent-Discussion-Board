@@ -125,6 +125,16 @@ a {
   justify-content: space-between;
   flex-direction: column;
 }
+.thread__column {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
+}
+.thread__top {
+  display: flex;
+  justify-content: space-between;
+}
 .thread__info__bottom {
   display: flex;
   justify-content: space-between;

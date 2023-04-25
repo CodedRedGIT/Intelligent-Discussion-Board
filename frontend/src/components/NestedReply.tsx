@@ -10,6 +10,7 @@ import {
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import dynamic from 'next/dynamic'
 import React, { useState } from 'react'
 
 interface Props {
@@ -139,6 +140,11 @@ interface Props {
 //   )
 // }
 
+const ReactQuillWrapper = dynamic(() => import('react-quill'), {
+  //besure to import dynamically
+  ssr: false,
+})
+
 const NestedReply: React.FC<Props> = ({ replyId }) => {
   const [prompt, setPrompt] = useState('')
 
@@ -167,32 +173,7 @@ const NestedReply: React.FC<Props> = ({ replyId }) => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div
-          className='form-group'
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-          }}
-        >
-          <h2>Reply:</h2>
-          <span className='inline-block w-4' />
-          <div style={{ height: '200px', overflowY: 'scroll', flexGrow: 1 }}>
-            {/* <ReactQuill
-            value={prompt}
-            onChange={setPrompt}
-            style={{ height: '100%', width: '100%' }}
-          /> */}
-            <textarea
-              required
-              rows={8}
-              className='modalInput'
-              name='Thread Prompt'
-              value={prompt}
-              onChange={e => setPrompt(e.target.value)}
-            />
-          </div>
-        </div>
+        <ReactQuillWrapper onChange={setPrompt} />
         <div style={{ textAlign: 'right' }}>
           <button type='submit' className='btn btn-primary'>
             Submit
