@@ -6,7 +6,7 @@ import {
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDeleteItem } from '@/pages/api/useDeleteItem'
 import { Button } from './ui/Button'
 import ReplyForm from './ReplyForm'
@@ -43,7 +43,7 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
   const [showUpvoteButton, setShowUpvoteButton] = useState(!success)
   const [upvotes, setUpvotes] = useState(reply.upvotes)
   const [isReplying, setIsReplying] = useState(false)
-  const [prompt, setPrompt] = useState('')
+  const [replies, setReplies] = useState<Reply[]>()
 
   const handleUpvote = () => {
     upvote()
@@ -114,13 +114,11 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
         </div>
         {isReplying && <NestedReply replyId={reply.id} />}
       </div>
-      {reply.child_replies && (
-        <div className='thread__child-replies'>
-          {reply.child_replies.map(childReply => (
-            <Reply key={childReply.id} reply={childReply} post_id={post_id} />
-          ))}
-        </div>
-      )}
+      <div className='nested'>
+        {reply.child_replies?.map(child => (
+          <p>{child.prompt}</p>
+        ))}
+      </div>
     </div>
   )
 }

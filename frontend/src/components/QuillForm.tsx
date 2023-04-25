@@ -14,17 +14,11 @@ import SunEditorCore from 'suneditor/src/lib/core'
 interface Props {
   post_id: string
 }
+const ReactQuillWrapper = dynamic(() => import('react-quill'), {
+  //besure to import dynamically
+  ssr: false,
+})
 const Quill: React.FC<Props> = ({ post_id }) => {
-  const SunEditor = dynamic(() => import('suneditor-react'), {
-    //besure to import dynamically
-    ssr: false,
-  })
-
-  const editor = useRef<SunEditorCore>()
-  const getSunEditorInstance = (sunEditor: SunEditorCore) => {
-    editor.current = sunEditor
-  }
-
   const [prompt, setPrompt] = useState('')
   const { sessionData } = useSessionContext()
   const member_id = sessionData?.user_id
@@ -41,16 +35,14 @@ const Quill: React.FC<Props> = ({ post_id }) => {
 
   const handleSubmit = () => {
     createReply({ member_id, prompt, post_id })
+    console.log(prompt)
     alert('Reply posted')
   }
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <SunEditor
-          getSunEditorInstance={getSunEditorInstance}
-          onChange={handleChange}
-        />
+        <ReactQuillWrapper onChange={setPrompt} />
         <div style={{ textAlign: 'right' }}>
           <button type='submit' className='btn btn-primary'>
             Submit
