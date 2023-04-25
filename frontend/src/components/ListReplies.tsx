@@ -68,38 +68,49 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
 
   return (
     <div className='thread__item' key={reply.id}>
-      <div
-        className='thread__reply'
-        dangerouslySetInnerHTML={{ __html: reply.prompt }}
-      ></div>
-      <div className='thread__info'>
-        <div className='thread__info__top'>
-          <small>{reply.published_date.substring(0, 10)}</small>
-          <small>{reply.published_date.substring(12, 19)}</small>
-          <small>
-            {showUpvoteButton && (
-              <button onClick={handleUpvote} disabled={isLoading}>
-                <FontAwesomeIcon icon={faThumbsUp} className='icon' />
-                {isLoading ? 'Loading...' : `${upvotes} upvotes`}
+      <div className='thread__column'>
+        <div className='thread__top'>
+          <div
+            className='thread__reply'
+            dangerouslySetInnerHTML={{ __html: reply.prompt }}
+          ></div>
+          <div className='thread__info'>
+            <div className='thread__info__top'>
+              <small>{reply.published_date.substring(0, 10)}</small>
+              <small>{reply.published_date.substring(12, 19)}</small>
+              <small>
+                {showUpvoteButton && (
+                  <button onClick={handleUpvote} disabled={isLoading}>
+                    <FontAwesomeIcon icon={faThumbsUp} className='icon' />
+                    {isLoading ? 'Loading...' : `${upvotes} upvotes`}
+                  </button>
+                )}
+                {!showUpvoteButton && (
+                  <button onClick={handleRemoveUpvote} disabled={isLoading}>
+                    <FontAwesomeIcon icon={faThumbsDown} className='icon' />
+                    {isLoading ? 'Loading...' : `${upvotes} upvotes`}
+                  </button>
+                )}
+              </small>
+              <small>{reply.email}</small>
+            </div>
+            <div className='thread__info__bottom'>
+              <button onClick={handleDelete} disabled={deleteIsLoading}>
+                <FontAwesomeIcon icon={faTrash} className='icon' />
+                {deleteIsLoading ? 'Loading...' : 'Delete'}
               </button>
-            )}
-            {!showUpvoteButton && (
-              <button onClick={handleRemoveUpvote} disabled={isLoading}>
-                <FontAwesomeIcon icon={faThumbsDown} className='icon' />
-                {isLoading ? 'Loading...' : `${upvotes} upvotes`}
-              </button>
-            )}
-          </small>
-          <small>{reply.email}</small>
+              {deleteSuccess && <div className='success'>Success!</div>}
+              {deleteError && <div className='error'>{deleteError}</div>}
+              {error && <div className='error'>{error}</div>}
+            </div>
+          </div>
+          <div className='nested'>
+            {reply.child_replies?.map(child => (
+              <p>{child.prompt}</p>
+            ))}
+          </div>
         </div>
-        <div className='thread__info__bottom'>
-          <button onClick={handleDelete} disabled={deleteIsLoading}>
-            <FontAwesomeIcon icon={faTrash} className='icon' />
-            {deleteIsLoading ? 'Loading...' : 'Delete'}
-          </button>
-          {deleteSuccess && <div className='success'>Success!</div>}
-          {deleteError && <div className='error'>{deleteError}</div>}
-          {error && <div className='error'>{error}</div>}
+        <div className='thread__bottom'>
           <div>
             <button
               onClick={() => {
@@ -111,13 +122,8 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
               Reply
             </button>
           </div>
+          {isReplying && <NestedReply replyId={reply.id} />}
         </div>
-        {isReplying && <NestedReply replyId={reply.id} />}
-      </div>
-      <div className='nested'>
-        {reply.child_replies?.map(child => (
-          <p>{child.prompt}</p>
-        ))}
       </div>
     </div>
   )
