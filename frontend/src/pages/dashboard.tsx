@@ -108,8 +108,6 @@ const Dashboard: NextPage = () => {
                 </div>
               )}
             </Card>
-            <span className='inline-block w-4' />
-            <Card className='bg-white p-6 rounded-lg shadow-md max-w-xl'></Card>
           </div>
         )}
         <div>
