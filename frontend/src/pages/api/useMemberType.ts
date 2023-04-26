@@ -1,36 +1,41 @@
-import { useState } from 'react'
-import axios from 'axios'
+import { useState, useEffect } from 'react'
 
-export const useGetMemberType = () => {
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [memberType, setMemberType] = useState<string>('')
-
-  const getMemberType = async (memberId: string) => {
-    setIsLoading(true)
-
-    try {
-      const response = await axios.get(
-        `http://localhost:8000/api/members/${memberId}/type/`,
-      )
-
-      if (!response.data.memberType) {
-        throw new Error('No member type found')
-      }
-
-      setMemberType(response.data.memberType)
-      setError(null)
-    } catch (error: any) {
-      setError(error.message)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  return {
-    isLoading,
-    error,
-    memberType,
-    getMemberType,
-  }
+interface MemberTypeResponse {
+  memberType: string | null
+  error: string | null
 }
+
+const useRetrieveMemberType = (
+  memberId: string | undefined,
+): MemberTypeResponse => {
+  const [memberTypeInfo, setMemberTypeInfo] = useState<MemberTypeResponse>({
+    memberType: null,
+    error: null,
+  })
+
+  useEffect(() => {
+    if (!memberId) return
+    const fetchMemberTypeInfo = async () => {
+      try {
+        const memberTypeResponse = await fetch(
+          `http://localhost:8000/api/members/${memberId}/type/`,
+        )
+        const memberTypeData = await memberTypeResponse.json()
+
+        setMemberTypeInfo({ memberType: memberTypeData, error: null })
+      } catch (error) {
+        console.error(error)
+        setMemberTypeInfo({
+          memberType: null,
+          error: 'Failed to retrieve member type information',
+        })
+      }
+    }
+
+    fetchMemberTypeInfo()
+  }, [memberId])
+
+  return memberTypeInfo
+}
+
+export default useRetrieveMemberType

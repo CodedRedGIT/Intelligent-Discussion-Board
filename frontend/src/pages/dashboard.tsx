@@ -15,7 +15,7 @@ import { Page } from '../components/layout/Page'
 import { Card } from '../components/layout/Card'
 import Router from 'next/router'
 import { Button } from '@/components/ui/Button'
-import { useGetMemberType } from './api/useMemberType'
+import useRetrieveMemberType from './api/useMemberType'
 
 const Dashboard: NextPage = () => {
   const { sessionData } = useSessionContext()
@@ -25,7 +25,7 @@ const Dashboard: NextPage = () => {
     sessionData?.user_id ?? '',
   )
 
-  const { memberType } = useGetMemberType()
+  const { memberType } = useRetrieveMemberType(sessionData?.user_id)
 
   const {
     isLoading: isCreating,

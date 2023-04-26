@@ -67,16 +67,6 @@ def get_all_members(request):
     serializer = MemberSerializer(members, many=True)
     return Response(serializer.data, status=200)
 
-@api_view(["GET"])
-def get_member_type(request, member_id):
-    try:
-        member = Member.objects.get(id=member_id)
-        member_type = member.member_type
-        return JsonResponse({"member_type": member_type})
-    except Member.DoesNotExist:
-        return JsonResponse({"error": "Member does not exist."}, status=404)
-
-
 @api_view(['GET'])
 def get_all_posts(request):
     """
@@ -406,6 +396,35 @@ def upvote_post(request, id):
 
     serializer = PostSerializer(post)
     return Response(serializer.data, status=200)
+
+
+@api_view(["GET"])
+def get_member_type(request, id):
+    try:
+        print("adwdaw")
+        member = Member.objects.get(id=id)
+        member_type = member.member_type
+        print(member_type)
+        return JsonResponse(member_type, safe=False)
+    except Member.DoesNotExist:
+        return JsonResponse({"error": "Member does not exist."}, status=404)
+
+
+@api_view(['POST'])
+def change_member_type(request, id):
+    try:
+        member = Member.objects.get(id=id)
+    except Member.DoesNotExist:
+        return Response({'error': 'Member not found'}, status=404)
+    
+    new_type = 'INSTRUCTOR' if member.member_type == 'STUDENT' else 'STUDENT'
+    member.member_type = new_type
+    member.save()
+
+    serializer = MemberSerializer(member)
+    return Response(serializer.data, status=200)
+
+
 
 
 @api_view(['POST'])

@@ -18,7 +18,7 @@ class Member(models.Model):
         TEACHER_ASSISTANT = "TA"
         INSTRUCTOR = "INSTRUCTOR"
 
-    member_type = models.TextField(choices=MemberType.choices)
+    member_type = models.TextField(choices=MemberType.choices, default=MemberType.INSTRUCTOR)
 
     def save(self, *args, **kwargs):
         self.member_type = self.member_type.upper()
@@ -29,6 +29,7 @@ class Member(models.Model):
 
     def get_classes(self):
         return Class.objects.filter(members=self)
+    
     
 class File(models.Model):
     file = models.FileField(upload_to='post_files/')

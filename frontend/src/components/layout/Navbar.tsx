@@ -1,11 +1,17 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHouse } from '@fortawesome/free-solid-svg-icons'
+import { faEye, faEyeSlash, faHouse } from '@fortawesome/free-solid-svg-icons'
 import { useSessionContext } from '../../pages/api/auth/session'
 import router from 'next/router'
+import useChangeMemberType from '@/pages/api/useChangeMemberType'
+import useRetrieveMemberType from '@/pages/api/useMemberType'
 
 const Navbar = () => {
   const { sessionData, clearSessionData } = useSessionContext()
+
+  const { memberType, error } = useRetrieveMemberType(sessionData?.user_id)
+
+  const { changeMemberType } = useChangeMemberType()
 
   const handleSignOut = () => {
     clearSessionData()
@@ -17,6 +23,11 @@ const Navbar = () => {
     } else {
       router.push('/')
     }
+  }
+
+  const handleEyeClick = async () => {
+    await changeMemberType(sessionData?.user_id)
+    window.location.reload()
   }
 
   return (
@@ -37,6 +48,17 @@ const Navbar = () => {
           Intelligent Discussion Board
         </div>
 
+        <div className='mt-10 right-0'>
+          {error ? (
+            <div>Error: {error}</div>
+          ) : (
+            <FontAwesomeIcon
+              icon={memberType === 'STUDENT' ? faEye : faEyeSlash}
+              className='fa-solid text-white text-4xl cursor-pointer'
+              onClick={handleEyeClick}
+            />
+          )}
+        </div>
         <div className='fixed right-0 mr-4 mt-10'>
           {sessionData ? (
             <button

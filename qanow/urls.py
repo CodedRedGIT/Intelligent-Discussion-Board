@@ -14,6 +14,7 @@ urlpatterns = [
     path('members/create/', views.create_member, name='create_member'),
     path('members/<str:id>/', views.get_member_info, name='get_member_info'),
     path('members/<str:id>/type/', views.get_member_type, name='get_member_type'),
+    path('members/<str:id>/change-type/', views.change_member_type, name='change_member_type'),
     path('members/<str:id>/classes/',
          views.get_member_classes, name='get_member_classes'),
     path('posts/', views.get_all_posts, name='get_all_posts'),
