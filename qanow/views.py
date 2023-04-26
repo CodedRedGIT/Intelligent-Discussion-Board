@@ -228,7 +228,6 @@ def login(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_session_data(request):
     user = request.user
     member = Member.objects.get(user=user)
