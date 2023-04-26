@@ -33,6 +33,7 @@ class Member(models.Model):
     
 class File(models.Model):
     file = models.FileField(upload_to='post_files/')
+    embedding = models.JSONField(null=True, blank=True)
 
 
 class Reply(models.Model):

@@ -6,10 +6,11 @@ from django.db import IntegrityError
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
+from django.db import transaction
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from qanow.text_data import process_text
+from qanow.text_data import embedding_create, process_text, strip_text
 from .models import Class, File, Member, Post, Reply
 from .serializer import ClassSerializer, MemberSerializer, PostSerializer, ReplySerializer, UserSerializer
 
@@ -32,21 +33,6 @@ def retrieve_files_by_class(request, id):
     # Serialize the files and return them in the response
     data = [{'id': f.id, 'name': f.name, 'size': f.size, 'type': f.type, 'created_at': f.created_at} for f in files]
     return JsonResponse({'files': data})
-
-@api_view(['POST'])
-def save_file_for_class(request):
-    class_id = request.POST.get('class_id')
-    file = request.FILES.get('file')
-
-    try:
-        class_obj = Class.objects.get(id=class_id)
-    except Class.DoesNotExist:
-        return Response({'error': 'Class not found'}, status=400)
-
-    file_obj = File.objects.create(file=file)
-    class_obj.files.add(file_obj)
-
-    return Response({'success': True}, status=200)
 
 @api_view(['GET'])
 def get_all_classes(request):
@@ -343,6 +329,24 @@ def create_post_check(request):
     return Response(response_data, status=201)
 
 
+@api_view(['POST'])
+def save_file_for_class(request):
+    class_id = request.POST.get('class_id')
+    file = request.FILES.get('file')
+
+    try:
+        class_obj = Class.objects.get(id=class_id)
+    except Class.DoesNotExist:
+        return Response({'error': 'Class not found'}, status=400)
+
+    file_text = strip_text(file)
+    file_embedding = embedding_create(file_text)
+
+    with transaction.atomic():
+        file_obj = File.objects.create(file=file, embedding=file_embedding)
+        class_obj.files.add(file_obj)
+
+    return Response({'success': True}, status=200)
 
 
 @api_view(['POST'])
