@@ -52,7 +52,7 @@ const Navbar = () => {
           ) : (
             <FontAwesomeIcon
               icon={memberType === 'STUDENT' ? faEye : faEyeSlash}
-              className='fa-solid text-white text-4xl cursor-pointer'
+              className='fa-solid text-white text-4xl cursor-pointer fixed right-44'
               onClick={handleEyeClick}
             />
           )}

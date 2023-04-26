@@ -247,7 +247,6 @@ def create_class(request):
     section = request.data.get('section')
     member_id = request.data.get('member_id')
 
-    print(member_id)
     try:
         member = Member.objects.get(id=member_id)
     except Member.DoesNotExist:
@@ -401,10 +400,8 @@ def upvote_post(request, id):
 @api_view(["GET"])
 def get_member_type(request, id):
     try:
-        print("adwdaw")
         member = Member.objects.get(id=id)
         member_type = member.member_type
-        print(member_type)
         return JsonResponse(member_type, safe=False)
     except Member.DoesNotExist:
         return JsonResponse({"error": "Member does not exist."}, status=404)
