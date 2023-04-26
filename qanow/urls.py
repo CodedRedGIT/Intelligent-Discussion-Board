@@ -1,8 +1,10 @@
 from django.urls import path
+from rest_framework_simplejwt.views import TokenRefreshView
 
 from . import views
 
 urlpatterns = [
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('classes/', views.get_all_classes, name='get_all_classes'),
     path('classes/save_file/', views.save_file_for_class, name='save_file_for_class'),
     path('classes/create/', views.create_class, name='create_class'),

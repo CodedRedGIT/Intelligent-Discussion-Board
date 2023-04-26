@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash, faHouse } from '@fortawesome/free-solid-svg-icons'
 import { useSessionContext } from '../../pages/api/auth/session'
@@ -8,9 +8,7 @@ import useRetrieveMemberType from '@/pages/api/useMemberType'
 
 const Navbar = () => {
   const { sessionData, clearSessionData } = useSessionContext()
-
   const { memberType, error } = useRetrieveMemberType(sessionData?.user_id)
-
   const { changeMemberType } = useChangeMemberType()
 
   const handleSignOut = () => {
