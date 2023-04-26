@@ -3,13 +3,46 @@ import nltk
 from nltk.corpus import stopwords
 import numpy as np
 import os
+import docx2txt
+import pypdf
 
 from .models import Class
 
 openai.api_key = os.environ["OPENAI"]
 
-# TODO, figure out how to access the other uploaded documents in the DB. The same API calls should be usable
+def strip_text(filename):
+    if filename.lower().endswith(".txt"):
+        file = open(filename, "r")
+        filetext = file.read()
+        # print(filetext)
 
+    if filename.lower().endswith(".docx"):
+        filetext = docx2txt.process(filename)
+        # print(filetext)
+
+    if filename.lower().endswith(".pdf"):
+        file = pypdf.PdfReader(filename)
+        filetext = ""
+        for page in file.pages:
+            filetext += page.extract_text()
+        # filetext = file.extract_text()
+        # print(filetext)
+    return filetext
+
+
+def context_completion(question, context):
+    aiprompt = context + "Q:" + question
+
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=aiprompt,
+        max_tokens = 256,
+        temperature=1
+    )
+
+    airesponse = response['choices'][0]['text']
+
+    return airesponse
 
 def syllabus_check(text):
     # Preprocess the text, removing stopwords, numbers, and punctuation and lowercasing all capital letters

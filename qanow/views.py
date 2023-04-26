@@ -10,9 +10,43 @@ from django.contrib.auth.models import User
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from qanow.text_data import process_text
-from .models import Class, Member, Post, Reply
+from .models import Class, File, Member, Post, Reply
 from .serializer import ClassSerializer, MemberSerializer, PostSerializer, ReplySerializer, UserSerializer
 
+
+@api_view(['GET'])
+def retrieve_files_by_class(request, id):
+    try:
+        # Retrieve the class with the given ID
+        class_obj = Class.objects.get(pk=id)
+    except Class.DoesNotExist:
+        return JsonResponse({'error': 'Class not found'}, status=404)
+
+    # Ensure that the user has permission to access this class
+    if not request.user.is_staff and request.user.id != class_obj.owner_id:
+        return JsonResponse({'error': 'You do not have permission to access this class'}, status=403)
+
+    # Retrieve all files for this class
+    files = File.objects.filter(class_id=id).order_by('-created_at')
+
+    # Serialize the files and return them in the response
+    data = [{'id': f.id, 'name': f.name, 'size': f.size, 'type': f.type, 'created_at': f.created_at} for f in files]
+    return JsonResponse({'files': data})
+
+@api_view(['POST'])
+def save_file_for_class(request):
+    class_id = request.POST.get('class_id')
+    file = request.FILES.get('file')
+
+    try:
+        class_obj = Class.objects.get(id=class_id)
+    except Class.DoesNotExist:
+        return Response({'error': 'Class not found'}, status=400)
+
+    file_obj = File.objects.create(file=file)
+    class_obj.files.add(file_obj)
+
+    return Response({'success': True}, status=200)
 
 @api_view(['GET'])
 def get_all_classes(request):
@@ -32,6 +66,15 @@ def get_all_members(request):
     members = Member.objects.all()
     serializer = MemberSerializer(members, many=True)
     return Response(serializer.data, status=200)
+
+@api_view(["GET"])
+def get_member_type(request, member_id):
+    try:
+        member = Member.objects.get(id=member_id)
+        member_type = member.member_type
+        return JsonResponse({"member_type": member_type})
+    except Member.DoesNotExist:
+        return JsonResponse({"error": "Member does not exist."}, status=404)
 
 
 @api_view(['GET'])

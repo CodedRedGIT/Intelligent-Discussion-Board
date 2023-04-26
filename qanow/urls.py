@@ -4,13 +4,16 @@ from . import views
 
 urlpatterns = [
     path('classes/', views.get_all_classes, name='get_all_classes'),
+    path('classes/save_file/', views.save_file_for_class, name='save_file_for_class'),
     path('classes/create/', views.create_class, name='create_class'),
     path('classes/<str:id>/', views.get_class, name='get_class'),
+    path('classes/<str:id>/files/', views.retrieve_files_by_class),
     path('classes/<str:id>/posts/',
          views.get_class_posts, name='get_classes_posts'),
     path('members/', views.get_all_members, name='get_all_members'),
     path('members/create/', views.create_member, name='create_member'),
     path('members/<str:id>/', views.get_member_info, name='get_member_info'),
+    path('members/<str:id>/type/', views.get_member_type, name='get_member_type'),
     path('members/<str:id>/classes/',
          views.get_member_classes, name='get_member_classes'),
     path('posts/', views.get_all_posts, name='get_all_posts'),
