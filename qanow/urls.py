@@ -8,6 +8,7 @@ urlpatterns = [
     path('classes/', views.get_all_classes, name='get_all_classes'),
     path('classes/save_file/', views.save_file_for_class, name='save_file_for_class'),
     path('classes/create/', views.create_class, name='create_class'),
+    path('classes/join/', views.join_class, name='join_class'),
     path('classes/<str:id>/', views.get_class, name='get_class'),
     path('classes/<str:id>/files/', views.retrieve_files_by_class),
     path('classes/<str:id>/posts/',

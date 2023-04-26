@@ -152,6 +152,27 @@ def get_reply(request, id):
     return Response(serializer.data, status=200)
 
 
+@api_view(['POST'])
+def join_class(request):
+    member_id = request.data.get('member_id')
+    class_id = request.data.get('class_id')
+
+    try:
+        member = Member.objects.get(id=member_id)
+        class_obj = Class.objects.get(id=class_id)
+    except Member.DoesNotExist:
+        return Response({'error': 'Member not found'}, status=404)
+    except Class.DoesNotExist:
+        return Response({'error': 'Class not found'}, status=404)
+
+    # Add the member to the class
+    class_obj.members.add(member)
+
+    # Serialize the updated class and return it in the response
+    serializer = ClassSerializer(class_obj)
+    return Response(serializer.data, status=200)
+
+
 @api_view(['GET'])
 def get_post_replies(request, post_id):
     """
