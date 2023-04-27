@@ -45,7 +45,6 @@ const CreatePost: NextPage = () => {
   const [prompt, setPrompt] = useState('')
   const [tag, setTag] = useState('GENERAL')
   const [showPopup, setShowPopup] = useState(false)
-  const [showFilePopup, setShowFilePopup] = useState(false)
   const { postResponse, createPostCheck } = useCreatePostCheck()
   const member_id = sessionData?.user_id ?? ''
   const [createPostCheckFinished, setCreatePostCheckFinished] = useState(false)
