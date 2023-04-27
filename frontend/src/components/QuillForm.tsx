@@ -1,24 +1,17 @@
-import React, { useRef, useState } from 'react'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
+import React, { useState } from 'react'
 import dynamic from 'next/dynamic'
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
+import 'react-quill/dist/quill.snow.css'
 import { useCreateReply } from '@/pages/api/useCreateReply'
 import { useSessionContext } from '@/pages/api/auth/session'
-import { useEditor, EditorContent } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import ReactDOM from 'react-dom'
-import { Editor, EditorState } from 'draft-js'
 import 'suneditor/dist/css/suneditor.min.css'
-import SunEditorCore from 'suneditor/src/lib/core'
 
 interface Props {
   post_id: string
   parent_id: string
 }
-const ReactQuillWrapper = dynamic(() => import('react-quill'), {
-  //besure to import dynamically
-  ssr: false,
-})
+
 const Quill: React.FC<Props> = ({ post_id, parent_id }) => {
   const [prompt, setPrompt] = useState('')
   const { sessionData } = useSessionContext()
@@ -41,7 +34,7 @@ const Quill: React.FC<Props> = ({ post_id, parent_id }) => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <ReactQuillWrapper onChange={setPrompt} />
+        <ReactQuill onChange={setPrompt} />
         <div style={{ textAlign: 'right' }}>
           <button type='submit' className='btn btn-primary'>
             Submit
@@ -51,4 +44,5 @@ const Quill: React.FC<Props> = ({ post_id, parent_id }) => {
     </div>
   )
 }
+
 export default Quill
