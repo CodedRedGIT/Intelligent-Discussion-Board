@@ -9,6 +9,11 @@ export const useSession = () => {
 
   useEffect(() => {
     const { session_id } = cookie.parse(document.cookie)
+    if (!session_id) {
+      clearSessionData()
+      return
+    }
+
     const fetchData = async () => {
       const data = await getSessionData(session_id)
       if (data === null) {
@@ -21,7 +26,7 @@ export const useSession = () => {
   }, [])
 
   const saveSessionData = (data: SessionData) => {
-    const expires = new Date(Date.now() + 2 * 365 * 24 * 60 * 60 * 1000) 
+    const expires = new Date(Date.now() + 2 * 365 * 24 * 60 * 60 * 1000)
     document.cookie = `session_id=${
       data.token
     }; expires=${expires.toUTCString()}; path=/;`
