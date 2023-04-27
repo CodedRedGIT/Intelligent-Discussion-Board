@@ -1,4 +1,3 @@
-// TODO needs to be updated with new frontend build
 import React, { useState } from 'react'
 import { NextPage } from 'next'
 import { Page } from '../../components/layout/Page'
@@ -18,7 +17,7 @@ const CreateThread: NextPage = () => {
       <div>
         <form className='homeForm' onSubmit={handleSubmit}>
           <div className='home__container'>
-            <h3 style={{ marginBottom: 3 }}>Thread Prompt</h3>
+            <h3 style={{ marginBottom: 3 }}>Thread Title</h3>
             <input
               required
               className='modalInput'

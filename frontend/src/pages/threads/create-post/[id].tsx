@@ -24,6 +24,12 @@ interface Member {
   }
 }
 
+interface PopUpPost {
+  id: string
+  prompt: string
+  title: string
+}
+
 interface PostResponse {
   post: Post | null
   member: Member | null
@@ -39,7 +45,8 @@ const CreatePost: NextPage = () => {
   const [prompt, setPrompt] = useState('')
   const [tag, setTag] = useState('GENERAL')
   const [showPopup, setShowPopup] = useState(false)
-  const { posts, createPostCheck } = useCreatePostCheck()
+  const [showFilePopup, setShowFilePopup] = useState(false)
+  const { postResponse, createPostCheck } = useCreatePostCheck()
   const member_id = sessionData?.user_id ?? ''
   const [createPostCheckFinished, setCreatePostCheckFinished] = useState(false)
 
@@ -52,18 +59,17 @@ const CreatePost: NextPage = () => {
 
   useEffect(() => {
     if (createPostCheckFinished) {
-      if (posts.length === 0) {
+      if (postResponse && postResponse.data.length === 0) {
         createPost({ member_id, prompt, title, tag, class_id })
         router.push(`/threads/${class_id}`)
         window.location.reload()
       } else {
-        console.log(posts)
         setShowPopup(true)
       }
     }
   }, [
     createPostCheckFinished,
-    posts,
+    postResponse,
     member_id,
     prompt,
     title,
@@ -104,21 +110,50 @@ const CreatePost: NextPage = () => {
             <div className='fixed inset-0 bg-gray-500 opacity-50'></div>
             <div className='relative bg-white rounded-lg'>
               <div className='p-4'>
-                <h3 className='text-xl font-bold mb-2'>Post Already Exists</h3>
-                <p className='mb-2'>
-                  A post with the similar prompt already exists in this class.
-                </p>
-                <p className='mb-4'>
-                  Click "Post anyways" to create a new post with the same title
-                  and prompt.
-                </p>
+                {postResponse?.response_type === 'post_data' ? (
+                  <div>
+                    <h3 className='text-xl font-bold mb-2'>
+                      Post Already Exists
+                    </h3>
+                    <p className='mb-2'>
+                      A post with the similar prompt already exists in this
+                      class.
+                    </p>
+                    <p className='mb-4'>
+                      Click "Post anyways" to create a new post with the same
+                      title and prompt.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <h3 className='text-xl font-bold mb-2'>
+                      May of found your answer.
+                    </h3>
+                    <p className='mb-2'>
+                      A file from your class may contain this answer.
+                    </p>
+                    <p className='mb-4'>
+                      Click "Post anyways" to create a the post.
+                    </p>
+                    <p>Answer:</p>
+                  </>
+                )}
+
                 <div className='grid'>
-                  {posts.map(post => (
-                    <Link href={`/post/${post.id}`} replace>
-                      {post.title}
-                    </Link>
-                  ))}
+                  {postResponse?.response_type === 'post_data' &&
+                    postResponse.data.map((post: PopUpPost) => (
+                      <Link href={`/post/${post.id}`} replace key={post.id}>
+                        {post.title}
+                      </Link>
+                    ))}
+                  {postResponse?.response_type === 'file_data' &&
+                    postResponse.data.map((file: string) => (
+                      <p className='mb-6' key={file}>
+                        {file}
+                      </p>
+                    ))}
                 </div>
+
                 <div className='flex justify-between'>
                   <button
                     className='text-sm text-gray-500 font-medium'
@@ -129,7 +164,6 @@ const CreatePost: NextPage = () => {
                   >
                     Cancel
                   </button>
-
                   <button
                     className='text-sm text-white bg-green-500 px-4 py-2 rounded-md font-medium'
                     onClick={handleCreatePost}
@@ -149,7 +183,7 @@ const CreatePost: NextPage = () => {
         <Card>
           <form className='homeForm' onSubmit={handleCreatePostCheck}>
             <div className='home__container'>
-              <h3 style={{ marginBottom: 3 }}>Thread Prompt</h3>
+              <h3 style={{ marginBottom: 3 }}>Thread Title</h3>
               <input
                 required
                 className='modalInput'
@@ -175,7 +209,6 @@ const CreatePost: NextPage = () => {
                 }}
                 value={tag}
               >
-                <option value='MISC'>MISC</option>
                 <option value='SYLLABUS'>SYLLABUS</option>
                 <option value='HW'>HW</option>
                 <option value='EXAM'>EXAM</option>

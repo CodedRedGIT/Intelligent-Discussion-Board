@@ -1,15 +1,27 @@
 import { useState } from 'react'
 
 interface Post {
-  id: number
+  id: string
   prompt: string
   title: string
 }
 
+interface FileData {
+  response_type: 'file_data'
+  data: string[]
+}
+
+interface PostData {
+  response_type: 'post_data'
+  data: Post[]
+}
+
+type PostResponse = FileData | PostData
+
 export const useCreatePostCheck = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [posts, setPosts] = useState<Post[]>([])
+  const [postResponse, setPostResponse] = useState<PostResponse | null>(null)
 
   const createPostCheck = async (newPost: {
     member_id: string
@@ -37,13 +49,8 @@ export const useCreatePostCheck = () => {
         throw new Error(error)
       }
 
-      const responseData = await response.json()
-      const processedPosts = responseData.map((item: any) => ({
-        id: item.post_id,
-        prompt: item.prompt,
-        title: item.title,
-      }))
-      setPosts(processedPosts)
+      const responseData: PostResponse = await response.json()
+      setPostResponse(responseData)
       setError(null)
     } catch (error: any) {
       setError(error.message)
@@ -53,7 +60,7 @@ export const useCreatePostCheck = () => {
   }
 
   return {
-    posts,
+    postResponse,
     loading,
     error,
     createPostCheck,

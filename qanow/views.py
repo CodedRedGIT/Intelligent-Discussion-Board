@@ -388,23 +388,34 @@ def create_post_check(request):
 
     prompt = request.data.get('prompt')
 
+    response_data = []
     processed_text_dict = process_text(prompt, class_id)
 
     if not processed_text_dict:
         processed_text_dict = process_file_text(prompt, class_id)
+        response_data = processed_text_dict
+        response_type = 'file_data'
+    else:
+        for post_id in processed_text_dict:
+            post = Post.objects.get(id=post_id)
+            prompt = post.prompt
+            title = post.title
+            response_data.append({'post_id': post_id, 'title': title, 'prompt': prompt})
+        response_type = 'post_data'
 
-    response_data = []  # Initialize the response_data variable
+    response = {
+        'response_type': response_type,
+        'data': response_data
+    }
 
-    for post_id in processed_text_dict:
-        post = Post.objects.get(id=post_id)
-        prompt = post.prompt
-        title = post.title
-        response_data.append({'post_id': post_id, 'title': title, 'prompt': prompt})
+    print(response)
 
-    print("file answer: ")
-    print(response_data)  # Print the response_data
+    if not response_data:
+        return Response("[]", status=200)
 
-    return Response(response_data, status=201)
+    return Response(response, status=200)
+
+
 
 
 
@@ -425,7 +436,7 @@ def save_file_for_class(request):
         file_obj = File.objects.create(file=file, embedding=file_embedding)
         class_obj.files.add(file_obj)
 
-    return Response({'success': True}, status=200)
+    return Response({'success': True}, status=201)
 
 
 @api_view(['POST'])
