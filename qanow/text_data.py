@@ -10,24 +10,23 @@ from .models import Class
 
 openai.api_key = os.environ["OPENAI"]
 
-def strip_text(filename):
+def strip_text(file):
+    filename = file.name
+
     if filename.lower().endswith(".txt"):
-        file = open(filename, "r")
-        filetext = file.read()
-        # print(filetext)
+        filetext = file.read().decode("utf-8")
+        # Process the filetext as needed
 
-    if filename.lower().endswith(".docx"):
-        filetext = docx2txt.process(filename)
-        # print(filetext)
+    elif filename.lower().endswith(".docx"):
+        filetext = docx2txt.process(file)
+        # Process the filetext as needed
 
-    if filename.lower().endswith(".pdf"):
-        file = pypdf.PdfReader(filename)
+    elif filename.lower().endswith(".pdf"):
         filetext = ""
-        for page in file.pages:
-            filetext += page.extract_text()
-        # filetext = file.extract_text()
-        # print(filetext)
+        # Process the filetext as needed
+
     return filetext
+
 
 
 def context_completion(question, context):
@@ -90,8 +89,19 @@ def embedding_create(text):
 
     return vector
 
-# Calculate and return the similarity of both the vector of the post and of the vector in the database
+def context_completion(question, context):
+    aiprompt = context + "Q:" + question
 
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=aiprompt,
+        max_tokens = 256,
+        temperature=1
+    )
+
+    airesponse = response['choices'][0]['text']
+
+    return airesponse
 
 def similarity_score(postvector, dbvector):
     similarity_score = np.dot(postvector, dbvector)
@@ -119,6 +129,27 @@ def process_text(posttext, class_id):
     # returnlist.append(syllabuscheck(posttext))
 
     return returnlist
+
+def process_file_text(posttext, class_id):
+    returnlist = []
+
+    post_embedding = embedding_create(posttext)
+    postvector = np.array(post_embedding)
+
+    class_instance = Class.objects.get(id=class_id)
+    files = class_instance.files.all()
+
+    for file in files:
+        for post in file.post_set.all():
+            if not post.textData:
+                continue
+            embedding = post.textData.embedding
+            score = similarity_score(postvector, embedding)
+            if score > 0.85:
+                returnlist.append(post.id)
+
+    return returnlist
+
 
 
 # if __name__ == "__main__":

@@ -10,8 +10,8 @@ from django.db import transaction
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from qanow.text_data import embedding_create, process_text, strip_text
-from .models import Class, File, Member, Post, Reply
+from qanow.text_data import embedding_create, process_file_text, process_text, strip_text
+from .models import Class, File, Member, ParentReply, Post, Reply
 from .serializer import ClassSerializer, MemberSerializer, PostSerializer, ReplySerializer, UserSerializer
 
 
@@ -268,7 +268,6 @@ def create_class(request):
 
 @api_view(['POST'])
 def create_reply(request):
-
     post_id = request.data.get('post_id')
 
     try:
@@ -278,17 +277,48 @@ def create_reply(request):
 
     member_id = request.data.get('member_id')
     prompt = request.data.get('prompt')
-    # tag = request.data.get('tag')
 
     member = Member.objects.get(id=member_id)
 
-    new_reply = Reply.objects.create(
-        member_id=member, prompt=prompt)
+    parent_id = request.data.get('parent_id')
+
+    if parent_id:
+        try:
+            parent_reply = Reply.objects.get(id=parent_id)
+        except Reply.DoesNotExist:
+            return Response({'error': 'Parent Reply not found'}, status=404)
+
+        parent_prompt = parent_reply.prompt
+        parent_member_email = parent_reply.member_id.user.email
+
+        parent_reply_object = ParentReply.objects.create(
+            member_email=parent_member_email,
+            prompt=parent_prompt
+        )
+
+        new_reply = Reply.objects.create(
+            member_id=member,
+            prompt=prompt,
+            nested_reply=parent_reply_object
+        )
+    else:
+        new_reply = Reply.objects.create(
+            member_id=member,
+            prompt=prompt
+        )
+
     new_reply.files.set(request.FILES.getlist('file'))
+
     post.replies.add(new_reply)
-    data = {'id': new_reply.id, 'member_id': new_reply.member_id.id,
-            'prompt': new_reply.prompt, 'upvotes': new_reply.upvotes}
+
+    data = {
+        'id': new_reply.id,
+        'member_id': new_reply.member_id.id,
+        'prompt': new_reply.prompt,
+        'upvotes': new_reply.upvotes
+    }
     return Response(data, status=201)
+
 
 @api_view(['POST'])
 def create_nested_reply(request):
@@ -337,15 +367,20 @@ def create_post_check(request):
     # process text
     processed_text_dict = process_text(prompt, class_id)
 
-    # create a list of dictionaries containing post IDs, titles, and prompts
-    response_data = []
-    for post_id in processed_text_dict:
-        post = Post.objects.get(id=post_id)
-        prompt = post.prompt
-        title = post.title
-        response_data.append({'post_id': post_id, 'title': title, 'prompt': prompt})
+    if processed_text_dict:  # create a list of dictionaries containing post IDs, titles, and prompts
+        response_data = []
+        for post_id in processed_text_dict:
+            post = Post.objects.get(id=post_id)
+            prompt = post.prompt
+            title = post.title
+            response_data.append({'post_id': post_id, 'title': title, 'prompt': prompt})
 
+    print("test")
+    if not processed_text_dict:  # If processed_text_dict is empty, use process_file_text instead
+        processed_text_dict = process_file_text(prompt, class_id)
 
+    print("awd")
+    print(response_data)
     # return the list of dictionaries as a JSON response
     return Response(response_data, status=201)
 

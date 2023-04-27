@@ -8,7 +8,7 @@ export const useCreateReply = () => {
   const createReply = async (newReply: {
     member_id: string | undefined
     prompt: string
-    //tag: string <-- deal with this later
+    parent_id: string
     post_id: string
   }) => {
     setIsLoading(true)

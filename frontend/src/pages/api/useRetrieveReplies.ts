@@ -6,8 +6,12 @@ interface Reply {
   upvotes: number
   published_date: string
   email: string
-  parent_reply?: Reply
-  child_replies?: Reply[]
+  parent_reply?: ParentReply
+}
+
+interface ParentReply {
+  member_email: string
+  prompt: string
 }
 
 interface Member {
