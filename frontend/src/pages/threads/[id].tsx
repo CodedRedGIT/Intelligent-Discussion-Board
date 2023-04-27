@@ -6,8 +6,6 @@ import Link from 'next/link'
 import { Page } from '../../components/layout/Page'
 import { LinkButton } from '../../components/ui/LinkButton'
 import { Card } from '../../components/layout/Card'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 const Threads: NextPage = () => {
   const { query } = useRouter()

@@ -1,145 +1,14 @@
-//WHOLE FORM DOESN'T WORK YET. WIP
 import { useSessionContext } from '@/pages/api/auth/session'
 import { useCreateNestedReply } from '@/pages/api/useCreatedNestedReply'
 import { useCreateReply } from '@/pages/api/useCreateReply'
-import { useDeleteItem } from '@/pages/api/useDeleteItem'
-import { useUpvote } from '@/pages/api/useUpvote'
-import {
-  faThumbsUp,
-  faThumbsDown,
-  faTrash,
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import dynamic from 'next/dynamic'
+import Router from 'next/router'
 import React, { useState } from 'react'
 
 interface Props {
   replyId: string
   post_id: string
 }
-
-// interface Reply {
-//   id: string
-//   prompt: string
-//   upvotes: number
-//   published_date: string
-//   email: string
-//   parent_reply?: Reply
-//   child_replies?: Reply[]
-// }
-
-// interface ReplyProps {
-//   reply: Reply
-//   post_id: string
-// }
-
-// const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
-//   const { isLoading, error, success, upvote, removeUpvote } = useUpvote(
-//     reply.id,
-//     'replies',
-//   )
-
-//   const {
-//     isLoading: deleteIsLoading,
-//     error: deleteError,
-//     success: deleteSuccess,
-//     deleteItem,
-//   } = useDeleteItem(reply.id, 'replies')
-
-//   const [showUpvoteButton, setShowUpvoteButton] = useState(!success)
-//   const [upvotes, setUpvotes] = useState(reply.upvotes)
-//   const [isReplying, setIsReplying] = useState(false)
-//   const [prompt, setPrompt] = useState('')
-
-//   const handleUpvote = () => {
-//     upvote()
-//     setShowUpvoteButton(false)
-//     setUpvotes(upvotes + 1)
-//   }
-
-//   const handleRemoveUpvote = () => {
-//     removeUpvote()
-//     setShowUpvoteButton(true)
-//     setUpvotes(upvotes - 1)
-//   }
-
-//   const handleDelete = () => {
-//     deleteItem()
-//     window.location.reload()
-//   }
-
-//   const nestedReply = () => {
-//     return <p>d</p>
-//   }
-
-//   return (
-//     <div className='thread__item' key={reply.id}>
-//       <div
-//         className='thread__reply'
-//         dangerouslySetInnerHTML={{ __html: reply.prompt }}
-//       ></div>
-//       <div className='thread__info'>
-//         <div className='thread__info__top'>
-//           <small>{reply.published_date.substring(0, 10)}</small>
-//           <small>{reply.published_date.substring(12, 19)}</small>
-//           <small>
-//             {showUpvoteButton && (
-//               <button onClick={handleUpvote} disabled={isLoading}>
-//                 <FontAwesomeIcon icon={faThumbsUp} className='icon' />
-//                 {isLoading ? 'Loading...' : `${upvotes} upvotes`}
-//               </button>
-//             )}
-//             {!showUpvoteButton && (
-//               <button onClick={handleRemoveUpvote} disabled={isLoading}>
-//                 <FontAwesomeIcon icon={faThumbsDown} className='icon' />
-//                 {isLoading ? 'Loading...' : `${upvotes} upvotes`}
-//               </button>
-//             )}
-//           </small>
-//           <small>{reply.email}</small>
-//         </div>
-//         <div className='thread__info__bottom'>
-//           <button onClick={handleDelete} disabled={deleteIsLoading}>
-//             <FontAwesomeIcon icon={faTrash} className='icon' />
-//             {deleteIsLoading ? 'Loading...' : 'Delete'}
-//           </button>
-//           {deleteSuccess && <div className='success'>Success!</div>}
-//           {deleteError && <div className='error'>{deleteError}</div>}
-//           {error && <div className='error'>{error}</div>}
-//           <div>
-//             <button
-//               onClick={() => setIsReplying(true)}
-//               className='btn btn-primary'
-//             >
-//               Reply
-//             </button>
-//           </div>
-//         </div>
-//         {isReplying && (
-//           <div style={{ height: '200px', overflowY: 'scroll', flexGrow: 1 }}>
-//             <form>
-//               <textarea
-//                 required
-//                 rows={8}
-//                 className='modalInput'
-//                 name='Thread Prompt'
-//                 value={prompt}
-//                 onChange={e => setPrompt(e.target.value)}
-//               />
-//             </form>
-//           </div>
-//         )}
-//       </div>
-//       {reply.child_replies && (
-//         <div className='thread__child-replies'>
-//           {reply.child_replies.map(childReply => (
-//             <Reply key={childReply.id} reply={childReply} post_id={post_id} />
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   )
-// }
 
 const ReactQuillWrapper = dynamic(() => import('react-quill'), {
   //besure to import dynamically
@@ -168,7 +37,7 @@ const NestedReply: React.FC<Props> = ({ replyId, post_id }) => {
 
   const handleSubmit = () => {
     createReply({ member_id, prompt, parent_id: replyId, post_id })
-    window.location.reload()
+    Router.reload()
   }
 
   return (

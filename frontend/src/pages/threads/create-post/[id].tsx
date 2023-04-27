@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { NextPage } from 'next'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { useCreatePost } from '@/pages/api/useCreatePost'
 import { Page } from '../../../components/layout/Page'
 import { Card } from '../../../components/layout/Card'
@@ -45,7 +45,6 @@ const CreatePost: NextPage = () => {
   const [prompt, setPrompt] = useState('')
   const [tag, setTag] = useState('GENERAL')
   const [showPopup, setShowPopup] = useState(false)
-  const [showFilePopup, setShowFilePopup] = useState(false)
   const { postResponse, createPostCheck } = useCreatePostCheck()
   const member_id = sessionData?.user_id ?? ''
   const [createPostCheckFinished, setCreatePostCheckFinished] = useState(false)
@@ -64,7 +63,7 @@ const CreatePost: NextPage = () => {
       } else {
         createPost({ member_id, prompt, title, tag, class_id })
         router.push(`/threads/${class_id}`)
-        window.location.reload()
+        Router.reload()
       }
     }
   }, [
