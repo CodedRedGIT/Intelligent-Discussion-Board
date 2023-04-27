@@ -9,20 +9,20 @@ export const useSession = () => {
 
   useEffect(() => {
     const { session_id } = cookie.parse(document.cookie)
-    if (!session_id) {
-      clearSessionData()
-      return
-    }
 
-    const fetchData = async () => {
-      const data = await getSessionData(session_id)
-      if (data === null) {
-        clearSessionData()
-      } else {
-        setSessionData(data)
+    if (session_id) {
+      const fetchData = async () => {
+        const data = await getSessionData(session_id)
+        if (data === null) {
+          clearSessionData()
+        } else {
+          setSessionData(data)
+        }
       }
+      fetchData()
+    } else {
+      clearSessionData()
     }
-    fetchData()
   }, [])
 
   const saveSessionData = (data: SessionData) => {

@@ -7,6 +7,9 @@ export type SessionData = {
 export const getSessionData = async (
   session_id: string,
 ): Promise<SessionData | null> => {
+  if (!session_id) {
+    return null
+  }
   try {
     const response = await fetch('http://localhost:8000/api/session/', {
       headers: { Authorization: `Bearer ${session_id}` },
