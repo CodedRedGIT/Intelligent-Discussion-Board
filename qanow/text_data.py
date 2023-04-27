@@ -137,20 +137,20 @@ def process_file_text(posttext, class_id):
     postvector = np.array(post_embedding)
 
     class_instance = Class.objects.get(id=class_id)
-    files = class_instance.files.all()
+    files = class_instance.files.all()  # Retrieve all the files associated with the class
 
+    print(files)
     for file in files:
-        for post in file.post_set.all():
-            if not post.textData:
-                continue
-            embedding = post.textData.embedding
-            score = similarity_score(postvector, embedding)
-            if score > 0.85:
-                returnlist.append(post.id)
+        if not file.embedding:
+            continue
+        embedding = file.embedding
+        print("embedd made")
+        score = similarity_score(postvector, embedding)
+        print(score)
+        if score > 0.75: #TODO only show highest scored answer
+            returnlist.append(context_completion(posttext, strip_text(file.file)))
 
     return returnlist
-
-
 
 
 # if __name__ == "__main__":
