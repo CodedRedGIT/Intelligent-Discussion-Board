@@ -1,30 +1,30 @@
-
 export type SessionData = {
-  token: string;
-  email: string;
-  user_id: string;
-};
+  token: string
+  email: string
+  user_id: string
+}
 
-export const getSessionData = async (session_id: string | undefined): Promise<SessionData | null> => {
-  if (!session_id) {
-    return null;
-  }
-
+export const getSessionData = async (
+  session_id: string,
+): Promise<SessionData | null> => {
   try {
     const response = await fetch('http://localhost:8000/api/session/', {
-        headers: { 'Authorization': `Bearer ${session_id}` },
-      });
-      
-    const data = await response.json();
-    console.log(data);
+      headers: { Authorization: `Bearer ${session_id}` },
+    })
+
+    const data = await response.json()
 
     if (response.ok) {
-      return { token: data.access_token, email: data.email, user_id: data.user_id };
+      return {
+        token: data.access_token,
+        email: data.email,
+        user_id: data.user_id,
+      }
     } else {
-      return null;
+      return null
     }
   } catch (err: any) {
-    console.error(err);
-    return null;
+    console.error(err)
+    return null
   }
-};
+}

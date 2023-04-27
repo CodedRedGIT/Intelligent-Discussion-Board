@@ -6,13 +6,33 @@ from django.db import IntegrityError
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
+from django.db import transaction
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from qanow.text_data import process_text
-from .models import Class, Member, Post, Reply
+from qanow.text_data import embedding_create, process_file_text, process_text, strip_text
+from .models import Class, File, Member, ParentReply, Post, Reply
 from .serializer import ClassSerializer, MemberSerializer, PostSerializer, ReplySerializer, UserSerializer
 
+
+@api_view(['GET'])
+def retrieve_files_by_class(request, id):
+    try:
+        # Retrieve the class with the given ID
+        class_obj = Class.objects.get(pk=id)
+    except Class.DoesNotExist:
+        return JsonResponse({'error': 'Class not found'}, status=404)
+
+    # Ensure that the user has permission to access this class
+    if not request.user.is_staff and request.user.id != class_obj.owner_id:
+        return JsonResponse({'error': 'You do not have permission to access this class'}, status=403)
+
+    # Retrieve all files for this class
+    files = File.objects.filter(class_id=id).order_by('-created_at')
+
+    # Serialize the files and return them in the response
+    data = [{'id': f.id, 'name': f.name, 'size': f.size, 'type': f.type, 'created_at': f.created_at} for f in files]
+    return JsonResponse({'files': data})
 
 @api_view(['GET'])
 def get_all_classes(request):
@@ -32,7 +52,6 @@ def get_all_members(request):
     members = Member.objects.all()
     serializer = MemberSerializer(members, many=True)
     return Response(serializer.data, status=200)
-
 
 @api_view(['GET'])
 def get_all_posts(request):
@@ -133,6 +152,27 @@ def get_reply(request, id):
     return Response(serializer.data, status=200)
 
 
+@api_view(['POST'])
+def join_class(request):
+    member_id = request.data.get('member_id')
+    class_id = request.data.get('class_id')
+
+    try:
+        member = Member.objects.get(id=member_id)
+        class_obj = Class.objects.get(id=class_id)
+    except Member.DoesNotExist:
+        return Response({'error': 'Member not found'}, status=404)
+    except Class.DoesNotExist:
+        return Response({'error': 'Class not found'}, status=404)
+
+    # Add the member to the class
+    class_obj.members.add(member)
+
+    # Serialize the updated class and return it in the response
+    serializer = ClassSerializer(class_obj)
+    return Response(serializer.data, status=200)
+
+
 @api_view(['GET'])
 def get_post_replies(request, post_id):
     """
@@ -185,7 +225,6 @@ def login(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_session_data(request):
     user = request.user
     member = Member.objects.get(user=user)
@@ -215,7 +254,6 @@ def create_class(request):
     section = request.data.get('section')
     member_id = request.data.get('member_id')
 
-    print(member_id)
     try:
         member = Member.objects.get(id=member_id)
     except Member.DoesNotExist:
@@ -230,7 +268,6 @@ def create_class(request):
 
 @api_view(['POST'])
 def create_reply(request):
-
     post_id = request.data.get('post_id')
 
     try:
@@ -240,17 +277,48 @@ def create_reply(request):
 
     member_id = request.data.get('member_id')
     prompt = request.data.get('prompt')
-    # tag = request.data.get('tag')
 
     member = Member.objects.get(id=member_id)
 
-    new_reply = Reply.objects.create(
-        member_id=member, prompt=prompt)
+    parent_id = request.data.get('parent_id')
+
+    if parent_id:
+        try:
+            parent_reply = Reply.objects.get(id=parent_id)
+        except Reply.DoesNotExist:
+            return Response({'error': 'Parent Reply not found'}, status=404)
+
+        parent_prompt = parent_reply.prompt
+        parent_member_email = parent_reply.member_id.user.email
+
+        parent_reply_object = ParentReply.objects.create(
+            member_email=parent_member_email,
+            prompt=parent_prompt
+        )
+
+        new_reply = Reply.objects.create(
+            member_id=member,
+            prompt=prompt,
+            nested_reply=parent_reply_object
+        )
+    else:
+        new_reply = Reply.objects.create(
+            member_id=member,
+            prompt=prompt
+        )
+
     new_reply.files.set(request.FILES.getlist('file'))
+
     post.replies.add(new_reply)
-    data = {'id': new_reply.id, 'member_id': new_reply.member_id.id,
-            'prompt': new_reply.prompt, 'upvotes': new_reply.upvotes}
+
+    data = {
+        'id': new_reply.id,
+        'member_id': new_reply.member_id.id,
+        'prompt': new_reply.prompt,
+        'upvotes': new_reply.upvotes
+    }
     return Response(data, status=201)
+
 
 @api_view(['POST'])
 def create_nested_reply(request):
@@ -299,19 +367,42 @@ def create_post_check(request):
     # process text
     processed_text_dict = process_text(prompt, class_id)
 
-    # create a list of dictionaries containing post IDs, titles, and prompts
-    response_data = []
-    for post_id in processed_text_dict:
-        post = Post.objects.get(id=post_id)
-        prompt = post.prompt
-        title = post.title
-        response_data.append({'post_id': post_id, 'title': title, 'prompt': prompt})
+    if processed_text_dict:  # create a list of dictionaries containing post IDs, titles, and prompts
+        response_data = []
+        for post_id in processed_text_dict:
+            post = Post.objects.get(id=post_id)
+            prompt = post.prompt
+            title = post.title
+            response_data.append({'post_id': post_id, 'title': title, 'prompt': prompt})
 
+    print("test")
+    if not processed_text_dict:  # If processed_text_dict is empty, use process_file_text instead
+        processed_text_dict = process_file_text(prompt, class_id)
 
+    print("awd")
+    print(response_data)
     # return the list of dictionaries as a JSON response
     return Response(response_data, status=201)
 
 
+@api_view(['POST'])
+def save_file_for_class(request):
+    class_id = request.POST.get('class_id')
+    file = request.FILES.get('file')
+
+    try:
+        class_obj = Class.objects.get(id=class_id)
+    except Class.DoesNotExist:
+        return Response({'error': 'Class not found'}, status=400)
+
+    file_text = strip_text(file)
+    file_embedding = embedding_create(file_text)
+
+    with transaction.atomic():
+        file_obj = File.objects.create(file=file, embedding=file_embedding)
+        class_obj.files.add(file_obj)
+
+    return Response({'success': True}, status=200)
 
 
 @api_view(['POST'])
@@ -364,6 +455,33 @@ def upvote_post(request, id):
 
     serializer = PostSerializer(post)
     return Response(serializer.data, status=200)
+
+
+@api_view(["GET"])
+def get_member_type(request, id):
+    try:
+        member = Member.objects.get(id=id)
+        member_type = member.member_type
+        return JsonResponse(member_type, safe=False)
+    except Member.DoesNotExist:
+        return JsonResponse({"error": "Member does not exist."}, status=404)
+
+
+@api_view(['POST'])
+def change_member_type(request, id):
+    try:
+        member = Member.objects.get(id=id)
+    except Member.DoesNotExist:
+        return Response({'error': 'Member not found'}, status=404)
+    
+    new_type = 'INSTRUCTOR' if member.member_type == 'STUDENT' else 'STUDENT'
+    member.member_type = new_type
+    member.save()
+
+    serializer = MemberSerializer(member)
+    return Response(serializer.data, status=200)
+
+
 
 
 @api_view(['POST'])

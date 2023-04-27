@@ -11,6 +11,9 @@ __pycache__/
 /venv/Scripts/blackd.exe
 
 
+#file upload
+/post_files
+
 #textData
 /venv
 

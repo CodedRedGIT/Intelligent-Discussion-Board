@@ -1,29 +1,21 @@
 import { useState } from 'react'
 
-export const useCreateReply = () => {
+export const useJoinClass = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<boolean>(false)
 
-  const createReply = async (newReply: {
-    member_id: string | undefined
-    prompt: string
-    parent_id: string
-    post_id: string
-  }) => {
+  const joinClass = async (memberId: string, classId: string) => {
     setIsLoading(true)
 
     try {
-      const response = await fetch(
-        'http://localhost:8000/api/posts/replies/create/',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newReply),
+      const response = await fetch(`http://localhost:8000/api/classes/join/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      )
+        body: JSON.stringify({ member_id: memberId, class_id: classId }),
+      })
 
       if (!response.ok) {
         const { error } = await response.json()
@@ -43,6 +35,6 @@ export const useCreateReply = () => {
     isLoading,
     error,
     success,
-    createReply,
+    joinClass,
   }
 }

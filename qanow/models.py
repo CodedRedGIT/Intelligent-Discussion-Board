@@ -18,7 +18,7 @@ class Member(models.Model):
         TEACHER_ASSISTANT = "TA"
         INSTRUCTOR = "INSTRUCTOR"
 
-    member_type = models.TextField(choices=MemberType.choices)
+    member_type = models.TextField(choices=MemberType.choices, default=MemberType.INSTRUCTOR)
 
     def save(self, *args, **kwargs):
         self.member_type = self.member_type.upper()
@@ -30,8 +30,14 @@ class Member(models.Model):
     def get_classes(self):
         return Class.objects.filter(members=self)
     
+    
 class File(models.Model):
     file = models.FileField(upload_to='post_files/')
+    embedding = models.JSONField(null=True, blank=True)
+
+class ParentReply(models.Model):
+    member_email = models.CharField(max_length=255, null=False)
+    prompt = models.CharField(max_length=2000)
 
 
 class Reply(models.Model):
@@ -43,7 +49,7 @@ class Reply(models.Model):
     upvotes = models.IntegerField(default=0)
     email = models.EmailField(default='', null=True, blank=True)
     parent_reply = models.ForeignKey(
-        'self', null=True, blank=True, on_delete=models.CASCADE, related_name='child_replies')
+        'ParentReply', null=True, blank=True, on_delete=models.CASCADE, related_name='parent_reply')
     files = models.ManyToManyField('File', blank=True)
 
     def save(self, *args, **kwargs):

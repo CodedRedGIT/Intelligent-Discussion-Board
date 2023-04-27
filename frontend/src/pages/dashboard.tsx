@@ -5,6 +5,7 @@ import { useSessionContext } from './api/auth/session'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faArrowRight,
+  faCog,
   faInfoCircle,
   faMugHot,
 } from '@fortawesome/free-solid-svg-icons'
@@ -14,16 +15,18 @@ import { Page } from '../components/layout/Page'
 import { Card } from '../components/layout/Card'
 import Router from 'next/router'
 import { Button } from '@/components/ui/Button'
+import useRetrieveMemberType from './api/useMemberType'
 import { useGetAllClasses } from './api/useRetrieveJoinableClasses'
 
 const Dashboard: NextPage = () => {
   const { sessionData } = useSessionContext()
-
   const [section, setSection] = useState('')
 
   const { loading, classes, error } = useRetrieveClassesByMember(
     sessionData?.user_id ?? '',
   )
+
+  const { memberType } = useRetrieveMemberType(sessionData?.user_id)
 
   const {
     classes: availClasses,
@@ -43,8 +46,8 @@ const Dashboard: NextPage = () => {
     Router.reload()
   }
 
-  const fileButton = () => {
-    Router.push('/files')
+  const classAdminButton = () => {
+    Router.push('/admin/classes')
   }
 
   return (
@@ -90,7 +93,16 @@ const Dashboard: NextPage = () => {
           <div>
             <span className='inline-block w-4' />
             <Card className='bg-white p-6 rounded-lg shadow-md max-w-xl'>
-              <h1 className='text-2xl font-bold mb-4'>Your classes:</h1>
+              <div className='flex justify-between'>
+                <h1 className='text-2xl font-bold mb-4'>Your classes:</h1>
+                {memberType !== 'STUDENT' && (
+                  <div className=''>
+                    <Button onClick={classAdminButton} className='bg-white'>
+                      <FontAwesomeIcon icon={faCog} className='text-white' />
+                    </Button>
+                  </div>
+                )}
+              </div>
               {classes.length === 0 ? (
                 <p className='text-lg leading-relaxed text-gray-700'>
                   You are not in any classes!
@@ -115,76 +127,8 @@ const Dashboard: NextPage = () => {
                 </div>
               )}
             </Card>
-            <span className='inline-block w-4' />
-            <Card className='bg-white p-6 rounded-lg shadow-md max-w-xl'>
-              <h1 className='text-2xl font-bold mb-4'>Join a class:</h1>
-              {availClasses.length === 0 ? (
-                <p className='text-lg leading-relaxed text-gray-700'>
-                  No classes made!
-                </p>
-              ) : (
-                <div className='grid grid-cols-1 gap-4'>
-                  {availClasses.map(c => (
-                    <div className='bg-gray-100 p-4 rounded-lg shadow-md flex justify-between items-center hover:bg-gray-200'>
-                      <div>
-                        <h2 className='text-xl font-bold mb-2'>
-                          {c.class_section}
-                        </h2>
-                      </div>
-                      <FontAwesomeIcon
-                        icon={faArrowRight}
-                        className='text-orange-500 text-2xl'
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </Card>
           </div>
         )}
-        <div>
-          <span className='inline-block w-4' />
-          <Card className='bg-white p-6 rounded-lg shadow-md max-w-xl'>
-            <h1 className='text-2xl font-bold mb-4'>Create a class:</h1>
-            <div className='flex'>
-              <input
-                type='text'
-                className='border border-gray-400 p-2 mr-2 w-full'
-                placeholder='Class section...'
-                onChange={e => setSection(e.target.value)}
-              />
-              <button
-                className='bg-green-500 text-gray-50 px-4 py-2 rounded hover:bg-green-600 transition-all duration-200'
-                onClick={handleCreateClass}
-                disabled={isCreating}
-              >
-                {isCreating ? 'Creating...' : 'Create'}
-              </button>
-            </div>
-            {createError && (
-              <p className='text-red-500'>Error creating class!</p>
-            )}
-            {success && (
-              <p className='text-green-500'>Class created successfully!</p>
-            )}
-          </Card>
-        </div>
-      </div>
-      <div>
-        <span className='inline-block w-4' />
-        <Card className='bg-white p-6 rounded-lg shadow-md max-w-xl'>
-          <Link href={`/files`} passHref>
-            <div className='bg-gray-100 p-4 rounded-lg shadow-md flex justify-between items-center hover:bg-gray-200'>
-              <div>
-                <h2 className='text-xl font-bold mb-2'>Files</h2>
-              </div>
-              <FontAwesomeIcon
-                icon={faArrowRight}
-                className='text-orange-500 text-2xl'
-              />
-            </div>
-          </Link>
-        </Card>
       </div>
     </Page>
   )
