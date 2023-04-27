@@ -17,6 +17,8 @@ import Router from 'next/router'
 import { Button } from '@/components/ui/Button'
 import useRetrieveMemberType from './api/useMemberType'
 import { useGetAllClasses } from './api/useRetrieveJoinableClasses'
+import { useJoinClass } from './api/useJoinClass'
+import { join } from 'path'
 
 const Dashboard: NextPage = () => {
   const { sessionData } = useSessionContext()
@@ -35,11 +37,23 @@ const Dashboard: NextPage = () => {
   } = useGetAllClasses()
 
   const {
+    isLoading: joinLoading,
+    error: joinError,
+    success: joinSuccess,
+    joinClass,
+  } = useJoinClass()
+
+  const {
     isLoading: isCreating,
     error: createError,
     success,
     createClass,
   } = useCreateClass()
+
+  const handleJoinClass = (classId: string) => {
+    joinClass(sessionData?.user_id ?? '', classId)
+    Router.reload()
+  }
 
   const handleCreateClass = () => {
     createClass(section, sessionData?.user_id)
@@ -129,6 +143,34 @@ const Dashboard: NextPage = () => {
             </Card>
           </div>
         )}
+        <span className='inline-block w-4' />
+        <Card className='bg-white p-6 rounded-lg shadow-md max-w-xl'>
+          <h1 className='text-2xl font-bold mb-4'>Join a class:</h1>
+          {availClasses.length === 0 ? (
+            <p className='text-lg leading-relaxed text-gray-700'>
+              No classes made!
+            </p>
+          ) : (
+            <div className='grid grid-cols-1 gap-4'>
+              {availClasses.map(c => (
+                <div
+                  onClick={() => handleJoinClass(c.id)}
+                  className='bg-gray-100 p-4 rounded-lg shadow-md flex justify-between items-center hover:bg-gray-200'
+                >
+                  <div>
+                    <h2 className='text-xl font-bold mb-2'>
+                      {c.class_section}
+                    </h2>
+                  </div>
+                  <FontAwesomeIcon
+                    icon={faArrowRight}
+                    className='text-orange-500 text-2xl'
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
       </div>
     </Page>
   )

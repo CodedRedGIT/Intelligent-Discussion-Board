@@ -11,6 +11,8 @@ import { useDeleteItem } from '@/pages/api/useDeleteItem'
 import { Button } from './ui/Button'
 import ReplyForm from './ReplyForm'
 import NestedReply from './NestedReply'
+// import { Quill } from 'react-quill'
+import Quill from '@/components/QuillForm'
 
 interface Reply {
   id: string
@@ -18,10 +20,13 @@ interface Reply {
   upvotes: number
   published_date: string
   email: string
-  parent_reply?: Reply
-  child_replies?: Reply[]
+  parent_reply?: ParentReply
 }
 
+interface ParentReply {
+  member_email: string
+  prompt: string
+}
 interface ReplyProps {
   reply: Reply
   post_id: string
@@ -70,6 +75,7 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
     <div className='thread__item' key={reply.id}>
       <div className='thread__column'>
         <div className='thread__top'>
+          {reply.parent_reply?.member_email}
           <div
             className='thread__reply'
             dangerouslySetInnerHTML={{ __html: reply.prompt }}
@@ -104,11 +110,6 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
               {error && <div className='error'>{error}</div>}
             </div>
           </div>
-          <div className='nested'>
-            {reply.child_replies?.map(child => (
-              <p>{child.prompt}</p>
-            ))}
-          </div>
         </div>
         <div className='thread__bottom'>
           <div>
@@ -122,7 +123,7 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
               Reply
             </button>
           </div>
-          {isReplying && <NestedReply replyId={reply.id} />}
+          {isReplying && <Quill post_id={post_id} parent_id={reply.id} />}
         </div>
       </div>
     </div>
@@ -142,10 +143,8 @@ const ListReplies: React.FC<Props> = ({ postId }) => {
   const like = (isLiked: boolean) => {
     if (isLiked) {
       isLiked = false
-      alert('Unliked')
     } else {
       isLiked = true
-      alert('Liked')
     }
   }
 
