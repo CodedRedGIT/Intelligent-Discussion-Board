@@ -69,6 +69,7 @@ def get_all_replies(request):
     Retrieve a list of all replies.
     """
     replies = Reply.objects.all()
+    print(replies)
     serializer = ReplySerializer(replies, many=True)
     return Response(serializer.data, status=200)
 
@@ -184,8 +185,30 @@ def get_post_replies(request, post_id):
         return Response({'error': 'Post not found'}, status=404)
 
     replies = post.replies.all()
-    serializer = ReplySerializer(replies, many=True)
-    return Response(serializer.data, status=200)
+
+    # Construct the response data
+    response_data = []
+    for reply in replies:
+        parent_reply_data = None
+        if reply.parent_reply:
+            parent_reply_data = {
+                'member_email': reply.parent_reply.member_email,
+                'prompt': reply.parent_reply.prompt
+            }
+
+        response_data.append({
+            'id': reply.id,
+            'prompt': reply.prompt,
+            'upvotes': reply.upvotes,
+            'published_date': reply.published_date,
+            'email': reply.email,
+            'parent_reply': parent_reply_data,
+            'files': []  # Modify this to include the actual files data if needed
+        })
+
+    return Response(response_data, status=200)
+
+
 
 
 @api_view(['GET'])

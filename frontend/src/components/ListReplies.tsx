@@ -143,10 +143,8 @@ const ListReplies: React.FC<Props> = ({ postId }) => {
   const like = (isLiked: boolean) => {
     if (isLiked) {
       isLiked = false
-      alert('Unliked')
     } else {
       isLiked = true
-      alert('Liked')
     }
   }
 
