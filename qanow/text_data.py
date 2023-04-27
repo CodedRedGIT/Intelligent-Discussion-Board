@@ -152,6 +152,7 @@ def process_file_text(posttext, class_id):
 
 
 
+
 # if __name__ == "__main__":
 #     vector1 = processtext("When are office hours? I need to talk to the professor")
 #     vector2 = processtext("What time are office hours?")
