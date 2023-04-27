@@ -48,7 +48,7 @@ class Reply(models.Model):
     prompt = models.CharField(max_length=2000)
     upvotes = models.IntegerField(default=0)
     email = models.EmailField(default='', null=True, blank=True)
-    nested_reply = models.ForeignKey(
+    parent_reply = models.ForeignKey(
         'ParentReply', null=True, blank=True, on_delete=models.CASCADE, related_name='parent_reply')
     files = models.ManyToManyField('File', blank=True)
 
