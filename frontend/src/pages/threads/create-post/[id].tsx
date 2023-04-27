@@ -59,12 +59,12 @@ const CreatePost: NextPage = () => {
 
   useEffect(() => {
     if (createPostCheckFinished) {
-      if (postResponse && postResponse.data && postResponse.data.length === 0) {
+      if (postResponse && postResponse.data && postResponse.data.length > 0) {
+        setShowPopup(true)
+      } else {
         createPost({ member_id, prompt, title, tag, class_id })
         router.push(`/threads/${class_id}`)
         window.location.reload()
-      } else {
-        setShowPopup(true)
       }
     }
   }, [
