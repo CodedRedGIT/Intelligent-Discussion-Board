@@ -364,25 +364,24 @@ def create_post_check(request):
 
     prompt = request.data.get('prompt')
 
-    # process text
     processed_text_dict = process_text(prompt, class_id)
 
-    if processed_text_dict:  # create a list of dictionaries containing post IDs, titles, and prompts
-        response_data = []
-        for post_id in processed_text_dict:
-            post = Post.objects.get(id=post_id)
-            prompt = post.prompt
-            title = post.title
-            response_data.append({'post_id': post_id, 'title': title, 'prompt': prompt})
-
-    print("test")
-    if not processed_text_dict:  # If processed_text_dict is empty, use process_file_text instead
+    if not processed_text_dict:
         processed_text_dict = process_file_text(prompt, class_id)
 
-    print("awd")
-    print(response_data)
-    # return the list of dictionaries as a JSON response
+    response_data = []  # Initialize the response_data variable
+
+    for post_id in processed_text_dict:
+        post = Post.objects.get(id=post_id)
+        prompt = post.prompt
+        title = post.title
+        response_data.append({'post_id': post_id, 'title': title, 'prompt': prompt})
+
+    print("file answer: ")
+    print(response_data)  # Print the response_data
+
     return Response(response_data, status=201)
+
 
 
 @api_view(['POST'])
