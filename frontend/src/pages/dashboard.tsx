@@ -16,6 +16,7 @@ import { Card } from '../components/layout/Card'
 import Router from 'next/router'
 import { Button } from '@/components/ui/Button'
 import useRetrieveMemberType from './api/useMemberType'
+import { useGetAllClasses } from './api/useRetrieveJoinableClasses'
 
 const Dashboard: NextPage = () => {
   const { sessionData } = useSessionContext()
@@ -26,6 +27,12 @@ const Dashboard: NextPage = () => {
   )
 
   const { memberType } = useRetrieveMemberType(sessionData?.user_id)
+
+  const {
+    classes: availClasses,
+    isLoading,
+    error: classesError,
+  } = useGetAllClasses()
 
   const {
     isLoading: isCreating,
