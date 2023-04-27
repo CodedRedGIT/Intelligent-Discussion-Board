@@ -13,6 +13,9 @@ import ReplyForm from './ReplyForm'
 import NestedReply from './NestedReply'
 // import { Quill } from 'react-quill'
 import Quill from '@/components/QuillForm'
+import { useSession } from '@/pages/api/useSession'
+import { useSessionContext } from '@/pages/api/auth/session'
+import useRetrieveMemberType from '@/pages/api/useMemberType'
 
 interface Reply {
   id: string
@@ -37,6 +40,9 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
     reply.id,
     'replies',
   )
+
+  const { sessionData } = useSessionContext()
+  const { memberType } = useRetrieveMemberType(sessionData?.user_id)
 
   const {
     isLoading: deleteIsLoading,
@@ -100,15 +106,17 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
               </small>
               <small>{reply.email}</small>
             </div>
-            <div className='thread__info__bottom'>
-              <button onClick={handleDelete} disabled={deleteIsLoading}>
-                <FontAwesomeIcon icon={faTrash} className='icon' />
-                {deleteIsLoading ? 'Loading...' : 'Delete'}
-              </button>
-              {deleteSuccess && <div className='success'>Success!</div>}
-              {deleteError && <div className='error'>{deleteError}</div>}
-              {error && <div className='error'>{error}</div>}
-            </div>
+            {memberType !== 'STUDENT' && (
+              <div className='thread__info__bottom'>
+                <button onClick={handleDelete} disabled={deleteIsLoading}>
+                  <FontAwesomeIcon icon={faTrash} className='icon' />
+                  {deleteIsLoading ? 'Loading...' : 'Delete'}
+                </button>
+                {deleteSuccess && <div className='success'>Success!</div>}
+                {deleteError && <div className='error'>{deleteError}</div>}
+                {error && <div className='error'>{error}</div>}
+              </div>
+            )}
           </div>
         </div>
         <div className='thread__bottom'>
