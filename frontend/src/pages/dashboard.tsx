@@ -64,6 +64,16 @@ const Dashboard: NextPage = () => {
     Router.push('/admin/classes')
   }
 
+  const getUnjoinedClasses = (
+    allClasses: Array<{ id: string; class_section: string }>,
+    joinedClasses: Array<{ id: string; class_section: string }>,
+  ): Array<{ id: string; class_section: string }> => {
+    const joinedClassIds = new Set(joinedClasses.map(c => c.id))
+    return allClasses.filter(c => !joinedClassIds.has(c.id))
+  }
+
+  const unjoinedClasses = getUnjoinedClasses(availClasses, classes)
+
   return (
     <Page title={'Dashboard'}>
       <div>
@@ -152,23 +162,31 @@ const Dashboard: NextPage = () => {
             </p>
           ) : (
             <div className='grid grid-cols-1 gap-4'>
-              {availClasses.map(c => (
-                <div
-                  onClick={() => handleJoinClass(c.id)}
-                  className='bg-gray-100 p-4 rounded-lg shadow-md flex justify-between items-center hover:bg-gray-200'
-                  key={c.id}
-                >
-                  <div>
-                    <h2 className='text-xl font-bold mb-2'>
-                      {c.class_section}
-                    </h2>
-                  </div>
-                  <FontAwesomeIcon
-                    icon={faArrowRight}
-                    className='text-orange-500 text-2xl'
-                  />
+              {unjoinedClasses.length === 0 ? (
+                <p className='text-lg leading-relaxed text-gray-700'>
+                  No classes to join!
+                </p>
+              ) : (
+                <div className='grid grid-cols-1 gap-4'>
+                  {unjoinedClasses.map(c => (
+                    <div
+                      onClick={() => handleJoinClass(c.id)}
+                      className='bg-gray-100 p-4 rounded-lg shadow-md flex justify-between items-center hover:bg-gray-200'
+                      key={c.id}
+                    >
+                      <div>
+                        <h2 className='text-xl font-bold mb-2'>
+                          {c.class_section}
+                        </h2>
+                      </div>
+                      <FontAwesomeIcon
+                        icon={faArrowRight}
+                        className='text-orange-500 text-2xl'
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
           )}
         </Card>
