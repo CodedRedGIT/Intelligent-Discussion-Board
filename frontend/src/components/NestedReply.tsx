@@ -15,6 +15,7 @@ import React, { useState } from 'react'
 
 interface Props {
   replyId: string
+  post_id: string
 }
 
 // interface Reply {
@@ -145,7 +146,7 @@ const ReactQuillWrapper = dynamic(() => import('react-quill'), {
   ssr: false,
 })
 
-const NestedReply: React.FC<Props> = ({ replyId }) => {
+const NestedReply: React.FC<Props> = ({ replyId, post_id }) => {
   const [prompt, setPrompt] = useState('')
 
   const { sessionData } = useSessionContext()
@@ -166,7 +167,7 @@ const NestedReply: React.FC<Props> = ({ replyId }) => {
   } = useCreateReply()
 
   const handleSubmit = () => {
-    createNestedReply({ member_id, prompt, reply_id: replyId })
+    createReply({ member_id, prompt, parent_id: replyId, post_id })
     window.location.reload()
   }
 
