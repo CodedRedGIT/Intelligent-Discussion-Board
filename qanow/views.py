@@ -249,14 +249,10 @@ def login(request):
 
 @api_view(['GET'])
 def get_session_data(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({"error": "User not authenticated"}, status=401)
-
     user = request.user
     member = Member.objects.get(user=user)
     serializer = MemberSerializer(member)
     return Response({'access_token': str(request.auth), 'email': user.email, 'user_id': serializer.data['id']})
-
 
 
 @api_view(['POST'])
