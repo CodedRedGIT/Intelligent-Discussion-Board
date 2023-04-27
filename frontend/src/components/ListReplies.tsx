@@ -77,11 +77,25 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
     <div className='thread__item' key={reply.id}>
       <div className='thread__column'>
         <div className='thread__top'>
-          {reply.parent_reply?.member_email}
-          <div
-            className='thread__reply'
-            dangerouslySetInnerHTML={{ __html: reply.prompt }}
-          ></div>
+          <div className='thread__top__nested'>
+            <small>
+              {reply.parent_reply === null ? (
+                <></>
+              ) : (
+                <h3>Replying to {reply.parent_reply?.member_email}</h3>
+              )}
+            </small>
+            <small>
+              {reply.parent_reply?.prompt.substring(
+                3,
+                reply.parent_reply?.prompt.length - 4,
+              )}
+            </small>
+            <div
+              className='thread__reply'
+              dangerouslySetInnerHTML={{ __html: reply.prompt }}
+            ></div>
+          </div>
           <div className='thread__info'>
             <div className='thread__info__top'>
               <small>{reply.published_date.substring(0, 10)}</small>
