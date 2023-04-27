@@ -6,16 +6,12 @@ import {
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useDeleteItem } from '@/pages/api/useDeleteItem'
-import { Button } from './ui/Button'
-import ReplyForm from './ReplyForm'
-import NestedReply from './NestedReply'
-// import { Quill } from 'react-quill'
 import Quill from '@/components/QuillForm'
-import { useSession } from '@/pages/api/useSession'
 import { useSessionContext } from '@/pages/api/auth/session'
 import useRetrieveMemberType from '@/pages/api/useMemberType'
+import Router from 'next/router'
 
 interface Reply {
   id: string
@@ -70,7 +66,7 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
 
   const handleDelete = () => {
     deleteItem()
-    window.location.reload()
+    Router.reload()
   }
 
   const nestedReply = () => {

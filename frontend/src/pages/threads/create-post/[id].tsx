@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { NextPage } from 'next'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { useCreatePost } from '@/pages/api/useCreatePost'
 import { Page } from '../../../components/layout/Page'
 import { Card } from '../../../components/layout/Card'
@@ -64,7 +64,7 @@ const CreatePost: NextPage = () => {
       } else {
         createPost({ member_id, prompt, title, tag, class_id })
         router.push(`/threads/${class_id}`)
-        window.location.reload()
+        Router.reload()
       }
     }
   }, [

@@ -5,6 +5,7 @@ import { useSessionContext } from '../../pages/api/auth/session'
 import router from 'next/router'
 import useChangeMemberType from '@/pages/api/useChangeMemberType'
 import useRetrieveMemberType from '@/pages/api/useMemberType'
+import Router from 'next/router'
 
 const Navbar = () => {
   const { sessionData, clearSessionData } = useSessionContext()
@@ -25,7 +26,7 @@ const Navbar = () => {
 
   const handleEyeClick = async () => {
     await changeMemberType(sessionData?.user_id)
-    window.location.reload()
+    Router.reload()
   }
 
   return (
