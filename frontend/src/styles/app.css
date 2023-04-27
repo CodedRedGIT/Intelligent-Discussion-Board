@@ -99,7 +99,9 @@ a {
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  padding: 20px;
+  padding-top: 8px;
+  font-weight: bold;
+  font-style: normal;
 }
 .thread__item {
   padding: 20px;
@@ -134,6 +136,11 @@ a {
 .thread__top {
   display: flex;
   justify-content: space-between;
+}
+.thread__top__nested {
+  display: flex;
+  flex-direction: column;
+  font-style: italic;
 }
 .thread__info__bottom {
   display: flex;
