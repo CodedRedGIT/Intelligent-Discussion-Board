@@ -36,8 +36,6 @@ const Quill: React.FC<Props> = ({ post_id, parent_id }) => {
 
   const handleSubmit = () => {
     createReply({ member_id, prompt, parent_id, post_id })
-    console.log(prompt)
-    alert('Reply posted')
   }
 
   return (

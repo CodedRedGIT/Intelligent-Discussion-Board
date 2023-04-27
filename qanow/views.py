@@ -299,7 +299,7 @@ def create_reply(request):
         new_reply = Reply.objects.create(
             member_id=member,
             prompt=prompt,
-            nested_reply=parent_reply_object
+            parent_reply=parent_reply_object
         )
     else:
         new_reply = Reply.objects.create(
@@ -318,6 +318,7 @@ def create_reply(request):
         'upvotes': new_reply.upvotes
     }
     return Response(data, status=201)
+
 
 
 @api_view(['POST'])
