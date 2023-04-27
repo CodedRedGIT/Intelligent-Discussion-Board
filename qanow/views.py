@@ -369,19 +369,29 @@ def create_post_check(request):
 
     if not processed_text_dict:
         processed_text_dict = process_file_text(prompt, class_id)
+        response_data = processed_text_dict
+        response_type = 'file_data'
     else:
         for post_id in processed_text_dict:
             post = Post.objects.get(id=post_id)
             prompt = post.prompt
             title = post.title
             response_data.append({'post_id': post_id, 'title': title, 'prompt': prompt})
-        return Response(response_data, status=201)
+        response_type = 'post_data'
 
-    print("Question: ", prompt)
-    print("file answer: ")
-    print(processed_text_dict)  # Print the response_data
+    response = {
+        'response_type': response_type,
+        'data': response_data
+    }
 
-    return Response(processed_text_dict, status=201)
+    print(response)
+
+    if not response_data:
+        return Response("[]", status=200)
+
+    return Response(response, status=200)
+
+
 
 
 
@@ -402,7 +412,7 @@ def save_file_for_class(request):
         file_obj = File.objects.create(file=file, embedding=file_embedding)
         class_obj.files.add(file_obj)
 
-    return Response({'success': True}, status=200)
+    return Response({'success': True}, status=201)
 
 
 @api_view(['POST'])
