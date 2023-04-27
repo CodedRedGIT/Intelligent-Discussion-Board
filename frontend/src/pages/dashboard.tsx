@@ -156,6 +156,7 @@ const Dashboard: NextPage = () => {
                 <div
                   onClick={() => handleJoinClass(c.id)}
                   className='bg-gray-100 p-4 rounded-lg shadow-md flex justify-between items-center hover:bg-gray-200'
+                  key={c.id}
                 >
                   <div>
                     <h2 className='text-xl font-bold mb-2'>
