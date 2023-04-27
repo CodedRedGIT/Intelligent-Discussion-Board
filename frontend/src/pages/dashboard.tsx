@@ -14,6 +14,7 @@ import { Page } from '../components/layout/Page'
 import { Card } from '../components/layout/Card'
 import Router from 'next/router'
 import { Button } from '@/components/ui/Button'
+import { useGetAllClasses } from './api/useRetrieveJoinableClasses'
 
 const Dashboard: NextPage = () => {
   const { sessionData } = useSessionContext()
@@ -23,6 +24,12 @@ const Dashboard: NextPage = () => {
   const { loading, classes, error } = useRetrieveClassesByMember(
     sessionData?.user_id ?? '',
   )
+
+  const {
+    classes: availClasses,
+    isLoading,
+    error: classesError,
+  } = useGetAllClasses()
 
   const {
     isLoading: isCreating,
@@ -109,7 +116,30 @@ const Dashboard: NextPage = () => {
               )}
             </Card>
             <span className='inline-block w-4' />
-            <Card className='bg-white p-6 rounded-lg shadow-md max-w-xl'></Card>
+            <Card className='bg-white p-6 rounded-lg shadow-md max-w-xl'>
+              <h1 className='text-2xl font-bold mb-4'>Join a class:</h1>
+              {availClasses.length === 0 ? (
+                <p className='text-lg leading-relaxed text-gray-700'>
+                  No classes made!
+                </p>
+              ) : (
+                <div className='grid grid-cols-1 gap-4'>
+                  {availClasses.map(c => (
+                    <div className='bg-gray-100 p-4 rounded-lg shadow-md flex justify-between items-center hover:bg-gray-200'>
+                      <div>
+                        <h2 className='text-xl font-bold mb-2'>
+                          {c.class_section}
+                        </h2>
+                      </div>
+                      <FontAwesomeIcon
+                        icon={faArrowRight}
+                        className='text-orange-500 text-2xl'
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Card>
           </div>
         )}
         <div>
