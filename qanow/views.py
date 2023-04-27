@@ -364,23 +364,24 @@ def create_post_check(request):
 
     prompt = request.data.get('prompt')
 
+    response_data = []
     processed_text_dict = process_text(prompt, class_id)
 
     if not processed_text_dict:
         processed_text_dict = process_file_text(prompt, class_id)
+    else:
+        for post_id in processed_text_dict:
+            post = Post.objects.get(id=post_id)
+            prompt = post.prompt
+            title = post.title
+            response_data.append({'post_id': post_id, 'title': title, 'prompt': prompt})
+        return Response(response_data, status=201)
 
-    response_data = []  # Initialize the response_data variable
-
-    for post_id in processed_text_dict:
-        post = Post.objects.get(id=post_id)
-        prompt = post.prompt
-        title = post.title
-        response_data.append({'post_id': post_id, 'title': title, 'prompt': prompt})
-
+    print("Question: ", prompt)
     print("file answer: ")
-    print(response_data)  # Print the response_data
+    print(processed_text_dict)  # Print the response_data
 
-    return Response(response_data, status=201)
+    return Response(processed_text_dict, status=201)
 
 
 
