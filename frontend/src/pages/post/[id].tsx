@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import ListReplies from '../../components/ListReplies'
-import ReplyForm from '../../components/ReplyForm'
+// import ReplyForm from '../../components/ReplyForm'
 import useRetrievePost from '../api/useRetrievePost'
 import { NextPage } from 'next'
 import Link from 'next/link'
@@ -20,6 +20,8 @@ const Post: NextPage = () => {
   const postId = query.id as string
 
   const { post, member, error } = useRetrievePost(postId)
+
+  // const formattedPost = post?.prompt.substring(3, post.prompt.length - 4)
 
   const date = post?.published_date.substring(0, 10)
   const time = post?.published_date.substring(11, 16)
@@ -43,7 +45,11 @@ const Post: NextPage = () => {
                       {date} {time}
                     </small>
                   </div>
-                  <p className='text-gray-500 text-lg mt-4'>{post?.prompt}</p>
+                  <p className='text-gray-500 text-lg mt-4'>
+                    <div
+                      dangerouslySetInnerHTML={{ __html: post?.prompt ?? '' }}
+                    ></div>
+                  </p>
                   <ListReplies postId={postId} />
                   {/* <ReplyForm post_id={postId} /> */}
                   <Quill post_id={postId} parent_id='' />

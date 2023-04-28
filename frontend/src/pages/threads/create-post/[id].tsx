@@ -8,6 +8,12 @@ import { useSessionContext } from '@/pages/api/auth/session'
 import { useCreatePostCheck } from '@/pages/api/useCreatePostCheck'
 import useRetrievePost from '@/pages/api/useRetrievePost'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
+
+const ReactQuillWrapper = dynamic(() => import('react-quill'), {
+  //besure to import dynamically
+  ssr: false,
+})
 
 interface Post {
   title: string
@@ -126,7 +132,7 @@ const CreatePost: NextPage = () => {
                 ) : (
                   <>
                     <h3 className='text-xl font-bold mb-2'>
-                      May of found your answer.
+                      May have found your answer:
                     </h3>
                     <p className='mb-2'>
                       A file from your class may contain this answer.
@@ -208,10 +214,10 @@ const CreatePost: NextPage = () => {
                 }}
                 value={tag}
               >
+                <option value='GENERAL'>GENERAL</option>
                 <option value='SYLLABUS'>SYLLABUS</option>
                 <option value='HW'>HW</option>
                 <option value='EXAM'>EXAM</option>
-                <option value='GENERAL'>GENERAL</option>
               </select>
               <button className='homeBtn'>Submit</button>
             </div>

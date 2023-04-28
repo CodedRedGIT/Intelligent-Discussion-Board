@@ -86,10 +86,11 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
               )}
             </small>
             <small>
-              {reply.parent_reply?.prompt.substring(
-                3,
-                reply.parent_reply?.prompt.length - 4,
-              )}
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: reply.parent_reply?.prompt ?? '',
+                }}
+              ></div>
             </small>
             <div
               className='thread__reply'
