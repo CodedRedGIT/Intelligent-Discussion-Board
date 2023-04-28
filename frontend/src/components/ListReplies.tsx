@@ -156,7 +156,13 @@ const ListReplies: React.FC<Props> = ({ postId }) => {
   const { replies } = useRetrieveReplies(postId)
   const [isLiked, setLike] = useState<boolean>(false)
 
-  const sortedReplies = [...replies].sort((a, b) => b.upvotes - a.upvotes)
+  const sortedReplies = [...replies].sort((a, b) => {
+    // Sort by published date in ascending order
+    return (
+      new Date(a.published_date).getTime() -
+      new Date(b.published_date).getTime()
+    )
+  })
 
   const like = (isLiked: boolean) => {
     if (isLiked) {
