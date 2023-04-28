@@ -32,7 +32,7 @@ const Posts: React.FC<PostProps> = ({ post }) => {
 
   const handleDelete = () => {
     deleteItem()
-    Router.reload()
+    Router.back()
   }
   const { sessionData } = useSessionContext()
   const { memberType } = useRetrieveMemberType(sessionData?.user_id)
@@ -52,8 +52,9 @@ const Posts: React.FC<PostProps> = ({ post }) => {
                     {post.published_date.substring(0, 10)}
                     <br />
                     {post.published_date.substring(11, 19)}
-                    {memberType !== 'STUDENT' && (
-                      <div className=''>
+                    <br />
+                    <div>
+                      {memberType !== 'STUDENT' && (
                         <button
                           onClick={handleDelete}
                           disabled={deleteIsLoading}
@@ -61,14 +62,11 @@ const Posts: React.FC<PostProps> = ({ post }) => {
                           <FontAwesomeIcon icon={faTrash} className='icon' />
                           {deleteIsLoading ? 'Loading...' : 'Delete'}
                         </button>
-                        {deleteSuccess && (
-                          <div className='success'>Success!</div>
-                        )}
-                        {deleteError && (
-                          <div className='error'>{deleteError}</div>
-                        )}
-                      </div>
-                    )}
+                        // {deleteSuccess && <div className='success'>Success!</div>}
+                        // {deleteError && <div className='error'>{deleteError}</div>}
+                        // )}
+                      )}
+                    </div>
                   </small>
                 </div>
                 <p className='text-gray-500 text-lg mt-4'>
