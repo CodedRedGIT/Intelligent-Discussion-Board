@@ -128,6 +128,10 @@ const ClassAdmin: NextPage = () => {
                 </p>
               ) : (
                 <div className='grid grid-cols-1 gap-4'>
+                  {uploadSuccess && (
+                    <p className='text-green-500'>File uploaded successfully</p>
+                  )}
+                  {uploadError && <p className='text-red-500'>{uploadError}</p>}
                   {classes.map(c => (
                     <div key={c.id}>
                       <div className='bg-gray-100 p-4 rounded-lg shadow-md flex justify-between items-center'>
@@ -144,14 +148,6 @@ const ClassAdmin: NextPage = () => {
                           {isUploading ? 'Uploading...' : 'Upload'}
                         </Button>
                       </div>
-                      {uploadSuccess && (
-                        <p className='text-green-500'>
-                          File uploaded successfully
-                        </p>
-                      )}
-                      {uploadError && (
-                        <p className='text-red-500'>{uploadError}</p>
-                      )}
                     </div>
                   ))}
                 </div>
