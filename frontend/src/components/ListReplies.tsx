@@ -117,17 +117,18 @@ const Reply: React.FC<ReplyProps> = ({ reply, post_id }) => {
               </small>
               <small>{reply.email}</small>
             </div>
-            {memberType !== 'STUDENT' && (
-              <div className='thread__info__bottom'>
-                <button onClick={handleDelete} disabled={deleteIsLoading}>
-                  <FontAwesomeIcon icon={faTrash} className='icon' />
-                  {deleteIsLoading ? 'Loading...' : 'Delete'}
-                </button>
-                {deleteSuccess && <div className='success'>Success!</div>}
-                {deleteError && <div className='error'>{deleteError}</div>}
-                {error && <div className='error'>{error}</div>}
-              </div>
-            )}
+            <div>
+              {memberType !== 'STUDENT' && (
+                <div>
+                  <button onClick={handleDelete} disabled={deleteIsLoading}>
+                    <FontAwesomeIcon icon={faTrash} className='icon' />
+                    {deleteIsLoading ? 'Loading...' : 'Delete'}
+                  </button>
+                  {deleteSuccess && <div className='success'>Success!</div>}
+                  {deleteError && <div className='error'>{deleteError}</div>}
+                </div>
+              )}
+            </div>
           </div>
         </div>
         <div className='thread__bottom'>

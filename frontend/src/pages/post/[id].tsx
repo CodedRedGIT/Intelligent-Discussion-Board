@@ -1,16 +1,10 @@
-// this page is still being worked on to work with out new framework. Need to update components.
-
-import React, { useState } from 'react'
+import React from 'react'
 import ListReplies from '../../components/ListReplies'
 import useRetrievePost from '../api/useRetrievePost'
 import { NextPage } from 'next'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Card } from '../../components/layout/Card'
 import { Page } from '../../components/layout/Page'
-import { LinkButton } from '../../components/ui/LinkButton'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp, faTrash } from '@fortawesome/free-solid-svg-icons'
 import Quill from '@/components/QuillForm'
 
 const Post: NextPage = () => {

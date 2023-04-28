@@ -53,13 +53,21 @@ const Posts: React.FC<PostProps> = ({ post }) => {
                     <br />
                     {post.published_date.substring(11, 19)}
                     {memberType !== 'STUDENT' && (
-                      <button onClick={handleDelete} disabled={deleteIsLoading}>
-                        <FontAwesomeIcon icon={faTrash} className='icon' />
-                        {deleteIsLoading ? 'Loading...' : 'Delete'}
-                      </button>
-                      // {deleteSuccess && <div className='success'>Success!</div>}
-                      // {deleteError && <div className='error'>{deleteError}</div>}
-                      // )}
+                      <div className=''>
+                        <button
+                          onClick={handleDelete}
+                          disabled={deleteIsLoading}
+                        >
+                          <FontAwesomeIcon icon={faTrash} className='icon' />
+                          {deleteIsLoading ? 'Loading...' : 'Delete'}
+                        </button>
+                        {deleteSuccess && (
+                          <div className='success'>Success!</div>
+                        )}
+                        {deleteError && (
+                          <div className='error'>{deleteError}</div>
+                        )}
+                      </div>
                     )}
                   </small>
                 </div>
