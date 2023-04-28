@@ -68,7 +68,7 @@ const CreatePost: NextPage = () => {
         setShowPopup(true)
       } else {
         createPost({ member_id, prompt, title, tag, class_id })
-        router.push(`/threads/${class_id}`)
+        Router.push(`/threads/${class_id}`)
         Router.reload()
       }
     }
