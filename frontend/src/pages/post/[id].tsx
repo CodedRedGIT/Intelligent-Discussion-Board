@@ -44,11 +44,10 @@ const Post: NextPage = () => {
                       {date} {time}
                     </small>
                   </div>
-                  <p className='text-gray-500 text-lg mt-4'>
-                    <div
-                      dangerouslySetInnerHTML={{ __html: post?.prompt ?? '' }}
-                    ></div>
-                  </p>
+                  <div
+                    className='text-gray-500 text-lg mt-4'
+                    dangerouslySetInnerHTML={{ __html: post?.prompt ?? '' }}
+                  ></div>{' '}
                   <ListReplies postId={postId} />
                   <Quill post_id={postId} parent_id='' />
                   <div className='flex justify-center mt-8'>
