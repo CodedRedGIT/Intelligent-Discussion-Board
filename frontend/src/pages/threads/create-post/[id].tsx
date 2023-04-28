@@ -31,7 +31,7 @@ interface Member {
 }
 
 interface PopUpPost {
-  id: string
+  post_id: string
   prompt: string
   title: string
 }
@@ -146,11 +146,20 @@ const CreatePost: NextPage = () => {
 
                 <div className='grid'>
                   {postResponse?.response_type === 'post_data' &&
-                    postResponse.data.map((post: PopUpPost) => (
-                      <Link href={`/post/${post.id}`} replace key={post.id}>
-                        {post.title}
-                      </Link>
-                    ))}
+                    postResponse.data.map((post: PopUpPost) => {
+                      console.log('postResponse.data:', postResponse.data)
+                      console.log('post.id:', post.post_id)
+                      return (
+                        <Link
+                          href={`/post/${post.post_id}`}
+                          replace
+                          key={post.post_id}
+                        >
+                          {post.title}
+                        </Link>
+                      )
+                    })}
+
                   {postResponse?.response_type === 'file_data' &&
                     postResponse.data.map((file: string) => (
                       <p className='mb-6' key={file}>

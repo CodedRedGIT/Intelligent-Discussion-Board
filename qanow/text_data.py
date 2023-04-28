@@ -147,7 +147,7 @@ def process_file_text(posttext, class_id):
         print("embedd made")
         score = similarity_score(postvector, embedding)
         print(score)
-        if score > 0.75: #TODO only show highest scored answer
+        if score > 0.70: #TODO only show highest scored answer
             returnlist.append(context_completion(posttext, strip_text(file.file)))
 
     return returnlist

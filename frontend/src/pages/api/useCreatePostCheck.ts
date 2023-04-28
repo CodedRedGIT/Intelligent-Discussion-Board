@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 interface Post {
-  id: string
+  post_id: string
   prompt: string
   title: string
 }
