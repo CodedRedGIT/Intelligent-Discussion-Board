@@ -128,6 +128,7 @@ const CreatePost: NextPage = () => {
                       Click "Post anyways" to create a new post with the same
                       title and prompt.
                     </p>
+                    <p className='mb-2'>Possible posts:</p>
                   </div>
                 ) : (
                   <>
