@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react'
 import ListReplies from '../../components/ListReplies'
-// import ReplyForm from '../../components/ReplyForm'
 import useRetrievePost from '../api/useRetrievePost'
 import { NextPage } from 'next'
 import Link from 'next/link'
@@ -51,7 +50,6 @@ const Post: NextPage = () => {
                     ></div>
                   </p>
                   <ListReplies postId={postId} />
-                  {/* <ReplyForm post_id={postId} /> */}
                   <Quill post_id={postId} parent_id='' />
                   <div className='flex justify-center mt-8'>
                     <h3 onClick={router.back}>Back to Threads</h3>
