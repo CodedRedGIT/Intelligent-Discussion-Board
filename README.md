@@ -28,7 +28,8 @@ IDB should have very low error rate as we do not want to provide incorrect repli
     * For simplicity, you can run the powershell venv command to create a venv. `.\venv.ps1` *for windows*
 3. Install dependencies with `pip install -r requirements.txt`
 4. Migrate database models with `py manage.py migrate`
-5. Run server with `py manage.py runserver`
+5. Update enviorment variables (.env) to include your openai key
+6. Run server with `py manage.py runserver`
 
 
 ## Getting Started with the Frontend
@@ -37,7 +38,7 @@ IDB should have very low error rate as we do not want to provide incorrect repli
 
 
 # Final Project Report
-
+Below is the final project report for this app. Some information was redacted for privacy reasons.
 
 ## Introduction
 
