@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'crispy_bootstrap5',
     'crispy_forms',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
