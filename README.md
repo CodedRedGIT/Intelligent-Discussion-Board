@@ -43,7 +43,7 @@ Below is the final project report for this app. Some information was redacted fo
 ## Introduction
 
 ### 1. Project Proposal
-As students engage in online discussions on eLearning platforms, they often ask repetitive or trivial questions that could easily be addressed by referring to existing resources, such as the syllabus or project specifications. However, many students fail to read through previous discussions or consult these documents before posting their queries. This creates a burden on instructors who must repeated;y respond to similar questions. 
+As students engage in online discussions on eLearning platforms, they often ask repetitive or trivial questions that could easily be addressed by referring to existing resources, such as the syllabus or project specifications. However, many students fail to read through previous discussions or consult these documents before posting their queries. This creates a burden on instructors who must repeatedly respond to similar questions. 
 To address this issue, our project aims to develop an intelligent discussion board (IDB) that automates the process of answering such queries. By utilizing a Next.js frontend, Django backend, and leveraging GPT-3 as our natural language processor, we will create a user-friendly and efficient platform. The IDB will alleviate the burden on instructors by automatically posting possible answers to these queries, thereby promoting a less-cluttered and more streamlines forum for student discussions.
 
 ### 2. Project Objective
