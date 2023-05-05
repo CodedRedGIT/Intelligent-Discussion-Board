@@ -1,6 +1,6 @@
 # Intelligent Discussion Board - CS Project
 ## Description
-__This is a school project.__ Intelligent Discussion Board, a.k.a IDB, is a group CS Project.
+__This is a senior design project.__ Intelligent Discussion Board, a.k.a IDB, is a group CS Project.
 The objective of the project is to develop an IDB using Python and Natrual Language processing skills that is able to respond to a wide range of queries. 
 More information about the project is found below  in the "Background" section. 
 
