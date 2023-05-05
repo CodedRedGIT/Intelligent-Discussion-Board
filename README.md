@@ -83,10 +83,13 @@ By implementing these API endpoints, seamless communication is established, enab
 
 
 ### 5. Text-Processing Code Documentation
-The text-processing functionality of the IDB makes use of two features that are part of the OpenAI API, text embeddings and text completion. A text embedding is a list/vector containing 1536 floating points that represents the numerical representation of the text’s semantic meaning. Getting the cosine similarity between two of these vectors (achieved through calculating the dot product) results in a number between 0 and 1. The closer to 1 the result is, the more similar the texts are, meaning wise. 
-Whenever a new post is created or a document is uploaded a new embedding is created from the text it contains using OpenAI’s text-embedding-ada-002 model. These embeddings are vital when searching through the database to find applicable posts and documents.
-When a user clicks post, the IDB creates an embedding of the text in their post, and gets the cosine similarity between it and all other posts in the class, taking note of those that are above .85. Once the database has been searched, these similar posts are presented to the user, and allows them to check the posts over before posting to the discussion board. 
-If no applicable posts are found, then the IDB will search through the uploaded documents. If any fitting documents with a similarity score over .70 are found, we then switch to using text completion. During text completion we take the text stripped from the document and feed it along with the user’s question to the text-davinci-003 model, and present the model’s response to the user.
+The text-processing functionality of the IDB leverages two key features of the OpenAI API: text embeddings and text completion. A text embedding is a numerical representation of semantic meaning, consisting of a vector with 1536 floating points. By calculating the cosine similarity between two text embeddings, achieved through the dot product, we obtain a similarity score ranging from 0 to 1. A higher score indicates a greater semantic similarity between the texts.
+When a new post is created or a document is uploaded, the IDB generates an embedding from the text using OpenAI's text-embedding-ada-002 model. These embeddings are essential for efficiently searching the database and retrieving relevant posts and documents.
+Upon clicking the "post" button, the IDB creates an embedding for the user's text and calculates the cosine similarity with all other posts in the class. Any posts with a similarity score above 0.85 are identified and presented to the user, allowing them to review these similar posts before making their own contribution to the discussion board.
+In the absence of applicable posts, the IDB proceeds to search through the uploaded documents. If any documents with a similarity score above 0.70 are found, the system switches to text completion. During text completion, the extracted text from the document, along with the user's question, is fed into the text-davinci-003 model. The model generates a response, which is then presented to the user.
+By utilizing text embeddings and text completion, the IDB provides an intelligent and efficient approach to processing user queries and delivering relevant information.
+
+
 
 
 ### 6. Frontend Code Documentation
